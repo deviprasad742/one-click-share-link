@@ -1,0 +1,5 @@
+core/Customer.class
+core/CustomerRepository.class
+core/OneLink.class
+core/Application.class
+core/LinkController.class
