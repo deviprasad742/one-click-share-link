@@ -22,7 +22,7 @@
 	<classpathentry kind="var" path="M2_REPO/ch/qos/logback/logback-classic/1.1.2/logback-classic-1.1.2.jar"/>
 	<classpathentry kind="var" path="M2_REPO/ch/qos/logback/logback-core/1.1.2/logback-core-1.1.2.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/yaml/snakeyaml/1.13/snakeyaml-1.13.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/mongodb/mongo-java-driver/2.12.3/mongo-java-driver-2.12.3.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/mongodb/mongo-java-driver/2.12.3/mongo-java-driver-2.12.3.jar" sourcepath="SOURCE_ATTACHER/mongo-java-driver-2.12.3-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/springframework/spring-tx/4.0.7.RELEASE/spring-tx-4.0.7.RELEASE.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/springframework/data/spring-data-mongodb/1.5.4.RELEASE/spring-data-mongodb-1.5.4.RELEASE.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/springframework/data/spring-data-commons/1.8.4.RELEASE/spring-data-commons-1.8.4.RELEASE.jar"/>
@@ -39,7 +39,7 @@
 	<classpathentry kind="var" path="M2_REPO/com/fasterxml/classmate/1.0.0/classmate-1.0.0.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/springframework/spring-web/4.0.7.RELEASE/spring-web-4.0.7.RELEASE.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/springframework/spring-webmvc/4.0.7.RELEASE/spring-webmvc-4.0.7.RELEASE.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/springframework/cloud/spring-cloud-spring-service-connector/1.1.0.BUILD-SNAPSHOT/spring-cloud-spring-service-connector-1.1.0.BUILD-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/springframework/cloud/spring-cloud-spring-service-connector/1.1.0.BUILD-SNAPSHOT/spring-cloud-spring-service-connector-1.1.0.BUILD-SNAPSHOT.jar" sourcepath="SOURCE_ATTACHER/spring-cloud-spring-service-connector-1.1.0.BUILD-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/springframework/cloud/spring-cloud-core/1.1.0.BUILD-SNAPSHOT/spring-cloud-core-1.1.0.BUILD-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
