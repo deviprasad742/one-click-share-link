@@ -1,12 +1,14 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
 public class LinkController {
@@ -19,7 +21,9 @@ public class LinkController {
 		Customer customer = repository.findByFirstName(name);
 		System.out.println("Result:" + customer);
 		if (customer != null) {
-			return customer.getLinks();
+			List<OneLink> links = new ArrayList<OneLink>(customer.getLinks());
+			Collections.reverse(links);
+			return links;
 		}
 		return new ArrayList<OneLink>();
 	}
