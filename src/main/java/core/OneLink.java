@@ -1,7 +1,10 @@
 package core;
 
+import org.springframework.data.annotation.Id;
+
 public class OneLink {
 
+	@Id
 	private final String title;
 	private final String link;
 

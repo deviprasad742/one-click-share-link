@@ -1,6 +1,6 @@
 core/Customer.class
-core/CustomerRepository.class
-core/CloudConfig.class
 core/OneLink.class
 core/Application.class
 core/LinkController.class
+core/CustomerRepository.class
+core/MongoHQConfiguration.class
