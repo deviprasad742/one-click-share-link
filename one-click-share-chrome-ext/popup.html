@@ -7,11 +7,20 @@
 	  			.button {
 	  				width: 200px;
 	  			}
+	  			a:link    { color: #c00;text-decoration: none;}  /* unvisited links */
+				a:visited { color: #000 }  /* visited links   */
+				a:hover   { color: #00c }  /* user hovers     */
+				a:active  { color: #ccc }  /* active links    */
+
+				#links-content-div{
+					margin: 10px;
+				}
 	  	</style>
 	    <script src="popup.js"></script>
 	</head>
   	<body style=min-width:325>
-        <div id="main2"></div>
+  		<div id="send-button-div"></div>
+        <div id="links-content-div"></div>
   	</body>
 </html>
 
