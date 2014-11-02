@@ -12,3 +12,11 @@ http://developaralysis.blogspot.in/2014/10/deploying-spring-on-heroku.html
 
 Important Steps:
 1. The objects saved in the repository for mongodb should have getter methods to work properly.
+
+
+2-11-2014
+
+1. Git-Adding a new remote 
+https://help.github.com/articles/adding-a-remote/
+
+
