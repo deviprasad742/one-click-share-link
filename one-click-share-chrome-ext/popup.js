@@ -3,12 +3,13 @@ function capitaliseFirstLetter(string)
 	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+var MAX_CHAR_LENGTH = 45;
 
 function trimTitle(string)
 {
 
-	if (string.length > 15) {
-		return string.substring(0,12) + "...";
+	if (string.length > MAX_CHAR_LENGTH) {
+		return string.substring(0,MAX_CHAR_LENGTH - 3) + "...";
 	}
 	return string;
 
