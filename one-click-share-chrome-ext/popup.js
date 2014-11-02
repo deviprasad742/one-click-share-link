@@ -18,7 +18,8 @@ var linksGenerator = {
 			for(i in linksArr){
 	    		console.log(link);
 				var link = document.createElement('a');
-				link.textContent = capitaliseFirstLetter(linksArr[i]["title"]);
+				//link.textContent = capitaliseFirstLetter(linksArr[i]["title"]);
+				link.textContent = linksArr[i]["title"];
 				link.href = linksArr[i]["link"];
 				link.onclick = function (loopIndex) {
 					return function () {
