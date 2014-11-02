@@ -3,6 +3,17 @@ function capitaliseFirstLetter(string)
 	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+
+function trimTitle(string)
+{
+
+	if (string.length > 15) {
+		return string.substring(0,12) + "...";
+	}
+	return string;
+
+}
+
 var linksGenerator = {
 
   	requestLinks: function() {
@@ -19,7 +30,7 @@ var linksGenerator = {
 	    		console.log(link);
 				var link = document.createElement('a');
 				//link.textContent = capitaliseFirstLetter(linksArr[i]["title"]);
-				link.textContent = linksArr[i]["title"];
+				link.textContent = trimTitle(linksArr[i]["title"]);
 				link.href = linksArr[i]["link"];
 				link.onclick = function (loopIndex) {
 					return function () {
