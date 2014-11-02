@@ -50,10 +50,10 @@ var linksGenerator = {
 
 document.addEventListener('DOMContentLoaded', function () {
 	var bt = document.createElement("BUTTON");
-	var text = document.createTextNode("Send");
+	var text = document.createTextNode("Send Link");
 	bt.appendChild(text);
-	bt.appendChild(document.createElement("br"));
 	document.body.appendChild(bt);
+	document.body.appendChild(document.createElement("br"));
 	bt.addEventListener("click",function(){
 		//tab=chrome.tabs.query({active: true, currentWindow: true},function(tab){});
 		chrome.tabs.getSelected(null,function(tab){
