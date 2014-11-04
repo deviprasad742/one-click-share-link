@@ -25,7 +25,6 @@ public class Application implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		//
-		repository.deleteAll();
 
 		if (repository.findByFirstName(Customer.ADMIN) == null) {
 			Customer admin = new Customer(Customer.ADMIN, Customer.ADMIN);

@@ -46,5 +46,14 @@ public class LinkController {
 		repository.save(customer);
 		return newLink;
 	}
+	
+	@RequestMapping("/clear")
+	public void clearRepo() {
+		repository.deleteAll();
+		Customer admin = new Customer(Customer.ADMIN, Customer.ADMIN);
+		admin.getLinks().add(new OneLink("Google", "http://www.google.com"));
+		repository.save(admin);
+	}
+
 
 }
