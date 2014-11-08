@@ -55,4 +55,9 @@ public class LinkController {
 		repository.save(admin);
 	}
 	
+	@RequestMapping("/key")
+	public String getOAuthKey() {
+		return System.getenv("OAUTHIO_PUBLIC_KEY");
+	}
+	
 }

@@ -22,9 +22,23 @@ function loadScript(url, callback)
 
 document.addEventListener('DOMContentLoaded', function () {
     
-    loadScript("resources/oauth.js",function() {        
-        OAuth.initialize("SlyxjLA5JM_UJ2V1YcY-chCSWNM");
-        console.log("OAuth initialized##############")
+    loadScript("resources/oauth.js",function() {     
+        
+        var xmlhttp = new XMLHttpRequest();
+        var url = "http://one-click-share-link.herokuapp.com/key;
+		xmlhttp.open("GET", url, true);
+		xmlhttp.send();
+
+        //show success status by reverting button style.
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4) {
+                var key = xmlhttp.responseText;
+                OAuth.initialize(key);
+                console.log("OAuth initialized with key:" + key)
+            }
+        };
+        
+        
     });
     
 	var bt = document.createElement("BUTTON");
@@ -39,6 +53,13 @@ document.addEventListener('DOMContentLoaded', function () {
         OAuth.popup("google")
         .done(function(result) {
             bt.textContent = "Logged-In";
+            result.get('/me')
+            .done(function (response) {
+                console.log(response.name);
+            })
+            .fail(function (err) {
+                console.log(err);
+            });
         })
         .fail(function (err) {
             console.log(err);
