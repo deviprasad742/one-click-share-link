@@ -55,8 +55,8 @@ public class LinkController {
 		repository.save(admin);
 	}
 
-    @RequestMapping("/")
-	public String loginPage() {
+    @RequestMapping("/login")
+	public String login() {
 		return "login";
 	}
 
