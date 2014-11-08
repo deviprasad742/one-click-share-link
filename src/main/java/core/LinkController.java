@@ -55,9 +55,4 @@ public class LinkController {
 		repository.save(admin);
 	}
 
-    @RequestMapping("/login")
-	public String login() {
-		return "login";
-	}
-
 }
