@@ -52,8 +52,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	bt.addEventListener("click",function(){
         OAuth.popup("google")
         .done(function(result) {
+            console.log(result);
             bt.textContent = "Logged-In";
-            result.get('/me')
+            result.get('/api/me')
             .done(function (response) {
                 console.log(response.name);
             })
