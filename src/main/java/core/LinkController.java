@@ -56,7 +56,7 @@ public class LinkController {
 	}
 
     @RequestMapping("/")
-	public void loginPage() {
+	public String loginPage() {
 		return "login";
 	}
 
