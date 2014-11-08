@@ -1,4 +1,28 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<h1>This is a sample web page </h1>
+	<head>
+	  	<style type="text/css">
+	  			* {
+ 					font-size: 100%;
+ 					font-family: Georgia;
+				}
+	  			a {
+	  				/*font-family: Tahoma, serif;*/
+	  				text-decoration: none;
+	  			}
+	  			.button {
+	  				width: 200px;
+	  			}
+				a:hover   { text-decoration: underline; }  /* user hovers     */
+				#links-content-div{
+					margin: 10px;
+				}
+	  	</style>
+        <script src="../js/oauth_util.js"></script>
+	</head>    
+    <body style=min-width:20em>
+  		<div id="send-button-div"></div>
+        <div id="links-content-div"></div>
+  	</body>
+<h1>OAuth Login Page</h1>
 </html>
