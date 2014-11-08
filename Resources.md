@@ -19,4 +19,7 @@ Important Steps:
 1. Git-Adding a new remote 
 https://help.github.com/articles/adding-a-remote/
 
+8-11-2014
 
+Displaying a web page content
+http://spring.io/guides/gs/serving-web-content/
