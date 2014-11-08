@@ -22,8 +22,9 @@ function loadScript(url, callback)
 
 document.addEventListener('DOMContentLoaded', function () {
     
-    loadScript("../js/oauth.js",function() {        
+    loadScript("/resources/oauth.js",function() {        
         OAuth.initialize('<%= ENV["OAUTHIO_PUBLIC_KEY"] %>');
+        console.log("OAuth initialized##############")
     });
     
 	var bt = document.createElement("BUTTON");
