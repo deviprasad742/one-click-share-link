@@ -54,5 +54,11 @@ public class LinkController {
 		admin.getLinks().add(new OneLink("Google", "http://www.google.com"));
 		repository.save(admin);
 	}
+	
+	 @RequestMapping("/")
+	    public String greeting() {
+	        return "login";
+	    }
+
 
 }
