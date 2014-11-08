@@ -22,7 +22,7 @@ function loadScript(url, callback)
 
 document.addEventListener('DOMContentLoaded', function () {
     
-    loadScript("resources/js/oauth.js",function() {        
+    loadScript("resources/oauth.js",function() {        
         OAuth.initialize('<%= ENV["OAUTHIO_PUBLIC_KEY"] %>');
         console.log("OAuth initialized##############")
     });
