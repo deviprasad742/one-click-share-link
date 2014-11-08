@@ -52,14 +52,14 @@ document.addEventListener('DOMContentLoaded', function () {
 	bt.addEventListener("click",function(){
         OAuth.popup("google")
         .done(function(result) {
-            console.log(result);
+            console.log("Login Result:" + result);
             bt.textContent = "Logged-In";
             result.get('/api/me')
             .done(function (response) {
-                console.log(response.name);
+                console.log(response);
             })
             .fail(function (err) {
-                console.log(err);
+                console.log("API call error:" + err);
             });
         })
         .fail(function (err) {
