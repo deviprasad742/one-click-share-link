@@ -23,7 +23,7 @@ function loadScript(url, callback)
 document.addEventListener('DOMContentLoaded', function () {
     
     loadScript("resources/oauth.js",function() {        
-        OAuth.initialize('<%= ENV["OAUTHIO_PUBLIC_KEY"] %>');
+        OAuth.initialize("SlyxjLA5JM_UJ2V1YcY-chCSWNM");
         console.log("OAuth initialized##############")
     });
     
@@ -39,13 +39,6 @@ document.addEventListener('DOMContentLoaded', function () {
         OAuth.popup("google")
         .done(function(result) {
             bt.textContent = "Logged-In";
-            result.get('/me')
-            .done(function (response) {
-                console.log(response.name);
-            })
-            .fail(function (err) {
-                console.log(err);
-            });
         })
         .fail(function (err) {
             console.log(err);
