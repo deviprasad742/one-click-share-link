@@ -51,22 +51,22 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.body.appendChild(document.createElement("br"));
 	bt.addEventListener("click",function(){
         OAuth.popup("google")
-        .done(function(result) {
-            console.log("Login Result:");
-            console.log(result);
-            bt.textContent = "Logged-In";
-            result.get('/api/me')
-            .done(function (response) {
-                console.log(response);
+            .done(function(result) {
+                console.log("Login Result:");
+                console.log(result);
+                bt.textContent = "Logged-In";
+                result.me()
+                    .done(function (response) {
+                        console.log(response);
+                    })
+                    .fail(function (err) {
+                        console.log("API call error");
+                        console.log(err);
+                    });
             })
             .fail(function (err) {
-                console.log("API call error");
                 console.log(err);
             });
-        })
-        .fail(function (err) {
-            console.log(err);
-        });
     });
 
 });
