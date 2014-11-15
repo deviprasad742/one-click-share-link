@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
             res.get('/plus/v1/people/me').done(function (data) {
                 console.log(data)
                 console.log('Hello ' + data.displayName)
-            })
+            });
         })
     });
 
