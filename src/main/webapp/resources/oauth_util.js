@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
         OAuth.popup('Google_plus', function (err, res) {
             res.get('/plus/v1/people/me').done(function (data) {
                 console.log(data)
-                console.log(('Hello ' + data.displayName)
+                console.log('Hello ' + data.displayName)
             })
         })
     });
