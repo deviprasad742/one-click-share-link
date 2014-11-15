@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (xmlhttp.readyState == 4) {
                 var key = xmlhttp.responseText;
                 OAuth.initialize(key);
-                console.log("OAuth initialized with key:" + key)
+                console.log("OAuth initialized with key:" + key);
             }
         };
 
@@ -47,8 +47,8 @@ document.addEventListener('DOMContentLoaded', function () {
     bt.addEventListener("click", function () {
         OAuth.popup('Google_plus', function (err, res) {
             res.get('/plus/v1/people/me').done(function (data) {
-                console.log(data)
-                console.log('Hello ' + data.displayName)
+                console.log(data);
+                console.log('Hello ' + data.displayName);
             });
         })
     });
