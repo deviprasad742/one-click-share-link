@@ -1,4 +1,9 @@
-function loadScript(url, callback) {
+
+
+
+
+function loadScript(url, callback)
+{
     // Adding the script tag to the head as suggested before
     var head = document.getElementsByTagName('head')[0];
     var script = document.createElement('script');
@@ -16,41 +21,52 @@ function loadScript(url, callback) {
 
 
 document.addEventListener('DOMContentLoaded', function () {
-
-    loadScript("resources/oauth.js", function () {
-
+    
+    loadScript("resources/oauth.js",function() {     
+        
         var xmlhttp = new XMLHttpRequest();
         var url = "https://one-click-share-link.herokuapp.com/key";
-        xmlhttp.open("GET", url, true);
-        xmlhttp.send();
+		xmlhttp.open("GET", url, true);
+		xmlhttp.send();
 
         //show success status by reverting button style.
-        xmlhttp.onreadystatechange = function () {
+        xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == 4) {
                 var key = xmlhttp.responseText;
                 OAuth.initialize(key);
-                console.log("OAuth initialized with key:" + key);
+                console.log("OAuth initialized with key:" + key)
             }
         };
-
-
+        
+        
     });
+    
+	var bt = document.createElement("BUTTON");
+	var text = document.createTextNode("Login");
+	bt.appendChild(text);
+	document.getElementById("send-button-div").appendChild(bt);
+	bt.style.background='white';
+	bt.style.color='black';
 
-    var bt = document.createElement("BUTTON");
-    var text = document.createTextNode("Login");
-    bt.appendChild(text);
-    document.getElementById("send-button-div").appendChild(bt);
-    bt.style.background = 'white';
-    bt.style.color = 'black';
-
-    document.body.appendChild(document.createElement("br"));
-    bt.addEventListener("click", function () {
-        OAuth.popup('Google_plus', function (err, res) {
-            res.get('/plus/v1/people/me').done(function (data) {
-                console.log(data);
-                console.log('Hello ' + data.displayName);
+	document.body.appendChild(document.createElement("br"));
+	bt.addEventListener("click",function(){
+        OAuth.popup("google_plus")
+            .done(function(result) {
+                console.log("Login Result:");
+                console.log(result);
+                bt.textContent = "Logged-In";
+                result.get('/plus/v1/people/me')
+                    .done(function (response) {
+                        console.log(response);
+                    })
+                    .fail(function (err) {
+                        console.log("API call error");
+                        console.log(err);
+                    });
+            })
+            .fail(function (err) {
+                console.log(err);
             });
-        })
     });
 
 });
