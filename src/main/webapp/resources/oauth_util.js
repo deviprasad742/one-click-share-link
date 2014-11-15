@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
     loadScript("resources/oauth.js",function() {     
         
         var xmlhttp = new XMLHttpRequest();
-        var url = "http://one-click-share-link.herokuapp.com/key";
+        var url = "https://one-click-share-link.herokuapp.com/key";
 		xmlhttp.open("GET", url, true);
 		xmlhttp.send();
 
