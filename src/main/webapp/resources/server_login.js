@@ -41,9 +41,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		//show success status by reverting button style.
 		xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState == 4) {
+                var data = xmlhttp.responseText;
+                var json = JSON.parse(data);
 				console.log(xmlhttp.responseText);
 				var newParagraph = document.createElement('p');
-				newParagraph.textContent = xmlhttp.responseText;
+				newParagraph.textContent = json.name;
 				document.body.appendChild(newParagraph);
 			}
 		};
