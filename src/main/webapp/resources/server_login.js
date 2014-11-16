@@ -19,32 +19,12 @@ domain_url = "https://one-click-share-link-dev.herokuapp.com/"
 
 document.addEventListener('DOMContentLoaded', function() {
 
-	var bt = document.createElement("BUTTON");
-	var text = document.createTextNode("Login");
-	bt.appendChild(text);
-	document.getElementById("login-button-div").appendChild(bt);
-	bt.style.background = 'white';
-	bt.style.color = 'black';
-	document.body.appendChild(document.createElement("br"));
-
 	var token = getParam("code");
 	if (token != null) {
-		bt.textContent = "Logged-In";
+        document.getElementById("login-link").textContent = "Logged-In";
 		updateInfo(token);
 	}
 
-	bt.addEventListener("click", function() {
-		var xmlhttp = new XMLHttpRequest();
-		xmlhttp.open("GET", domain_url + "redirect", true);
-		xmlhttp.send();
-
-		//show success status by reverting button style.
-		xmlhttp.onreadystatechange = function() {
-			if (xmlhttp.readyState == 4) {
-				console.log(xmlhttp.responseText);
-			}
-		};
-	});
 
 	function getParam(name) {
 		if (name = (new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)'))
