@@ -61,10 +61,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		//show success status by reverting button style.
 		xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState == 4) {
-				var newParagraph = document.createElement('p');
-				newParagraph.textContent = token;
-				document.body.appendChild(xmlhttp.responseText);
 				console.log(xmlhttp.responseText);
+				var newParagraph = document.createElement('p');
+				newParagraph.textContent = xmlhttp.responseText;
+				document.body.appendChild(newParagraph);
 			}
 		};
 
