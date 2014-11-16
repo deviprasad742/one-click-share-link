@@ -13,45 +13,37 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class LinkController {
 	@Autowired
-	private CustomerRepository repository;
+	private UserRepository repository;
 
 	@RequestMapping("/links")
-	public List<OneLink> links(@RequestParam(value = "name", defaultValue = Customer.ADMIN) String name) {
-		System.out.println("Request:" + name);
-		Customer customer = repository.findByFirstName(name);
+	public List<OneLink> links(@RequestParam(value = "emailId") String emailId) {
+		System.out.println("Request:" + emailId);
+		User customer = repository.findByEmailId(emailId);
 		System.out.println("Result:" + customer);
 		if (customer != null) {
-			List<OneLink> links = new ArrayList<OneLink>(customer.getLinks());
+			List<OneLink> links = new ArrayList<OneLink>(customer.getOutLinks());
 			Collections.reverse(links);
 			return links;
 		}
 		return new ArrayList<OneLink>();
 	}
 
-	@RequestMapping("/add")
-	public OneLink addLink(@RequestParam(value = "name", defaultValue = Customer.ADMIN) String name,
+	@RequestMapping("/send")
+	public OneLink addLink(@RequestParam(value = "from") String fromEmailId,@RequestParam(value = "to") String toEmailId,
 			@RequestParam(value = "title") String title, @RequestParam(value = "link") String link) {
-		System.out.println("Request:" + name);
-		Customer customer = repository.findByFirstName(name);
-		System.out.println("Result:" + customer);
 
-		if (customer == null) {
-			customer = new Customer(name, name);
-			repository.save(customer);
-		}
-
-		OneLink newLink = new OneLink(title, link);
-		customer.getLinks().add(newLink);
+		OneLink newLink = new OneLink(title, link, fromEmailId);
+//		customer.getOutLinks().add(newLink);
 		System.out.println("Link Added -->" + newLink);
-		repository.save(customer);
+//		repository.save(customer);
 		return newLink;
 	}
 	
 	@RequestMapping("/clear")
 	public void clearRepo() {
 		repository.deleteAll();
-		Customer admin = new Customer(Customer.ADMIN, Customer.ADMIN);
-		admin.getLinks().add(new OneLink("Google", "http://www.google.com"));
+		User admin = new User(User.ADMIN, User.ADMIN);
+		admin.getOutLinks().add(new OneLink("Google", "http://www.google.com", User.ADMIN));
 		repository.save(admin);
 	}
 	

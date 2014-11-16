@@ -51,14 +51,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log(result);
                 bt.textContent = "Logged-In";
 
-                result.get('oauth2/v1/userinfo')
-                    .done(function (response) {
-                        console.log(response);
-                    })
-                    .fail(function (err) {
-                        console.log("API call error");
-                        console.log(err);
-                    });
+                setTimeout(function () {
+                    result.get('oauth2/v1/userinfo')
+                        .done(function (response) {
+                            console.log(response);
+                        })
+                        .fail(function (err) {
+                            console.log("API call error");
+                            console.log(err);
+                        });
+                }, 1000);
+
             })
             .fail(function (err) {
                 console.log(err);

@@ -44,6 +44,33 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
+
+	<!-- Google api dependencies start -->
+
+		<dependency>
+			<groupId>com.google.http-client</groupId>
+			<artifactId>google-http-client</artifactId>
+			<version>1.13.1-beta</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.http-client</groupId>
+			<artifactId>google-http-client-jackson</artifactId>
+			<version>1.13.1-beta</version>
+		</dependency>
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-web-api</artifactId>
+			<version>7.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.apis</groupId>
+			<artifactId>google-api-services-oauth2</artifactId>
+			<version>v2-rev29-1.13.2-beta</version>
+		</dependency>
+
+	
+	<!-- Google api dependencies end -->
 		
 		
     </dependencies>
@@ -54,23 +81,27 @@
     
     
 	<repositories>
-		<repository>
-			<id>org.springframework.maven.milestone</id>
-			<name>Spring Maven Milestone Repository</name>
-			<url>http://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>spring-snapshots</id>
-			<name>Spring Snapshots</name>
-			<url>http://repo.spring.io/snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+	<repository>
+		<id>org.springframework.maven.milestone</id>
+		<name>Spring Maven Milestone Repository</name>
+		<url>http://repo.spring.io/milestone</url>
+		<snapshots>
+			<enabled>false</enabled>
+		</snapshots>
+	</repository>
+	<repository>
+		<id>spring-snapshots</id>
+		<name>Spring Snapshots</name>
+		<url>http://repo.spring.io/snapshot</url>
+		<snapshots>
+			<enabled>true</enabled>
+		</snapshots>
+	</repository>
+	<repository>
+		<id>google-api-services</id>
+		<url>http://google-api-client-libraries.appspot.com/mavenrepo</url>
+	</repository>
+</repositories>
 
 	<pluginRepositories>
 		<pluginRepository>
