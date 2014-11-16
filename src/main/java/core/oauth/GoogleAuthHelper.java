@@ -1,6 +1,7 @@
 package core.oauth;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.Arrays;
 
 import com.google.api.client.auth.oauth2.Credential;
@@ -51,6 +52,7 @@ public final class GoogleAuthHelper {
 	// end google authentication constants
 
 	private final GoogleAuthorizationCodeFlow flow;
+	private String stateToken;
 
 	/**
 	 * Constructor initializes the Google Authorization Code Flow with CLIENT
@@ -59,6 +61,7 @@ public final class GoogleAuthHelper {
 	public GoogleAuthHelper() {
 		flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, CLIENT_ID, CLIENT_SECRET, SCOPE)
 				.build();
+		generateStateToken();
 	}
 
 	/**
@@ -66,11 +69,27 @@ public final class GoogleAuthHelper {
 	 */
 	public String buildLoginUrl() {
 		final GoogleAuthorizationCodeRequestUrl url = flow.newAuthorizationUrl();
-		String authUrl = url.setRedirectUri(CALLBACK_URI).build();
+		String authUrl = url.setRedirectUri(CALLBACK_URI).setState(stateToken).build();
 		System.out.println("****************************Google URL is**************************\n" + authUrl);
 		
 		return authUrl;
 	}
+	
+	/**
+	 * Generates a secure state token 
+	 */
+	private void generateStateToken(){
+		SecureRandom sr1 = new SecureRandom();
+		stateToken = "google;"+sr1.nextInt();
+	}
+	
+	/**
+	 * Accessor for state token
+	 */
+	public String getStateToken(){
+		return stateToken;
+	}
+	
 
 	/**
 	 * Expects an Authentication Code, and makes an authenticated request for
