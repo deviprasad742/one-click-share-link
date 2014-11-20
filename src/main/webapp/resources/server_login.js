@@ -51,7 +51,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 var image = document.createElement('img');
                 image.src = jsonData.image;
-                image.style = "width:32px;height:32px";
+                image.style.width = "32px";
+                image.style.height = "32px";
                 document.body.appendChild(image);
             }
         };
