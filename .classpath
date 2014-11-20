@@ -41,6 +41,7 @@
 	<classpathentry kind="var" path="M2_REPO/org/springframework/spring-webmvc/4.0.7.RELEASE/spring-webmvc-4.0.7.RELEASE.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/springframework/cloud/spring-cloud-spring-service-connector/1.1.0.BUILD-SNAPSHOT/spring-cloud-spring-service-connector-1.1.0.BUILD-SNAPSHOT.jar" sourcepath="SOURCE_ATTACHER/spring-cloud-spring-service-connector-1.1.0.BUILD-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/springframework/cloud/spring-cloud-core/1.1.0.BUILD-SNAPSHOT/spring-cloud-core-1.1.0.BUILD-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/google/code/gson/gson/2.3/gson-2.3.jar" sourcepath="SOURCE_ATTACHER/gson-2.3-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/google/http-client/google-http-client-jackson/1.13.1-beta/google-http-client-jackson-1.13.1-beta.jar" sourcepath="M2_REPO/com/google/http-client/google-http-client-jackson/1.13.1-beta/google-http-client-jackson-1.13.1-beta-sources.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:file:/home/prasad/.m2/repository/com/google/http-client/google-http-client-jackson/1.13.1-beta/google-http-client-jackson-1.13.1-beta-javadoc.jar!/"/>
@@ -62,5 +63,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="var" path="M2_REPO/javax/javaee-web-api/7.0/javaee-web-api-7.0.jar"/>
+	<classpathentry kind="lib" path="/home/prasad/.m2/repository/com/google/code/gson/gson/2.3/gson-2.3.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

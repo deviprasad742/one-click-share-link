@@ -1,6 +1,7 @@
 package core.controller;
 
 import java.io.IOException;
+import java.io.StringReader;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,9 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
-import com.google.api.client.json.JsonParser;
-import com.google.api.client.json.JsonToken;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.gson.stream.JsonReader;
 
 import core.UserRepository;
 import core.model.User;
@@ -54,16 +53,21 @@ public class UserController {
 		String emailId = null;
 		String userInfoJson = googleAuthHelper.getUserInfoJson(response);
 		System.out.println("****User Info: " + userInfoJson);
-		JsonParser parser = new JacksonFactory().createJsonParser(userInfoJson);
-		JsonToken token = null;
-		while ((token = parser.nextToken()) != null) {
-			if (token == JsonToken.FIELD_NAME) {
-				if (KEY_NAME.equals(parser.getCurrentName())) {
-					name = parser.getText();
-				} else if (KEY_PICTURE.equals(parser.getCurrentName())) {
-					image = parser.getText();
+
+		JsonReader reader = new JsonReader(new StringReader(userInfoJson));
+		try {
+			while (reader.hasNext()) {
+				String nextName = reader.nextName();
+				if (KEY_NAME.equals(nextName)) {
+					name = reader.nextString();
+				} else if (KEY_PICTURE.equals(nextName)) {
+					image = reader.nextString();
+				} else {
+					reader.skipValue();
 				}
 			}
+		} finally {
+			reader.close();
 		}
 		UserInfo userInfo = new UserInfo(name, emailId, image);
 		userInfo.setAccessToken(response.getAccessToken());
