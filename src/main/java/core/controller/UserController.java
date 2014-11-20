@@ -1,7 +1,8 @@
 package core.controller;
 
 import java.io.IOException;
-import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
-import com.google.gson.stream.JsonReader;
+import com.google.gson.Gson;
 
 import core.UserRepository;
 import core.model.User;
@@ -21,6 +22,8 @@ import core.oauth.GoogleAuthHelper;
 public class UserController {
 	private static final String KEY_PICTURE = "picture";
 	private static final String KEY_NAME = "name";
+	private static final String KEY_EMAIL = "email";
+
 	@Autowired
 	private UserRepository repository;
 	private GoogleAuthHelper googleAuthHelper = GoogleAuthHelper.getInstance();
@@ -47,6 +50,7 @@ public class UserController {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	private UserInfo createUserInfo(GoogleTokenResponse response) throws IOException {
 		String name = null;
 		String image = null;
@@ -54,21 +58,14 @@ public class UserController {
 		String userInfoJson = googleAuthHelper.getUserInfoJson(response);
 		System.out.println("****User Info: " + userInfoJson);
 
-		JsonReader reader = new JsonReader(new StringReader(userInfoJson));
-		try {
-			while (reader.hasNext()) {
-				String nextName = reader.nextName();
-				if (KEY_NAME.equals(nextName)) {
-					name = reader.nextString();
-				} else if (KEY_PICTURE.equals(nextName)) {
-					image = reader.nextString();
-				} else {
-					reader.skipValue();
-				}
-			}
-		} finally {
-			reader.close();
-		}
+		Gson gson = new Gson();
+		Map<String, String> map = new HashMap<String, String>();
+		map = (Map<String, String>) gson.fromJson(userInfoJson, map.getClass());
+
+		emailId = map.get(KEY_EMAIL);
+		name = map.get(KEY_NAME);
+		image = map.get(KEY_PICTURE);
+
 		UserInfo userInfo = new UserInfo(name, emailId, image);
 		userInfo.setAccessToken(response.getAccessToken());
 		return userInfo;
