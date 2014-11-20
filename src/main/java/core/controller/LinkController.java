@@ -45,11 +45,12 @@ public class LinkController {
 	}
 
 	@RequestMapping("/clear")
-	public void clearRepo() {
+	public String clearRepo() {
 		repository.deleteAll();
 		User admin = new User(new UserInfo(User.ADMIN, User.ADMIN, null));
 		admin.getOutLinks().add(new OneLink("Google", "http://www.google.com", User.ADMIN));
 		repository.save(admin);
+		return "Cleared";
 	}
 
 	@RequestMapping("/key")
