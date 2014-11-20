@@ -1,4 +1,4 @@
-package core;
+package core.model;
 
 import org.springframework.data.annotation.Id;
 

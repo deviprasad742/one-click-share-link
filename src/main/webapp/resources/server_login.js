@@ -34,8 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function updateInfo(token) {
 		var xmlhttp = new XMLHttpRequest();
-        var reqUrl = domain_url + "info" + "?code=" + token;
-		xmlhttp.open("GET", domain_url + "info" + "?code=" + token, true);
+        var reqUrl = domain_url + "register" + "?code=" + token;
+		xmlhttp.open("POST", reqUrl, true);
 		xmlhttp.send();
 
 		//show success status by reverting button style.
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 var json = JSON.parse(data);
 				console.log(xmlhttp.responseText);
 				var newParagraph = document.createElement('p');
-				newParagraph.textContent = json.name;
+				newParagraph.textContent = data;
 				document.body.appendChild(newParagraph);
 			}
 		};

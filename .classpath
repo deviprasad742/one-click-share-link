@@ -33,7 +33,7 @@
 	<classpathentry kind="var" path="M2_REPO/org/apache/tomcat/embed/tomcat-embed-logging-juli/7.0.55/tomcat-embed-logging-juli-7.0.55.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/core/jackson-databind/2.3.4/jackson-databind-2.3.4.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/core/jackson-annotations/2.3.4/jackson-annotations-2.3.4.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/core/jackson-core/2.3.4/jackson-core-2.3.4.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/core/jackson-core/2.3.4/jackson-core-2.3.4.jar" sourcepath="SOURCE_ATTACHER/jackson-core-2.3.4-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/hibernate/hibernate-validator/5.0.3.Final/hibernate-validator-5.0.3.Final.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/jboss/logging/jboss-logging/3.1.1.GA/jboss-logging-3.1.1.GA.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/fasterxml/classmate/1.0.0/classmate-1.0.0.jar"/>

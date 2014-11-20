@@ -34,9 +34,10 @@ public final class GoogleAuthHelper {
 	 * set this up at https://code.google.com/apis/console/
 	 */
 	private static final String CLIENT_SECRET = "7jc-U4DzJRkrWoXTPRRjCgTK";
-	
-	private static String DOMAIN_URL =  "https://one-click-share-link-dev.herokuapp.com/";
-	//private static String DOMAIN_URL =  "https://one-click-share-link.herokuapp.com/";
+
+	private static String DOMAIN_URL = "https://one-click-share-link-dev.herokuapp.com/";
+	// private static String DOMAIN_URL =
+	// "https://one-click-share-link.herokuapp.com/";
 	/**
 	 * Callback URI that google will redirect to after successful authentication
 	 */
@@ -58,11 +59,16 @@ public final class GoogleAuthHelper {
 	 * Constructor initializes the Google Authorization Code Flow with CLIENT
 	 * ID, SECRET, and SCOPE
 	 */
-	public GoogleAuthHelper() {
-		flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, CLIENT_ID, CLIENT_SECRET, SCOPE)
-				.build();
+	private GoogleAuthHelper() {
+		GoogleAuthorizationCodeFlow.Builder builder = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT,
+				JSON_FACTORY, CLIENT_ID, CLIENT_SECRET, SCOPE);
+		flow = builder.build();
 		generateStateToken();
 	}
+	
+	public static GoogleAuthHelper getInstance() {
+		return new GoogleAuthHelper();
+	} 
 
 	/**
 	 * Builds a login URL based on client ID, secret, callback URI, and scope
@@ -71,25 +77,49 @@ public final class GoogleAuthHelper {
 		final GoogleAuthorizationCodeRequestUrl url = flow.newAuthorizationUrl();
 		String authUrl = url.setRedirectUri(CALLBACK_URI).setState(stateToken).build();
 		System.out.println("****************************Google URL is**************************\n" + authUrl);
-		
+
 		return authUrl;
 	}
-	
+
 	/**
-	 * Generates a secure state token 
+	 * Generates a secure state token
 	 */
-	private void generateStateToken(){
+	private void generateStateToken() {
 		SecureRandom sr1 = new SecureRandom();
-		stateToken = "google;"+sr1.nextInt();
+		stateToken = "google;" + sr1.nextInt();
 	}
-	
+
 	/**
 	 * Accessor for state token
 	 */
-	public String getStateToken(){
+	public String getStateToken() {
 		return stateToken;
 	}
+
 	
+	public GoogleTokenResponse getTokenResponse(final String authCode) throws IOException {
+		final GoogleTokenResponse response = flow.newTokenRequest(authCode).setRedirectUri(CALLBACK_URI).execute();
+		return response;
+	}
+	
+	/**
+	 * 
+	 * @param response the acess token response retured from the google
+	 * @return
+	 * @throws IOException
+	 */
+	public String getUserInfoJson(GoogleTokenResponse response) throws IOException {
+		final Credential credential = flow.createAndStoreCredential(response, null);
+		final HttpRequestFactory requestFactory = HTTP_TRANSPORT.createRequestFactory(credential);
+		// Make an authenticated request
+		final GenericUrl url = new GenericUrl(USER_INFO_URL);
+		final HttpRequest request = requestFactory.buildGetRequest(url);
+		request.getHeaders().setContentType("application/json");
+		final String jsonIdentity = request.execute().parseAsString();
+
+		return jsonIdentity;
+
+	}
 
 	/**
 	 * Expects an Authentication Code, and makes an authenticated request for
@@ -100,17 +130,8 @@ public final class GoogleAuthHelper {
 	 *            authentication code provided by google
 	 */
 	public String getUserInfoJson(final String authCode) throws IOException {
-
-		final GoogleTokenResponse response = flow.newTokenRequest(authCode).setRedirectUri(CALLBACK_URI).execute();
-		final Credential credential = flow.createAndStoreCredential(response, null);
-		final HttpRequestFactory requestFactory = HTTP_TRANSPORT.createRequestFactory(credential);
-		// Make an authenticated request
-		final GenericUrl url = new GenericUrl(USER_INFO_URL);
-		final HttpRequest request = requestFactory.buildGetRequest(url);
-		request.getHeaders().setContentType("application/json");
-		final String jsonIdentity = request.execute().parseAsString();
-		
-		return jsonIdentity;
+		final GoogleTokenResponse response = getTokenResponse(authCode);
+		return getUserInfoJson(response);
 
 	}
 

@@ -1,4 +1,4 @@
-package core;
+package core.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import core.UserRepository;
+import core.model.OneLink;
+import core.model.User;
 
 @RestController
 public class LinkController {
@@ -29,27 +32,28 @@ public class LinkController {
 	}
 
 	@RequestMapping("/send")
-	public OneLink addLink(@RequestParam(value = "from") String fromEmailId,@RequestParam(value = "to") String toEmailId,
-			@RequestParam(value = "title") String title, @RequestParam(value = "link") String link) {
+	public OneLink addLink(@RequestParam(value = "from") String fromEmailId,
+			@RequestParam(value = "to") String toEmailId, @RequestParam(value = "title") String title,
+			@RequestParam(value = "link") String link) {
 
 		OneLink newLink = new OneLink(title, link, fromEmailId);
-//		customer.getOutLinks().add(newLink);
+		// customer.getOutLinks().add(newLink);
 		System.out.println("Link Added -->" + newLink);
-//		repository.save(customer);
+		// repository.save(customer);
 		return newLink;
 	}
-	
+
 	@RequestMapping("/clear")
 	public void clearRepo() {
 		repository.deleteAll();
-		User admin = new User(User.ADMIN, User.ADMIN);
+		User admin = new User(User.ADMIN, User.ADMIN, null);
 		admin.getOutLinks().add(new OneLink("Google", "http://www.google.com", User.ADMIN));
 		repository.save(admin);
 	}
-	
+
 	@RequestMapping("/key")
 	public String getOAuthKey() {
 		return System.getenv("OAUTHIO_PUBLIC_KEY");
 	}
-	
+
 }
