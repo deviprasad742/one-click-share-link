@@ -54,6 +54,7 @@ public class UserController {
 		String image = null;
 		String emailId = null;
 		String userInfoJson = googleAuthHelper.getUserInfoJson(response);
+		System.out.println("****User Info: " + userInfoJson);
 		JsonParser parser = new JacksonFactory().createJsonParser(userInfoJson);
 		JsonToken token = null;
 		while ((token = parser.nextToken()) != null) {

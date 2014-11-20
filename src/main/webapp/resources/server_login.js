@@ -42,8 +42,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState == 4) {
                 var data = xmlhttp.responseText;
+                console.log(data);
                 var json = JSON.parse(data);
-				console.log(xmlhttp.responseText);
 				var newParagraph = document.createElement('p');
 				newParagraph.textContent = data;
 				document.body.appendChild(newParagraph);
