@@ -15,6 +15,7 @@ import com.google.api.client.json.jackson.JacksonFactory;
 
 import core.UserRepository;
 import core.model.User;
+import core.model.UserInfo;
 import core.oauth.GoogleAuthHelper;
 
 @RestController
@@ -26,20 +27,18 @@ public class UserController {
 	private GoogleAuthHelper googleAuthHelper = GoogleAuthHelper.getInstance();
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public User registerUser(@RequestParam(value = "code") String code) {
+	public UserInfo registerUser(@RequestParam(value = "code") String code) {
 		GoogleTokenResponse tokenResponse;
 		try {
 			tokenResponse = googleAuthHelper.getTokenResponse(code);
-			User userInfo = createUserInfo(tokenResponse);
+			UserInfo userInfo = createUserInfo(tokenResponse);
 			User repoUser = repository.findByEmailId(userInfo.getEmailId());
 			if (repoUser == null) {
-				repoUser = userInfo;
+				repoUser = new User(userInfo);
 				System.out.println("New user created: " + userInfo.getEmailId());
 			} else {
-				repoUser.setName(userInfo.getName());
-				repoUser.setImage(userInfo.getImage());
+				repoUser.getUserInfo().syncInfo(userInfo);
 			}
-			repoUser.setAccessToken(tokenResponse.getAccessToken());
 			repository.save(repoUser);
 
 			return repoUser.getUserInfo();
@@ -49,7 +48,7 @@ public class UserController {
 		return null;
 	}
 
-	private User createUserInfo(GoogleTokenResponse response) throws IOException {
+	private UserInfo createUserInfo(GoogleTokenResponse response) throws IOException {
 		String name = null;
 		String image = null;
 		String emailId = null;
@@ -66,7 +65,9 @@ public class UserController {
 				}
 			}
 		}
-		return new User(name, emailId, image);
+		UserInfo userInfo = new UserInfo(name, emailId, image);
+		userInfo.setAccessToken(response.getAccessToken());
+		return userInfo;
 	}
 
 	@RequestMapping(value = "/info", method = RequestMethod.GET)
