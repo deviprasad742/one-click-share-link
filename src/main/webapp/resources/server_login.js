@@ -60,6 +60,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateInfo(authCode) {
+        showLogoutCtrls();
+
         var xmlhttp = new XMLHttpRequest();
         var reqUrl = DOMAIN_URL + "register" + "?code=" + authCode;
         xmlhttp.open("POST", reqUrl, true);
@@ -113,10 +115,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function clearLocalStorage() {
-//        localStorage.removeItem[KEY_NAME];
-//        localStorage.removeItem[KEY_EMAIL_ID];
-//        localStorage.removeItem[KEY_IMAGE];
-//        localStorage.removeItem[KEY_ACCESS_TOKEN];
+        //        localStorage.removeItem[KEY_NAME];
+        //        localStorage.removeItem[KEY_EMAIL_ID];
+        //        localStorage.removeItem[KEY_IMAGE];
+        //        localStorage.removeItem[KEY_ACCESS_TOKEN];
         localStorage.clear();
     }
 
@@ -129,13 +131,17 @@ document.addEventListener('DOMContentLoaded', function () {
         image.style.width = "32px";
         image.style.height = "32px";
         document.body.appendChild(image);
-        document.getElementById("login-link").style.display = "none";
-        document.getElementById("logout-btn").style.display = "inline";
+        showLogoutCtrls();
     }
 
     function showLoginCtrls() {
         document.getElementById("login-link").style.display = "inline";
         document.getElementById("logout-btn").style.display = "none";
+    }
+
+    function showLogoutCtrls() {
+        document.getElementById("login-link").style.display = "none";
+        document.getElementById("logout-btn").style.display = "inline";
     }
 
     function addCredentials(xmlhttp) {
