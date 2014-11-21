@@ -99,6 +99,16 @@ public class UserController {
 		return false;
 	}
 	
+	@RequestMapping("/delete")
+	public String deleteUser() {
+		User user = getValidatedUser();
+		if (user != null) {
+			repository.delete(user);
+			return "Deleted user: " + user.getEmailId();
+		}
+		return "Not Found!!";
+	}
+	
 	@RequestMapping(value = "/info", method = RequestMethod.GET)
 	public User getInfo() {
 		return getValidatedUser();

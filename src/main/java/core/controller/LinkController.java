@@ -82,7 +82,7 @@ public class LinkController {
 
 	}
 
-	@RequestMapping("/delete")
+	@RequestMapping("/delete-link")
 	public void deleteLink(@RequestParam(value = "to") String toEmailId, @RequestParam(value = "title") String title,
 			@RequestParam(value = "url") String url) {
 		User user = getValidatedUser();
@@ -102,15 +102,6 @@ public class LinkController {
 		}
 	}
 
-	@RequestMapping("/delete")
-	public String deleteUser() {
-		User user = getValidatedUser();
-		if (user != null) {
-			repository.delete(user);
-			return "Deleted user: " + user.getEmailId();
-		}
-		return "Not Found!!";
-	}
 
 	@RequestMapping("/has-links")
 	public boolean hasIncomingLinks() {
