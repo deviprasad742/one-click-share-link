@@ -26,7 +26,7 @@ import core.oauth.GoogleAuthHelper;
 
 @RestController
 public class UserController {
-	private static final String HEADER_ACCESS_TOKEN = "access_token";
+	private static final String HEADER_ACCESS_TOKEN = "access-token";
 	private static final String HEADER_EMAIL_ID = "email-id";
 	private static final String KEY_PICTURE = "picture";
 	private static final String KEY_NAME = "name";
