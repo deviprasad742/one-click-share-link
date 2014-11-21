@@ -1,9 +1,12 @@
 package core.model;
 
+import org.springframework.data.annotation.Transient;
+
 public class UserInfo {
 	private String name;
 	private String emailId;
 	private String image;
+	@Transient
 	private String accessToken;
 
 	public UserInfo(String name, String emailId, String image) {

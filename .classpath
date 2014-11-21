@@ -25,10 +25,10 @@
 	<classpathentry kind="var" path="M2_REPO/org/mongodb/mongo-java-driver/2.12.3/mongo-java-driver-2.12.3.jar" sourcepath="SOURCE_ATTACHER/mongo-java-driver-2.12.3-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/springframework/spring-tx/4.0.7.RELEASE/spring-tx-4.0.7.RELEASE.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/springframework/data/spring-data-mongodb/1.5.4.RELEASE/spring-data-mongodb-1.5.4.RELEASE.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/springframework/data/spring-data-commons/1.8.4.RELEASE/spring-data-commons-1.8.4.RELEASE.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/springframework/data/spring-data-commons/1.8.4.RELEASE/spring-data-commons-1.8.4.RELEASE.jar" sourcepath="SOURCE_ATTACHER/spring-data-commons-1.8.4.RELEASE-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/springframework/boot/spring-boot-starter-web/1.1.8.RELEASE/spring-boot-starter-web-1.1.8.RELEASE.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/springframework/boot/spring-boot-starter-tomcat/1.1.8.RELEASE/spring-boot-starter-tomcat-1.1.8.RELEASE.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/apache/tomcat/embed/tomcat-embed-core/7.0.55/tomcat-embed-core-7.0.55.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/tomcat/embed/tomcat-embed-core/7.0.55/tomcat-embed-core-7.0.55.jar" sourcepath="SOURCE_ATTACHER/tomcat-embed-core-7.0.55-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/tomcat/embed/tomcat-embed-el/7.0.55/tomcat-embed-el-7.0.55.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/tomcat/embed/tomcat-embed-logging-juli/7.0.55/tomcat-embed-logging-juli-7.0.55.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/core/jackson-databind/2.3.4/jackson-databind-2.3.4.jar"/>
@@ -37,7 +37,7 @@
 	<classpathentry kind="var" path="M2_REPO/org/hibernate/hibernate-validator/5.0.3.Final/hibernate-validator-5.0.3.Final.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/jboss/logging/jboss-logging/3.1.1.GA/jboss-logging-3.1.1.GA.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/fasterxml/classmate/1.0.0/classmate-1.0.0.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/springframework/spring-web/4.0.7.RELEASE/spring-web-4.0.7.RELEASE.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/springframework/spring-web/4.0.7.RELEASE/spring-web-4.0.7.RELEASE.jar" sourcepath="SOURCE_ATTACHER/spring-web-4.0.7.RELEASE-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/springframework/spring-webmvc/4.0.7.RELEASE/spring-webmvc-4.0.7.RELEASE.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/springframework/cloud/spring-cloud-spring-service-connector/1.1.0.BUILD-SNAPSHOT/spring-cloud-spring-service-connector-1.1.0.BUILD-SNAPSHOT.jar" sourcepath="SOURCE_ATTACHER/spring-cloud-spring-service-connector-1.1.0.BUILD-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/springframework/cloud/spring-cloud-core/1.1.0.BUILD-SNAPSHOT/spring-cloud-core-1.1.0.BUILD-SNAPSHOT.jar"/>

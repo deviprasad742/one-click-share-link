@@ -1,10 +1,16 @@
 package core.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,12 +26,16 @@ import core.oauth.GoogleAuthHelper;
 
 @RestController
 public class UserController {
+	private static final String HEADER_TOKEN = "token";
+	private static final String HEADER_EMAIL_ID = "emailId";
 	private static final String KEY_PICTURE = "picture";
 	private static final String KEY_NAME = "name";
 	private static final String KEY_EMAIL = "email";
 
 	@Autowired
 	private UserRepository repository;
+	@Autowired
+	private HttpServletRequest context;
 	private GoogleAuthHelper googleAuthHelper = GoogleAuthHelper.getInstance();
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
@@ -41,6 +51,7 @@ public class UserController {
 			} else {
 				repoUser.getUserInfo().syncInfo(userInfo);
 			}
+			repoUser.addToken(userInfo.getAccessToken());
 			repository.save(repoUser);
 
 			return repoUser.getUserInfo();
@@ -71,10 +82,77 @@ public class UserController {
 		return userInfo;
 	}
 
-	@RequestMapping(value = "/info", method = RequestMethod.GET)
-	public User getInfo(@RequestParam(value = "email") String emailId) {
-		User user = repository.findByEmailId(emailId);
-		return user;
+	@RequestMapping(value = "/is-valid", method = RequestMethod.GET)
+	public boolean isValidRequest() {
+		return isValidRequest(context);
+	}
+
+	public boolean isValidRequest(HttpServletRequest request) {
+		String emailId = getEmailId(request);
+		String token = getToken(request);
+		if (!StringUtils.isEmpty(token) && !StringUtils.isEmpty(emailId)) {
+			User user = repository.findByEmailId(emailId);
+			if (user != null) {
+				return user.isValidToken(token);
+			}
+		}
+		return false;
+	}
+
+	@RequestMapping(value = "/friends", method = RequestMethod.GET)
+	public List<UserInfo> getFriends() {
+		User user = getValidatedUser();
+		if (user != null) {
+			List<String> friends = user.getFriends();
+			return retrieveInfo(friends);
+		}
+		return new ArrayList<UserInfo>();
+	}
+	
+	@RequestMapping(value = "/last-contact", method = RequestMethod.GET)
+	public List<UserInfo> getLastContacted() {
+		User user = getValidatedUser();
+		if (user != null) {
+			List<String> lastContacted = new ArrayList<String>(user.getLastContacted());
+			Collections.reverse(lastContacted);
+			return retrieveInfo(lastContacted);
+		}
+		return new ArrayList<UserInfo>();
+	}
+
+	private List<UserInfo> retrieveInfo(List<String> emailList) {
+		List<UserInfo> infoList = new ArrayList<UserInfo>();
+		for (String emailId : emailList) {
+			User user = repository.findByEmailId(emailId);
+			String name = emailId;
+			String image = "";
+			if (user != null) {
+				name = user.getUserInfo().getName();
+				image = user.getUserInfo().getImage();
+			}
+			infoList.add(new UserInfo(name, emailId, image));
+		}
+		return infoList;
+	}
+
+	private String getToken(HttpServletRequest request) {
+		return request.getHeader(HEADER_TOKEN);
+	}
+
+	private String getEmailId(HttpServletRequest request) {
+		return request.getHeader(HEADER_EMAIL_ID);
+	}
+
+	public User getUser(HttpServletRequest request) {
+		String emailId = getEmailId(request);
+		return repository.findByEmailId(emailId);
+	}
+
+	private User getValidatedUser() {
+		if (isValidRequest(context)) {
+			return getUser(context);
+		}
+		return null;
 	}
 
 }
