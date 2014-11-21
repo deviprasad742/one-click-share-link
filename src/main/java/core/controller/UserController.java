@@ -95,7 +95,9 @@ public class UserController {
 			repository.save(user);
 			System.out.println("Logged Out!!!");
 			return true;
-		} 
+		}  else {
+			System.out.println("Valid user not found to logout");
+		}
 		return false;
 	}
 	

@@ -37,20 +37,17 @@ document.addEventListener('DOMContentLoaded', function () {
         var reqUrl = DOMAIN_URL + "logout";
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.open("GET", reqUrl, true);
-        xmlhttp.setRequestHeader(KEY_EMAIL_ID,  localStorage[KEY_EMAIL_ID]);
-        xmlhttp.setRequestHeader(KEY_ACCESS_TOKEN,  localStorage[KEY_ACCESS_TOKEN])
+        addCredentials(xmlhttp);
         xmlhttp.send();
-        
+
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState == 4) {
                 var data = xmlhttp.responseText;
-                if (data.valueOf == "true".valueOf) {
-                    localStorage.remove[KEY_NAME];
-                    localStorage.remove[KEY_EMAIL_ID];
-                    localStorage.remove[KEY_IMAGE];
-                    localStorage.remove[KEY_ACCESS_TOKEN];
-                    document.body.getElementsByTagName("p").innerHTML = "";
-                    updateInfoFromLocal();
+                if (data.valueOf() == "true".valueOf()) {
+                    localStorage.removeItem[KEY_NAME];
+                    localStorage.removeItem[KEY_EMAIL_ID];
+                    localStorage.removeItem[KEY_IMAGE];
+                    localStorage.removeItem[KEY_ACCESS_TOKEN];
                     location.reload();
                 }
 
@@ -77,12 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 var data = xmlhttp.responseText;
                 console.log(data);
                 var jsonData = JSON.parse(data);
-                localStorage[KEY_NAME] = jsonData.name;
-                localStorage[KEY_EMAIL_ID] = jsonData.emailId;
-                localStorage[KEY_IMAGE] = jsonData.image;
-                localStorage[KEY_ACCESS_TOKEN] = jsonData.accessToken;
-
-                updateInfoFromLocal();
+                createLocalStorage(jsonData);
                 location.assign(DOMAIN_URL);
             }
         };
@@ -94,20 +86,63 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updateLoginStatus(name, imageUrl) {
         if (name != null) {
-            var newParagraph = document.createElement('p');
-            newParagraph.textContent = name;
-            document.body.appendChild(newParagraph);
-            var image = document.createElement('img');
-            image.src = imageUrl;
-            image.style.width = "32px";
-            image.style.height = "32px";
-            document.body.appendChild(image);
-            document.getElementById("login-link").style.display = "none";
-            document.getElementById("logout-btn").style.display = "inline";
+            var reqUrl = DOMAIN_URL + "is-valid";
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET", reqUrl, true);
+            addCredentials(xmlhttp);
+            xmlhttp.send();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    var data = xmlhttp.responseText;
+                    if (data.valueOf() == "true".valueOf()) {
+                        creteUserInfoCtrls();
+                    } else {
+                        clearLocalStorage();
+                        showLoginCtrls();
+                    }
+                }
+            };
         } else {
-            document.getElementById("login-link").style.display = "inline";
-            document.getElementById("logout-btn").style.display = "none";
+            showLoginCtrls();
         }
+    }
+
+    function createLocalStorage(jsonData) {
+        localStorage[KEY_NAME] = jsonData.name;
+        localStorage[KEY_EMAIL_ID] = jsonData.emailId;
+        localStorage[KEY_IMAGE] = jsonData.image;
+        localStorage[KEY_ACCESS_TOKEN] = jsonData.accessToken;
+    }
+
+    function clearLocalStorage() {
+        localStorage.removeItem[KEY_NAME];
+        localStorage.removeItem[KEY_EMAIL_ID];
+        localStorage.removeItem[KEY_IMAGE];
+        localStorage.removeItem[KEY_ACCESS_TOKEN];
+    }
+
+    function creteUserInfoCtrls() {
+        var newParagraph = document.createElement('p');
+        newParagraph.textContent = name;
+        document.body.appendChild(newParagraph);
+        var image = document.createElement('img');
+        image.src = imageUrl;
+        image.style.width = "32px";
+        image.style.height = "32px";
+        document.body.appendChild(image);
+        document.getElementById("login-link").style.display = "none";
+        document.getElementById("logout-btn").style.display = "inline";
+    }
+
+    function showLoginCtrls() {
+        document.getElementById("login-link").style.display = "inline";
+        document.getElementById("logout-btn").style.display = "none";
+    }
+
+    function addCredentials(xmlhttp) {
+        xmlhttp.setRequestHeader(KEY_EMAIL_ID, localStorage[KEY_EMAIL_ID]);
+        xmlhttp.setRequestHeader(KEY_ACCESS_TOKEN, localStorage[KEY_ACCESS_TOKEN]);
     }
 
 });
