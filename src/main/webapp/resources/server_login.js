@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var bt = document.getElementById("logout-btn");
     bt.addEventListener("click", function () {
         var reqUrl = DOMAIN_URL + "logout";
+        var xmlhttp = new XMLHttpRequest();
         xmlhttp.open("GET", reqUrl, true);
         xmlhttp.setRequestHeader(KEY_EMAIL_ID,  localStorage[KEY_EMAIL_ID]);
         xmlhttp.setRequestHeader(KEY_ACCESS_TOKEN,  localStorage[KEY_ACCESS_TOKEN])
@@ -100,11 +101,11 @@ document.addEventListener('DOMContentLoaded', function () {
             image.style.width = "32px";
             image.style.height = "32px";
             document.body.appendChild(image);
-            document.getElementById("login-link").style.visibility = "hidden";
-            document.getElementById("logout-btn").style.visibility = "visible";
+            document.getElementById("login-link").style.display = "none";
+            document.getElementById("logout-btn").style.display = "inline";
         } else {
-            document.getElementById("login-link").style.visibility = "visible";
-            document.getElementById("logout-btn").style.visibility = "hidden";
+            document.getElementById("login-link").style.display = "inline";
+            document.getElementById("logout-btn").style.display = "none";
         }
     }
 
