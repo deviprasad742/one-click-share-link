@@ -78,10 +78,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateInfoFromLocal() {
-        updateLoginStatus(localStorage[KEY_NAME], localStorage[KEY_IMAGE]);
+        updateLoginStatus(localStorage[KEY_NAME]);
     }
 
-    function updateLoginStatus(name, imageUrl) {
+    function updateLoginStatus(name) {
         if (name != null) {
             var reqUrl = DOMAIN_URL + "is-valid";
             var xmlhttp = new XMLHttpRequest();
@@ -122,10 +122,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function createUserInfoCtrls() {
         var newParagraph = document.createElement('p');
-        newParagraph.textContent = name;
+        newParagraph.textContent = localStorage[KEY_NAME];
         document.body.appendChild(newParagraph);
         var image = document.createElement('img');
-        image.src = imageUrl;
+        image.src = localStorage[KEY_IMAGE];
         image.style.width = "32px";
         image.style.height = "32px";
         document.body.appendChild(image);
