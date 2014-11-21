@@ -1,12 +1,13 @@
 package core.model;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
 
 public class User {
 
+	private static final int MAX_LINK_LIMIT = 100;
 	private static final int TOKEN_LIMIT = 10;
 	private static final int LAST_CONTACT_LIMIT = 10;
 	public static final String ADMIN = "admin";
@@ -18,13 +19,13 @@ public class User {
 	private UserInfo userInfo;
 	private int inLinkCounter;
 
-	private List<OneLink> outLinks = new ArrayList<OneLink>();
-	private List<OneLink> inLinks = new ArrayList<OneLink>();
-	private List<String> accessTokens = new ArrayList<String>();
+	private List<OneLink> outLinks = new LinkedList<OneLink>();
+	private List<OneLink> inLinks = new LinkedList<OneLink>();
+	private List<String> accessTokens = new LinkedList<String>();
 
-	private List<String> friends = new ArrayList<String>();
-	private List<String> lastContacted = new ArrayList<String>();
-	private List<String> favorites = new ArrayList<String>();
+	private List<String> friends = new LinkedList<String>();
+	private List<String> lastContacted = new LinkedList<String>();
+	private List<String> favorites = new LinkedList<String>();
 
 	public User(UserInfo userInfo) {
 		this.userInfo = userInfo;
@@ -102,4 +103,18 @@ public class User {
 		}
 	}
 
+	public void addOutLink(OneLink outLink) {
+		checkAndAdd(outLinks, outLink);
+	}
+
+	public void addInLink(OneLink inLink) {
+		checkAndAdd(inLinks, inLink);
+	}
+
+	private void checkAndAdd(List<OneLink> links, OneLink link) {
+		links.add(link);
+		if (links.size() > MAX_LINK_LIMIT) {
+			links.remove(0);
+		}
+	}
 }

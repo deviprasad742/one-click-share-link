@@ -1,8 +1,9 @@
 package core.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,6 +19,8 @@ import core.model.UserInfo;
 
 @RestController
 public class LinkController {
+	private static final int LINK_LIMIT = 50;
+
 	@Autowired
 	private UserRepository repository;
 	@Autowired
@@ -29,14 +32,11 @@ public class LinkController {
 	public List<OneLink> inLinks() {
 		User user = getValidatedUser();
 		if (user != null) {
-			List<OneLink> links = new ArrayList<OneLink>(user.getInLinks());
-			Collections.reverse(links);
-
 			// clear counters
 			user.clearInLinkCounter();
 			repository.save(user);
 
-			return links;
+			return getTopInfoLinks(user.getInLinks());
 		}
 		return new ArrayList<OneLink>();
 	}
@@ -45,18 +45,9 @@ public class LinkController {
 	public List<OneLink> outLinks() {
 		User user = getValidatedUser();
 		if (user != null) {
-			List<OneLink> links = new ArrayList<OneLink>(user.getOutLinks());
-			Collections.reverse(links);
-			return links;
+			return getTopInfoLinks(user.getOutLinks());
 		}
 		return new ArrayList<OneLink>();
-	}
-
-	private User getValidatedUser() {
-		if (controller.isValidRequest(context)) {
-			return controller.getUser(context);
-		}
-		return null;
 	}
 
 	@RequestMapping("/send")
@@ -65,16 +56,20 @@ public class LinkController {
 		User user = getValidatedUser();
 		if (user != null) {
 			OneLink outLink = new OneLink(title, url, toEmailId);
-			user.getOutLinks().add(outLink);
+			
+			//update sent user info
+			user.addOutLink(outLink);
 			user.addToLastContacted(toEmailId);
+			user.addToFriends(toEmailId);
 			repository.save(user);
 
 			User toUser = repository.findByEmailId(toEmailId);
 			if (toUser == null) {
 				sendMail(outLink, toEmailId);
 			} else {
+				//update received user info
 				OneLink inLink = new OneLink(title, url, user.getEmailId());
-				toUser.getInLinks().add(inLink);
+				toUser.addInLink(inLink);
 				toUser.incrementInLinkCounter();
 				repository.save(toUser);
 			}
@@ -108,16 +103,6 @@ public class LinkController {
 		}
 	}
 
-	private OneLink findLink(List<OneLink> outLinks, String title, String url, String emailId) {
-		for (OneLink oneLink : outLinks) {
-			if (oneLink.getTitle().equals(title) && oneLink.getUrl().equals(url)
-					&& oneLink.getEmailId().equals(emailId)) {
-				return oneLink;
-			}
-		}
-		return null;
-	}
-
 	@RequestMapping("/clear")
 	public String clearRepo() {
 		repository.deleteAll();
@@ -127,6 +112,7 @@ public class LinkController {
 		return "Cleared";
 	}
 
+	@RequestMapping("/has-links")
 	public boolean hasIncomingLinks() {
 		User user = getValidatedUser();
 		if (user != null) {
@@ -138,6 +124,55 @@ public class LinkController {
 	@RequestMapping("/key")
 	public String getOAuthKey() {
 		return System.getenv("OAUTHIO_PUBLIC_KEY");
+	}
+
+	private List<OneLink> getTopInfoLinks(List<OneLink> links) {
+		List<OneLink> interestedLinks = new ArrayList<OneLink>();
+		if (links.size() > LINK_LIMIT) {
+			interestedLinks = links.subList(links.size() - LINK_LIMIT, links.size());
+		} else {
+			interestedLinks = links;
+		}
+
+		Map<String, String> userNameCache = new HashMap<String, String>();
+
+		List<OneLink> topInfoLinks = new ArrayList<OneLink>();
+
+		for (int i = interestedLinks.size() - 1; i >= 0; i++) {
+			OneLink currentLink = interestedLinks.get(i);
+
+			String emailId = currentLink.getEmailId();
+			String name = userNameCache.get(emailId);
+			if (name == null) {
+				User user = repository.findByEmailId(emailId);
+				if (user == null) {
+					name = emailId;
+				} else {
+					name = user.getUserInfo().getName();
+				}
+				userNameCache.put(emailId, name);
+			}
+			currentLink.setName(name);
+			topInfoLinks.add(currentLink);
+		}
+		return topInfoLinks;
+	}
+
+	private User getValidatedUser() {
+		if (controller.isValidRequest(context)) {
+			return controller.getUser(context);
+		}
+		return null;
+	}
+
+	private OneLink findLink(List<OneLink> outLinks, String title, String url, String emailId) {
+		for (OneLink oneLink : outLinks) {
+			if (oneLink.getTitle().equals(title) && oneLink.getUrl().equals(url)
+					&& oneLink.getEmailId().equals(emailId)) {
+				return oneLink;
+			}
+		}
+		return null;
 	}
 
 }

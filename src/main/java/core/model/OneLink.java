@@ -10,7 +10,7 @@ public class OneLink {
 	private final String url;
 	private final String emailId;
 	@Transient
-	private String displayName;
+	private String name;
 
 	public OneLink(String title, String url, String emailId) {
 		this.title = title;
@@ -35,12 +35,12 @@ public class OneLink {
 		return emailId;
 	}
 	
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
-	public String getDisplayName() {
-		return displayName;
+	public String getName() {
+		return name;
 	}
 
 }
