@@ -119,13 +119,16 @@ public class UserController {
 	public boolean isValidRequest(HttpServletRequest request) {
 		String emailId = getEmailId(request);
 		String token = getAccessToken(request);
+		System.out.println(emailId + "-----" + token);
 		if (!StringUtils.isEmpty(token) && !StringUtils.isEmpty(emailId)) {
 			User user = repository.findByEmailId(emailId);
 			if (user != null) {
-				return user.isValidToken(token);
+				boolean validToken = user.isValidToken(token);
+				System.out.println("Token validity:" + validToken);
+				return validToken;
 			}
 		} else {
-			System.out.println("Invalid request: " + request);
+			System.out.println("Invalid request: " + request.getHeaderNames());
 		}
 		return false;
 	}

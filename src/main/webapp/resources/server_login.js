@@ -44,10 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (xmlhttp.readyState == 4) {
                 var data = xmlhttp.responseText;
                 if (data.valueOf() == "true".valueOf()) {
-                    localStorage.removeItem[KEY_NAME];
-                    localStorage.removeItem[KEY_EMAIL_ID];
-                    localStorage.removeItem[KEY_IMAGE];
-                    localStorage.removeItem[KEY_ACCESS_TOKEN];
+                    clearLocalStorage();
                     location.reload();
                 }
 
@@ -96,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (xmlhttp.readyState == 4) {
                     var data = xmlhttp.responseText;
                     if (data.valueOf() == "true".valueOf()) {
-                        creteUserInfoCtrls();
+                        createUserInfoCtrls();
                     } else {
                         clearLocalStorage();
                         showLoginCtrls();
@@ -116,13 +113,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function clearLocalStorage() {
-        localStorage.removeItem[KEY_NAME];
-        localStorage.removeItem[KEY_EMAIL_ID];
-        localStorage.removeItem[KEY_IMAGE];
-        localStorage.removeItem[KEY_ACCESS_TOKEN];
+//        localStorage.removeItem[KEY_NAME];
+//        localStorage.removeItem[KEY_EMAIL_ID];
+//        localStorage.removeItem[KEY_IMAGE];
+//        localStorage.removeItem[KEY_ACCESS_TOKEN];
+        localStorage.clear();
     }
 
-    function creteUserInfoCtrls() {
+    function createUserInfoCtrls() {
         var newParagraph = document.createElement('p');
         newParagraph.textContent = name;
         document.body.appendChild(newParagraph);
