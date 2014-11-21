@@ -44,14 +44,14 @@ document.addEventListener('DOMContentLoaded', function () {
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState == 4) {
                 var data = xmlhttp.responseText;
-
-                if (data.equals("true")) {
+                if (data.valueOf == "true".valueOf) {
                     localStorage.remove[KEY_NAME];
                     localStorage.remove[KEY_EMAIL_ID];
                     localStorage.remove[KEY_IMAGE];
                     localStorage.remove[KEY_ACCESS_TOKEN];
                     document.body.getElementsByTagName("p").innerHTML = "";
                     updateInfoFromLocal();
+                    location.reload();
                 }
 
             }
@@ -83,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 localStorage[KEY_ACCESS_TOKEN] = jsonData.accessToken;
 
                 updateInfoFromLocal();
+                location.assign(DOMAIN_URL);
             }
         };
     }

@@ -95,7 +95,7 @@ public class UserController {
 			repository.save(user);
 			System.out.println("Logged Out!!!");
 			return true;
-		}
+		} 
 		return false;
 	}
 	
@@ -122,6 +122,8 @@ public class UserController {
 			if (user != null) {
 				return user.isValidToken(token);
 			}
+		} else {
+			System.out.println("Invalid request: " + request);
 		}
 		return false;
 	}
