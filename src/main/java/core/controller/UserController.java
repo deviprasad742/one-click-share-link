@@ -26,8 +26,8 @@ import core.oauth.GoogleAuthHelper;
 
 @RestController
 public class UserController {
-	private static final String HEADER_TOKEN = "token";
-	private static final String HEADER_EMAIL_ID = "emailId";
+	private static final String HEADER_ACCESS_TOKEN = "access_token";
+	private static final String HEADER_EMAIL_ID = "email-id";
 	private static final String KEY_PICTURE = "picture";
 	private static final String KEY_NAME = "name";
 	private static final String KEY_EMAIL = "email";
@@ -86,10 +86,27 @@ public class UserController {
 	public boolean isValidRequest() {
 		return isValidRequest(context);
 	}
-
+	
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public boolean logout() {
+		User user = getValidatedUser();
+		if (user != null) {
+			user.removeToken(getAccessToken(context));
+			repository.save(user);
+			System.out.println("Logged Out!!!");
+			return true;
+		}
+		return false;
+	}
+	
+	@RequestMapping(value = "/info", method = RequestMethod.GET)
+	public User getInfo() {
+		return getValidatedUser();
+	}
+	
 	public boolean isValidRequest(HttpServletRequest request) {
 		String emailId = getEmailId(request);
-		String token = getToken(request);
+		String token = getAccessToken(request);
 		if (!StringUtils.isEmpty(token) && !StringUtils.isEmpty(emailId)) {
 			User user = repository.findByEmailId(emailId);
 			if (user != null) {
@@ -135,8 +152,8 @@ public class UserController {
 		return infoList;
 	}
 
-	private String getToken(HttpServletRequest request) {
-		return request.getHeader(HEADER_TOKEN);
+	private String getAccessToken(HttpServletRequest request) {
+		return request.getHeader(HEADER_ACCESS_TOKEN);
 	}
 
 	private String getEmailId(HttpServletRequest request) {

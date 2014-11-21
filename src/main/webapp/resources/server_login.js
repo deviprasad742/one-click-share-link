@@ -14,16 +14,48 @@ function loadScript(url, callback) {
     head.appendChild(script);
 }
 
-domain_url = "https://one-click-share-link-dev.herokuapp.com/"
-//domain_url = "https://one-click-share-link.herokuapp.com/"
+DOMAIN_URL = "https://one-click-share-link-dev.herokuapp.com/";
+KEY_ACCESS_TOKEN = "access-token";
+KEY_EMAIL_ID = "email-id";
+KEY_NAME = "name";
+KEY_IMAGE = "image";
+
+
+//DOMAIN_URL = "https://one-click-share-link.herokuapp.com/"
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    var token = getParam("code");
-    if (token != null) {
-        document.getElementById("login-link").textContent = "Logged-In";
-        updateInfo(token);
+    var authCode = getParam("code");
+    if (authCode != null) {
+        updateInfo(authCode);
+    } else {
+        updateInfoFromLocal();
     }
+
+    var bt = document.getElementById("logout-btn");
+    bt.addEventListener("click", function () {
+        var reqUrl = DOMAIN_URL + "logout";
+        xmlhttp.open("GET", reqUrl, true);
+        xmlhttp.setRequestHeader(KEY_EMAIL_ID,  localStorage[KEY_EMAIL_ID]);
+        xmlhttp.setRequestHeader(KEY_ACCESS_TOKEN,  localStorage[KEY_ACCESS_TOKEN])
+        xmlhttp.send();
+        
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4) {
+                var data = xmlhttp.responseText;
+
+                if (data.equals("true")) {
+                    localStorage.remove[KEY_NAME];
+                    localStorage.remove[KEY_EMAIL_ID];
+                    localStorage.remove[KEY_IMAGE];
+                    localStorage.remove[KEY_ACCESS_TOKEN];
+                    document.body.getElementsByTagName("p").innerHTML = "";
+                    updateInfoFromLocal();
+                }
+
+            }
+        };
+    });
 
 
     function getParam(name) {
@@ -32,9 +64,9 @@ document.addEventListener('DOMContentLoaded', function () {
             return decodeURIComponent(name[1]);
     }
 
-    function updateInfo(token) {
+    function updateInfo(authCode) {
         var xmlhttp = new XMLHttpRequest();
-        var reqUrl = domain_url + "register" + "?code=" + token;
+        var reqUrl = DOMAIN_URL + "register" + "?code=" + authCode;
         xmlhttp.open("POST", reqUrl, true);
         xmlhttp.send();
 
@@ -44,19 +76,36 @@ document.addEventListener('DOMContentLoaded', function () {
                 var data = xmlhttp.responseText;
                 console.log(data);
                 var jsonData = JSON.parse(data);
+                localStorage[KEY_NAME] = jsonData.name;
+                localStorage[KEY_EMAIL_ID] = jsonData.emailId;
+                localStorage[KEY_IMAGE] = jsonData.image;
+                localStorage[KEY_ACCESS_TOKEN] = jsonData.accessToken;
 
-                var newParagraph = document.createElement('p');
-                newParagraph.textContent = jsonData.name;
-                document.body.appendChild(newParagraph);
-
-                var image = document.createElement('img');
-                image.src = jsonData.image;
-                image.style.width = "32px";
-                image.style.height = "32px";
-                document.body.appendChild(image);
+                updateInfoFromLocal();
             }
         };
+    }
 
+    function updateInfoFromLocal() {
+        updateLoginStatus(localStorage[KEY_NAME], localStorage[KEY_IMAGE]);
+    }
+
+    function updateLoginStatus(name, imageUrl) {
+        if (name != null) {
+            var newParagraph = document.createElement('p');
+            newParagraph.textContent = name;
+            document.body.appendChild(newParagraph);
+            var image = document.createElement('img');
+            image.src = imageUrl;
+            image.style.width = "32px";
+            image.style.height = "32px";
+            document.body.appendChild(image);
+            document.getElementById("login-link").style.visibility = "hidden";
+            document.getElementById("logout-btn").style.visibility = "visible";
+        } else {
+            document.getElementById("login-link").style.visibility = "visible";
+            document.getElementById("logout-btn").style.visibility = "hidden";
+        }
     }
 
 });

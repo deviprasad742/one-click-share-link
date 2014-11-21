@@ -54,6 +54,10 @@ public class User {
 			accessTokens.remove(0);
 		}
 	}
+	
+	public void removeToken(String token) {
+		accessTokens.remove(token);
+	}
 
 	public boolean isValidToken(String token) {
 		return accessTokens.contains(token);

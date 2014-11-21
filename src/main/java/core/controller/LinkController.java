@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import core.UserRepository;
 import core.model.OneLink;
 import core.model.User;
-import core.model.UserInfo;
 
 @RestController
 public class LinkController {
@@ -103,13 +102,14 @@ public class LinkController {
 		}
 	}
 
-	@RequestMapping("/clear")
-	public String clearRepo() {
-		repository.deleteAll();
-		User admin = new User(new UserInfo(User.ADMIN, User.ADMIN, null));
-		admin.getOutLinks().add(new OneLink("Google", "http://www.google.com", User.ADMIN));
-		repository.save(admin);
-		return "Cleared";
+	@RequestMapping("/delete")
+	public String deleteUser() {
+		User user = getValidatedUser();
+		if (user != null) {
+			repository.delete(user);
+			return "Deleted user: " + user.getEmailId();
+		}
+		return "Not Found!!";
 	}
 
 	@RequestMapping("/has-links")
