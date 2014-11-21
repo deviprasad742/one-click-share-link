@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import core.UserRepository;
 import core.model.User;
 import core.model.UserInfo;
+import core.model.UserInfoWithToken;
 import core.oauth.GoogleAuthHelper;
 
 @RestController
@@ -43,18 +44,18 @@ public class UserController {
 		GoogleTokenResponse tokenResponse;
 		try {
 			tokenResponse = googleAuthHelper.getTokenResponse(code);
-			UserInfo userInfo = createUserInfo(tokenResponse);
-			User repoUser = repository.findByEmailId(userInfo.getEmailId());
+			UserInfoWithToken userInfoWithToken = createUserInfo(tokenResponse);
+			User repoUser = repository.findByEmailId(userInfoWithToken.getEmailId());
 			if (repoUser == null) {
-				repoUser = new User(userInfo);
-				System.out.println("New user created: " + userInfo.getEmailId());
+				repoUser = new User(userInfoWithToken);
+				System.out.println("New user created: " + userInfoWithToken.getEmailId());
 			} else {
-				repoUser.getUserInfo().syncInfo(userInfo);
+				repoUser.getUserInfo().syncInfo(userInfoWithToken);
 			}
-			repoUser.addToken(userInfo.getAccessToken());
+			repoUser.addToken(userInfoWithToken.getAccessToken());
 			repository.save(repoUser);
 
-			return repoUser.getUserInfo();
+			return userInfoWithToken;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -62,7 +63,7 @@ public class UserController {
 	}
 
 	@SuppressWarnings("unchecked")
-	private UserInfo createUserInfo(GoogleTokenResponse response) throws IOException {
+	private UserInfoWithToken createUserInfo(GoogleTokenResponse response) throws IOException {
 		String name = null;
 		String image = null;
 		String emailId = null;
@@ -77,7 +78,7 @@ public class UserController {
 		name = map.get(KEY_NAME);
 		image = map.get(KEY_PICTURE);
 
-		UserInfo userInfo = new UserInfo(name, emailId, image);
+		UserInfoWithToken userInfo = new UserInfoWithToken(name, emailId, image);
 		userInfo.setAccessToken(response.getAccessToken());
 		return userInfo;
 	}
@@ -86,7 +87,7 @@ public class UserController {
 	public boolean isValidRequest() {
 		return isValidRequest(context);
 	}
-	
+
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public boolean logout() {
 		User user = getValidatedUser();
@@ -95,12 +96,12 @@ public class UserController {
 			repository.save(user);
 			System.out.println("Logged Out!!!");
 			return true;
-		}  else {
+		} else {
 			System.out.println("Valid user not found to logout");
 		}
 		return false;
 	}
-	
+
 	@RequestMapping("/delete")
 	public String deleteUser() {
 		User user = getValidatedUser();
@@ -110,12 +111,12 @@ public class UserController {
 		}
 		return "Not Found!!";
 	}
-	
+
 	@RequestMapping(value = "/info", method = RequestMethod.GET)
 	public User getInfo() {
 		return getValidatedUser();
 	}
-	
+
 	public boolean isValidRequest(HttpServletRequest request) {
 		String emailId = getEmailId(request);
 		String token = getAccessToken(request);
@@ -142,7 +143,7 @@ public class UserController {
 		}
 		return new ArrayList<UserInfo>();
 	}
-	
+
 	@RequestMapping(value = "/last-contact", method = RequestMethod.GET)
 	public List<UserInfo> getLastContacted() {
 		User user = getValidatedUser();

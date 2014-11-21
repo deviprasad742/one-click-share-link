@@ -1,13 +1,10 @@
 package core.model;
 
-import org.springframework.data.annotation.Transient;
 
 public class UserInfo {
 	private String name;
 	private String emailId;
 	private String image;
-	@Transient
-	private String accessToken;
 
 	public UserInfo(String name, String emailId, String image) {
 		this.name = name;
@@ -39,18 +36,9 @@ public class UserInfo {
 		this.image = image;
 	}
 
-	public String getAccessToken() {
-		return accessToken;
-	}
-
-	public void setAccessToken(String accessToken) {
-		this.accessToken = accessToken;
-	}
-
 	public void syncInfo(UserInfo userInfo) {
 		setName(userInfo.getName());
 		setImage(userInfo.getImage());
-		setAccessToken(userInfo.getAccessToken());
 	}
 
 }
