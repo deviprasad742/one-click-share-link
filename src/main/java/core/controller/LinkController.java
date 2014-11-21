@@ -138,7 +138,7 @@ public class LinkController {
 
 		List<OneLink> topInfoLinks = new ArrayList<OneLink>();
 
-		for (int i = interestedLinks.size() - 1; i >= 0; i++) {
+		for (int i = interestedLinks.size() - 1; i >= 0; i--) {
 			OneLink currentLink = interestedLinks.get(i);
 
 			String emailId = currentLink.getEmailId();
