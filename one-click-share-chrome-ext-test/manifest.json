@@ -12,8 +12,16 @@
     "background": {
         "page": "background.html"
     },
+    "oauth2": {
+        "client_id": "100034805102-nqe03ff7bdhtf9ou91vcnbnpe8fk2vo4.apps.googleusercontent.com",
+        "scopes": [
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ]
+    },
+    "options_page": "options.html",
 
     "permissions": [
+    "identity",
     "tabs",
     "activeTab",
     "https://one-click-share-link.herokuapp.com/links",

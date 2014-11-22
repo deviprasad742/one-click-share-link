@@ -61,15 +61,40 @@ public class UserController {
 		}
 		return null;
 	}
+	
+	@RequestMapping(value = "/register-token", method = RequestMethod.POST)
+	public UserInfo registerUserWithToken(@RequestParam(value = "token") String token) {
+		try {
+			UserInfoWithToken userInfoWithToken = createUserInfo(token);
+			User repoUser = repository.findByEmailId(userInfoWithToken.getEmailId());
+			if (repoUser == null) {
+				repoUser = new User(userInfoWithToken);
+				System.out.println("New user created: " + userInfoWithToken.getEmailId());
+			} else {
+				repoUser.getUserInfo().syncInfo(userInfoWithToken);
+			}
+			repoUser.addToken(userInfoWithToken.getAccessToken());
+			repository.save(repoUser);
+
+			return userInfoWithToken;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private UserInfoWithToken createUserInfo(GoogleTokenResponse response) throws IOException {
+		String accessToken = response.getAccessToken();
+		return createUserInfo(accessToken);
+	}
 
 	@SuppressWarnings("unchecked")
-	private UserInfoWithToken createUserInfo(GoogleTokenResponse response) throws IOException {
+	private UserInfoWithToken createUserInfo(String accessToken) throws IOException {
+		String userInfoJson = googleAuthHelper.getUserInfoJsonFromToken(accessToken);
+		System.out.println("****User Info: " + userInfoJson);
 		String name = null;
 		String image = null;
 		String emailId = null;
-		String userInfoJson = googleAuthHelper.getUserInfoJsonFromToken(response.getAccessToken());
-		System.out.println("****User Info: " + userInfoJson);
-
 		Gson gson = new Gson();
 		Map<String, String> map = new HashMap<String, String>();
 		map = (Map<String, String>) gson.fromJson(userInfoJson, map.getClass());
@@ -79,7 +104,7 @@ public class UserController {
 		image = map.get(KEY_PICTURE);
 
 		UserInfoWithToken userInfo = new UserInfoWithToken(name, emailId, image);
-		userInfo.setAccessToken(response.getAccessToken());
+		userInfo.setAccessToken(accessToken);
 		return userInfo;
 	}
 
