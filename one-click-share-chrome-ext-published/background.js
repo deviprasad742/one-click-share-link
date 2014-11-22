@@ -63,4 +63,5 @@ function checkLogin() {
 
 
 
+setIcon();
 chrome.browserAction.onClicked.addListener(checkLogin);

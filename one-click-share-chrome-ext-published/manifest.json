@@ -3,7 +3,7 @@
 
     "name": "1-Click Share Link",
     "description": "Share and receive links with 1 click",
-    "version": "1.0",
+    "version": "1.1",
 
     "browser_action": {
         "default_icon": "icon.png",
@@ -13,7 +13,7 @@
         "page": "background.html"
     },
     "oauth2": {
-        "client_id": "100034805102-nqe03ff7bdhtf9ou91vcnbnpe8fk2vo4.apps.googleusercontent.com",
+        "client_id": "100034805102-o3r46n0tgplh56teffldavp3ekoi68ji.apps.googleusercontent.com",
         "scopes": [
       "https://www.googleapis.com/auth/userinfo.profile",
             "https://www.googleapis.com/auth/userinfo.email"
@@ -25,8 +25,6 @@
     "identity",
     "tabs",
     "activeTab",
-    "https://one-click-share-link-dev.herokuapp.com/*",
-    "https://one-click-share-link.herokuapp.com/*"
-
+    "https://one-click-share-link-dev.herokuapp.com/*"
   ]
 }
