@@ -111,6 +111,16 @@ public class LinkController {
 		}
 		return false;
 	}
+	
+	@RequestMapping("/in-links-size")
+	public int getIncomingLinksSize() {
+		User user = getValidatedUser();
+		if (user != null) {
+			return user.getInLinkCounter();
+		}
+		return 0;
+	}
+	
 
 	@RequestMapping("/key")
 	public String getOAuthKey() {
