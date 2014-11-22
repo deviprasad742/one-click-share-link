@@ -25,8 +25,9 @@ document.addEventListener('DOMContentLoaded', function () {
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState == 4) {
                 var data = xmlhttp.responseText;
-                if (data.valueOf() == "true".valueOf()) {
+                if (data == "true") {
                     clearLocalStorage();
+                    location.reload();
                 }
 
             }
@@ -75,7 +76,7 @@ function updateInfo(accessToken) {
             console.log(data);
             var jsonData = JSON.parse(data);
             createLocalStorage(jsonData);
-            //                location.reload();
+            location.reload();
         }
     };
 }
