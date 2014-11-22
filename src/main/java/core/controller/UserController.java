@@ -67,7 +67,7 @@ public class UserController {
 		String name = null;
 		String image = null;
 		String emailId = null;
-		String userInfoJson = googleAuthHelper.getUserInfoJson(response);
+		String userInfoJson = googleAuthHelper.getUserInfoJsonFromToken(response.getAccessToken());
 		System.out.println("****User Info: " + userInfoJson);
 
 		Gson gson = new Gson();

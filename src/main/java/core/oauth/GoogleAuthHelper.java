@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
+import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
@@ -116,9 +117,21 @@ public final class GoogleAuthHelper {
 		final HttpRequest request = requestFactory.buildGetRequest(url);
 		request.getHeaders().setContentType("application/json");
 		final String jsonIdentity = request.execute().parseAsString();
-
 		return jsonIdentity;
 
+	}
+	
+	/**
+	 * 
+	 * @param response the access token response retured from the google
+	 * @return
+	 * @throws IOException
+	 */
+	public String getUserInfoJsonFromToken(String accessToken) throws IOException {
+		Credential credential = new Credential(BearerToken.authorizationHeaderAccessMethod())
+				.setAccessToken(accessToken);
+		HttpRequestFactory requestFactory = new NetHttpTransport().createRequestFactory(credential);
+		return requestFactory.buildGetRequest(new GenericUrl(USER_INFO_URL)).execute().parseAsString();
 	}
 
 	/**
