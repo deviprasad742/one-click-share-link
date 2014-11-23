@@ -5,6 +5,8 @@ KEY_NAME = "name";
 KEY_IMAGE = "image";
 LOGOUT_BTN = "logout"
 LOGIN_BTN = "login"
+MAIN_UI = "main-ui";
+LOGIN_UI = "login-ui";
 
 //DOMAIN_URL = "https://one-click-share-link.herokuapp.com/"
 
@@ -125,25 +127,30 @@ function clearLocalStorage() {
 }
 
 function createUserInfoCtrls() {
-    var newParagraph = document.createElement('p');
-    newParagraph.textContent = localStorage[KEY_NAME];
-    document.body.appendChild(newParagraph);
+    var loginBtn = document.getElementById(LOGIN_BTN);
+    var nameNode = document.createTextNode(localStorage[KEY_NAME]);
+    document.getElementById(LOGIN_UI).insertBefore(nameNode, loginBtn);
     var image = document.createElement('img');
     image.src = localStorage[KEY_IMAGE];
     image.style.width = "32px";
     image.style.height = "32px";
-    document.body.appendChild(image);
+    image.align = "left";
+    document.getElementById(LOGIN_UI).insertBefore(image, nameNode);
+
     showLogoutCtrls();
 }
 
 function showLoginCtrls() {
     document.getElementById(LOGIN_BTN).style.display = "inline";
     document.getElementById(LOGOUT_BTN).style.display = "none";
+    document.getElementById(MAIN_UI).style.display = "none";
+
 }
 
 function showLogoutCtrls() {
     document.getElementById(LOGIN_BTN).style.display = "none";
     document.getElementById(LOGOUT_BTN).style.display = "inline";
+    document.getElementById(MAIN_UI).style.display = "inline";
 }
 
 function addCredentials(xmlhttp) {
