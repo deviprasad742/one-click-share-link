@@ -10,26 +10,29 @@ KEY_ACCESS_TOKEN = "access-token";
 KEY_EMAIL_ID = "email-id";
 
 function updateBadge() {
-    var xmlhttp = new XMLHttpRequest();
-    var url = DOMAIN_URL + "in-links-size";
-    xmlhttp.open("GET", url, true);
-    addCredentials(xmlhttp);
-    xmlhttp.send();
+    if (hasCredentials()) {
+        var xmlhttp = new XMLHttpRequest();
+        var url = DOMAIN_URL + "in-links-size";
+        xmlhttp.open("GET", url, true);
+        addCredentials(xmlhttp);
+        xmlhttp.send();
 
-    xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState == 4) {
-            var linksArr = xmlhttp.responseText;
-            var bg_color = "#0000FF";
-            var bg_text = linksArr > 0 ? "" + linksArr : "";
-            chrome.browserAction.setBadgeBackgroundColor({
-                color: bg_color
-            });
-            chrome.browserAction.setBadgeText({
-                text: bg_text
-            });
-        }
-    };
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4) {
+                var linksArr = xmlhttp.responseText;
+                var bg_color = "#0000FF";
+                var bg_text = linksArr > 0 ? "" + linksArr : "";
+                chrome.browserAction.setBadgeBackgroundColor({
+                    color: bg_color
+                });
+                chrome.browserAction.setBadgeText({
+                    text: bg_text
+                });
+            }
+        };
+    }
 }
+
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -39,6 +42,10 @@ document.addEventListener('DOMContentLoaded', function () {
 function addCredentials(xmlhttp) {
     xmlhttp.setRequestHeader(KEY_EMAIL_ID, localStorage[KEY_EMAIL_ID]);
     xmlhttp.setRequestHeader(KEY_ACCESS_TOKEN, localStorage[KEY_ACCESS_TOKEN]);
+}
+
+function hasCredentials() {
+    return localStorage[KEY_EMAIL_ID] != null;
 }
 
 

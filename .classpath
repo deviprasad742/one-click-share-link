@@ -62,6 +62,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="var" path="M2_REPO/javax/javaee-web-api/7.0/javaee-web-api-7.0.jar"/>
-	<classpathentry kind="var" path="M2_REPO/javax/mail/javax.mail-api/1.5.1/javax.mail-api-1.5.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/javax/mail/mail/1.4.7/mail-1.4.7.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
