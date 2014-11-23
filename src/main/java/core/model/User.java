@@ -55,6 +55,10 @@ public class User {
 		}
 	}
 	
+	public boolean isRegistered() {
+		return accessTokens.size() > 0;
+	}
+
 	public void removeToken(String token) {
 		accessTokens.remove(token);
 	}
