@@ -17,7 +17,7 @@ var linksGenerator = {
 
     requestLinks: function () {
         var xmlhttp = new XMLHttpRequest();
-        var url = DOMAIN_URL;
+        var url = DOMAIN_URL + "links";
 
         xmlhttp.open("GET", url, true);
         xmlhttp.send();
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log(tab.title);
 
             var xmlhttp = new XMLHttpRequest();
-            var url = DOMAIN_URL + "?title=" + tab.title + "&link=" + tab.url;
+            var url = DOMAIN_URL + "add" + "?title=" + tab.title + "&link=" + tab.url;
             console.log(url);
 
             xmlhttp.open("POST", url, true);
@@ -110,24 +110,3 @@ document.addEventListener('DOMContentLoaded', function () {
     linksGenerator.requestLinks();
 });
 
-function updateBadge() {
-    var xmlhttp = new XMLHttpRequest();
-    var url = "https://one-click-share-link.herokuapp.com/links";
-
-    xmlhttp.open("GET", url, true);
-    xmlhttp.send();
-
-    xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState == 4) {
-            var linksArr = JSON.parse(xmlhttp.responseText);
-            var bg_color = "#00FF00";
-            var bg_text = "" + linksArr.length;
-            chrome.browserAction.setBadgeBackgroundColor({
-                color: bg_color
-            });
-            chrome.browserAction.setBadgeText({
-                text: bg_text
-            });
-        }
-    };
-}
