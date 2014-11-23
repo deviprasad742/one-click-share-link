@@ -1,51 +1,68 @@
 <html>
-	<head>
-        <link href="jqueryui/jquery-ui.css" rel="stylesheet">
-	  	<style type="text/css">
-                body {
-                    overflow:hidden;
-                }
-	  			* {
- 					font-size: 100%;
- 					font-family: Helvetica;
-				}
-	  			a {
-	  				/*font-family: Tahoma, serif;*/
-	  				text-decoration: none;
-	  			}
-	  			.button {
-	  				width: 200px;
-	  			}
-				a:hover   { text-decoration: underline; }  /* user hovers     */
-				#links-content-div{
-				    position:fixed;
-                    width: 30em;
-                    overflow:auto;
-                    height: 100%;
-				}
-	  	</style>
-        <script src="jqueryui/external/jquery/jquery.js"></script>
-        <script src="jqueryui/jquery-ui.js"></script>
-	    <script src="popup.js"></script>
-	</head>
-  	<body>
-        <div style="width: 30em; background: white">
-            <div id="send-button-div">
-                <button id="send-button-id"></button>
+
+<head>
+    <link href="jqueryui/jquery-ui.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            overflow: hidden;
+        }
+        * {
+            font-size: 100%;
+            font-family: Helvetica;
+        }
+        .button {
+            width: 200px;
+        }
+        a {
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        a:link {
+            color: blue;
+        }
+        a:visited,
+        span.visited {
+            color: purple;
+        }
+        a:active,
+        span.active {
+            color: red;
+        }
+        #links-content-div {
+            position: fixed;
+            width: 30em;
+            overflow: auto;
+            height: 100%;
+        }
+    </style>
+    <script src="jqueryui/external/jquery/jquery.js"></script>
+    <script src="jqueryui/jquery-ui.js"></script>
+    <script src="popup.js"></script>
+</head>
+
+<body>
+    <div style="width: 30em; background: white">
+        <div id="send-button-div">
+            <button id="send-button-id"></button>
+        </div>
+        <div id="tabs" style="height: 100%;">
+            <ul>
+                <li><a href="#tabs-1">Sent</a>
+                </li>
+                <li><a href="#tabs-2">Inbox</a>
+                </li>
+            </ul>
+            <div id="tabs-1">
+                Hello World!
             </div>
-            <div id="tabs" style="height: 100%;">
-                <ul>
-                    <li><a href="#tabs-1">Sent</a></li>
-                    <li><a href="#tabs-2">Inbox</a></li>
-                </ul>
-                <div id="tabs-1">
-                    Hello World!
-                </div>
-                <div id="tabs-2">
-                    <div id="links-content-div"></div>
-                </div>
+            <div id="tabs-2">
+                <div id="links-content-div"></div>
             </div>
         </div>
-  	</body>
+    </div>
+</body>
+
 </html>
 

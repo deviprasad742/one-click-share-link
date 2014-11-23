@@ -1,3 +1,4 @@
+var controller = chrome.extension.getBackgroundPage();
 
 function capitaliseFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -55,26 +56,26 @@ var linksGenerator = {
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    
-    $(function() {
-        $( "#tabs" ).tabs({
-          event: "mouseover"
+
+    $(function () {
+        $("#tabs").tabs({
+            event: "mouseover"
         });
     });
-    
+
     var bt = document.getElementById("send-button-id");
     var text = document.createTextNode(">> Send Link");
     bt.appendChild(text);
     document.getElementById("send-button-div").appendChild(bt);
     bt.style.background = 'white';
     bt.style.color = 'black';
-    
-    $(function() {
-        $( "button" )
-          .button()
-          .click(function( event ) {
-            event.preventDefault();
-          });
+
+    $(function () {
+        $("button")
+            .button()
+            .click(function (event) {
+                event.preventDefault();
+            });
     });
 
     document.body.appendChild(document.createElement("br"));

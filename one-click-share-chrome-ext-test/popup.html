@@ -10,15 +10,25 @@
             font-size: 100%;
             font-family: Helvetica;
         }
-        a {
-            /*font-family: Tahoma, serif;*/
-            text-decoration: none;
-        }
         .button {
             width: 200px;
         }
+        a {
+            text-decoration: none;
+        }
         a:hover {
             text-decoration: underline;
+        }
+        a:link {
+            color: blue;
+        }
+        a:visited,
+        span.visited {
+            color: purple;
+        }
+        a:active,
+        span.active {
+            color: red;
         }
         /* user hovers     */
         #links-content-div {
@@ -31,7 +41,9 @@
     <script src="jqueryui/external/jquery/jquery.js"></script>
     <script src="jqueryui/jquery-ui.js"></script>
     <script src="popup.js"></script>
-    <script src="options.js"></script>
+    <script src="login.js"></script>
+    <script src="background.js"></script>
+
 
 </head>
 
