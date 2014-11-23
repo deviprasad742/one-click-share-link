@@ -1,3 +1,4 @@
+
 function capitaliseFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -26,7 +27,6 @@ var linksGenerator = {
             if (xmlhttp.readyState == 4) {
                 var linksArr = JSON.parse(xmlhttp.responseText);
                 for (i in linksArr) {
-                    console.log(link);
                     var link = document.createElement('a');
                     //link.textContent = capitaliseFirstLetter(linksArr[i]["title"]);
                     var itemIndex = parseInt(i) + 1;
@@ -55,12 +55,27 @@ var linksGenerator = {
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    var bt = document.createElement("BUTTON");
-    var text = document.createTextNode("Send Link");
+    
+    $(function() {
+        $( "#tabs" ).tabs({
+          event: "mouseover"
+        });
+    });
+    
+    var bt = document.getElementById("send-button-id");
+    var text = document.createTextNode(">> Send Link");
     bt.appendChild(text);
     document.getElementById("send-button-div").appendChild(bt);
     bt.style.background = 'white';
     bt.style.color = 'black';
+    
+    $(function() {
+        $( "button" )
+          .button()
+          .click(function( event ) {
+            event.preventDefault();
+          });
+    });
 
     document.body.appendChild(document.createElement("br"));
     bt.addEventListener("click", function () {

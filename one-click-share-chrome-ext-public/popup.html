@@ -1,9 +1,13 @@
 <html>
 	<head>
+        <link href="jqueryui/jquery-ui.css" rel="stylesheet">
 	  	<style type="text/css">
+                body {
+                    overflow:hidden;
+                }
 	  			* {
  					font-size: 100%;
- 					font-family: Georgia;
+ 					font-family: Helvetica;
 				}
 	  			a {
 	  				/*font-family: Tahoma, serif;*/
@@ -14,14 +18,34 @@
 	  			}
 				a:hover   { text-decoration: underline; }  /* user hovers     */
 				#links-content-div{
-					margin: 10px;
+				    position:fixed;
+                    width: 30em;
+                    overflow:auto;
+                    height: 100%;
 				}
 	  	</style>
+        <script src="jqueryui/external/jquery/jquery.js"></script>
+        <script src="jqueryui/jquery-ui.js"></script>
 	    <script src="popup.js"></script>
 	</head>
-  	<body style=min-width:20em>
-  		<div id="send-button-div"></div>
-        <div id="links-content-div"></div>
+  	<body>
+        <div style="width: 30em; background: white">
+            <div id="send-button-div">
+                <button id="send-button-id"></button>
+            </div>
+            <div id="tabs" style="height: 100%;">
+                <ul>
+                    <li><a href="#tabs-1">Sent</a></li>
+                    <li><a href="#tabs-2">Inbox</a></li>
+                </ul>
+                <div id="tabs-1">
+                    Hello World!
+                </div>
+                <div id="tabs-2">
+                    <div id="links-content-div"></div>
+                </div>
+            </div>
+        </div>
   	</body>
 </html>
 
