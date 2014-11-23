@@ -110,14 +110,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     linksGenerator.requestLinks();
-    syncData(loadUI);
+    checkAndsyncData(loadUI);
 });
 
 
 function loadUI(loaded) {
-    if (loaded) {
-        console.log("Data is updated");
-    } else {
-        console.log("Data is not updated");
-    }
+    console.log("Received callback data updated: " + loaded);
 }

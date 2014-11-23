@@ -14,23 +14,16 @@ KEY_NAME = "name";
 KEY_IMAGE = "image";
 KEY_URL_RECENT = "last-contact";
 KEY_URL_IN_LINKS = "in-links";
+KEY_URL_IN_LINKS_SIZE = "in-links-size";
 KEY_URL_OUT_LINKS = "out-links";
 
 
 
 function updateBadge() {
     if (hasCredentials()) {
-        var xmlhttp = new XMLHttpRequest();
-        var url = DOMAIN_URL + "in-links-size";
-        xmlhttp.open("GET", url, true);
-        addCredentials(xmlhttp);
-        xmlhttp.send();
-
-        xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState == 4) {
-                setBadgeText(xmlhttp.responseText);
-            }
-        };
+        fetchData(function (result) {
+            setBadgeText(result);
+        }, KEY_URL_IN_LINKS_SIZE);
     } else {
         setBadgeText(0);
     }
@@ -72,17 +65,29 @@ function hasCredentials() {
     return localStorage[KEY_EMAIL_ID] != null;
 }
 
-function syncData(callback) {
+function checkAndsyncData(callback) {
     if (hasCredentials()) {
-        fetchData(null, KEY_URL_RECENT);
-        fetchData(null, KEY_URL_IN_LINKS);
-        fetchData(function () {
-            callback(true);
-        }, KEY_URL_OUT_LINKS);
+        fetchData(function (result) {
+            if (result > 0) {
+                syncData(callback)
+            } else {
+                callback(true);
+            }
+
+        }, KEY_URL_IN_LINKS_SIZE);
 
     } else {
         callback(false);
     }
+}
+
+function syncData(data_loaded) {
+    fetchData(null, KEY_URL_RECENT);
+    fetchData(null, KEY_URL_IN_LINKS);
+    fetchData(function (result) {
+        data_loaded(true);
+    }, KEY_URL_OUT_LINKS);
+
 }
 
 function fetchData(callback, key_url) {
@@ -96,9 +101,9 @@ function fetchData(callback, key_url) {
         if (xmlhttp.readyState == 4) {
             var result = xmlhttp.responseText;
             localStorage[key_url] = result;
-            console.log(result);
+            console.log(key_url + ": " + result);
             if (callback != null) {
-                callback();
+                callback(result);
             }
         }
     };
