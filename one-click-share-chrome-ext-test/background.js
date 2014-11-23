@@ -20,8 +20,7 @@ KEY_URL_OUT_LINKS = "out-links";
 JSON_KEY_NAME = "name";
 JSON_KEY_TITLE = "title";
 JSON_KEY_URL = "url";
-
-
+JSON_KEY_EMAIL_ID = "emailId";
 
 
 function updateBadge() {
@@ -72,18 +71,27 @@ function hasCredentials() {
 
 function checkAndsyncData(callback) {
     if (hasCredentials()) {
-        fetchData(function (result) {
-            if (result > 0) {
-                syncData(callback)
-            } else {
-                callback(true);
-            }
 
-        }, KEY_URL_IN_LINKS_SIZE);
+        if (isDataUnSynced()) {
+            syncData(callback)
+        } else {
+            fetchData(function (result) {
+                if (result > 0) {
+                    syncData(callback)
+                } else {
+                    callback(true);
+                }
+
+            }, KEY_URL_IN_LINKS_SIZE);
+        }
 
     } else {
         callback(false);
     }
+}
+
+function isDataUnSynced() {
+    return localStorage[KEY_URL_IN_LINKS] == null;
 }
 
 function syncData(data_loaded) {
