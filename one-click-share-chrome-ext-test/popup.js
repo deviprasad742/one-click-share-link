@@ -63,12 +63,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    var bt = document.getElementById("send-button-id");
+    var sendButton = document.getElementById("send-button-id");
     var text = document.createTextNode(">> Send Link");
-    bt.appendChild(text);
-    document.getElementById("send-button-div").appendChild(bt);
-    bt.style.background = 'white';
-    bt.style.color = 'black';
+    sendButton.appendChild(text);
+    document.getElementById("send-button-div").appendChild(sendButton);
+    sendButton.style.background = 'white';
+    sendButton.style.color = 'black';
 
     $(function () {
         $("button")
@@ -79,11 +79,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.body.appendChild(document.createElement("br"));
-    bt.addEventListener("click", function () {
+    sendButton.addEventListener("click", function () {
 
         //temporarily show the sending status by color change.
-        bt.style.background = "green";
-        bt.style.color = 'white';
+        sendButton.style.background = "green";
+        sendButton.style.color = 'white';
 
         chrome.tabs.getSelected(null, function (tab) {
             console.log(tab.url);
@@ -99,8 +99,8 @@ document.addEventListener('DOMContentLoaded', function () {
             //show success status by reverting button style.
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4) {
-                    bt.style.background = 'white';
-                    bt.style.color = 'black';
+                    sendButton.style.background = 'white';
+                    sendButton.style.color = 'black';
 
                     updateBadge();
                 }
@@ -110,26 +110,14 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     linksGenerator.requestLinks();
+    syncData(loadUI);
 });
 
-function updateBadge() {
-    var xmlhttp = new XMLHttpRequest();
-    var url = "https://one-click-share-link.herokuapp.com/links";
 
-    xmlhttp.open("GET", url, true);
-    xmlhttp.send();
-
-    xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState == 4) {
-            var linksArr = JSON.parse(xmlhttp.responseText);
-            var bg_color = "#00FF00";
-            var bg_text = "" + linksArr.length;
-            chrome.browserAction.setBadgeBackgroundColor({
-                color: bg_color
-            });
-            chrome.browserAction.setBadgeText({
-                text: bg_text
-            });
-        }
-    };
+function loadUI(loaded) {
+    if (loaded) {
+        console.log("Data is updated");
+    } else {
+        console.log("Data is not updated");
+    }
 }

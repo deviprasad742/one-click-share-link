@@ -12,6 +12,10 @@ KEY_ACCESS_TOKEN = "access-token";
 KEY_EMAIL_ID = "email-id";
 KEY_NAME = "name";
 KEY_IMAGE = "image";
+KEY_URL_RECENT = "last-contact";
+KEY_URL_IN_LINKS = "in-links";
+KEY_URL_OUT_LINKS = "out-links";
+
 
 
 function updateBadge() {
@@ -66,4 +70,49 @@ function clearLocalStorage() {
 
 function hasCredentials() {
     return localStorage[KEY_EMAIL_ID] != null;
+}
+
+function syncData(callback) {
+    if (hasCredentials()) {
+        fetchData(null, KEY_URL_RECENT);
+        fetchData(null, KEY_URL_IN_LINKS);
+        fetchData(function () {
+            callback(true);
+        }, KEY_URL_OUT_LINKS);
+
+    } else {
+        callback(false);
+    }
+}
+
+function fetchData(callback, key_url) {
+    var xmlhttp = new XMLHttpRequest();
+    var url = DOMAIN_URL + key_url;
+    xmlhttp.open("GET", url, true);
+    addCredentials(xmlhttp);
+    xmlhttp.send();
+
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4) {
+            var result = xmlhttp.responseText;
+            localStorage[key_url] = result;
+            console.log(result);
+            if (callback != null) {
+                callback();
+            }
+        }
+    };
+}
+
+
+function getInLinks() {
+    return localStorage[KEY_URL_IN_LINKS];
+}
+
+function getOutLinks() {
+    return localStorage[KEY_URL_OUT_LINKS];
+}
+
+function getRecentContacts() {
+    return localStorage[KEY_URL_RECENT];
 }
