@@ -1,12 +1,10 @@
-DOMAIN_URL = "https://one-click-share-link-dev.herokuapp.com/";
-KEY_ACCESS_TOKEN = "access-token";
-KEY_EMAIL_ID = "email-id";
-KEY_NAME = "name";
-KEY_IMAGE = "image";
 LOGOUT_BTN = "logout"
 LOGIN_BTN = "login"
+MAIN_UI = "main-ui";
+LOGIN_UI = "login-ui";
 
-//DOMAIN_URL = "https://one-click-share-link.herokuapp.com/"
+
+
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -27,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 var data = xmlhttp.responseText;
                 if (data == "true") {
                     clearLocalStorage();
+                    updateBadge();
                     location.reload();
                 }
 
@@ -77,6 +76,7 @@ function updateInfo(accessToken) {
             var jsonData = JSON.parse(data);
             createLocalStorage(jsonData);
             location.reload();
+            updateBadge();
         }
     };
 }
@@ -109,44 +109,29 @@ function updateLoginStatus(name) {
     }
 }
 
-function createLocalStorage(jsonData) {
-    localStorage[KEY_NAME] = jsonData.name;
-    localStorage[KEY_EMAIL_ID] = jsonData.emailId;
-    localStorage[KEY_IMAGE] = jsonData.image;
-    localStorage[KEY_ACCESS_TOKEN] = jsonData.accessToken;
-}
-
-function clearLocalStorage() {
-    //        localStorage.removeItem[KEY_NAME];
-    //        localStorage.removeItem[KEY_EMAIL_ID];
-    //        localStorage.removeItem[KEY_IMAGE];
-    //        localStorage.removeItem[KEY_ACCESS_TOKEN];
-    localStorage.clear();
-}
-
 function createUserInfoCtrls() {
-    var newParagraph = document.createElement('p');
-    newParagraph.textContent = localStorage[KEY_NAME];
-    document.body.appendChild(newParagraph);
+    var loginBtn = document.getElementById(LOGIN_BTN);
+    var nameNode = document.createTextNode(localStorage[KEY_NAME]);
+    document.getElementById(LOGIN_UI).insertBefore(nameNode, loginBtn);
     var image = document.createElement('img');
     image.src = localStorage[KEY_IMAGE];
     image.style.width = "32px";
     image.style.height = "32px";
-    document.body.appendChild(image);
+    image.align = "left";
+    document.getElementById(LOGIN_UI).insertBefore(image, nameNode);
+
     showLogoutCtrls();
 }
 
 function showLoginCtrls() {
     document.getElementById(LOGIN_BTN).style.display = "inline";
     document.getElementById(LOGOUT_BTN).style.display = "none";
+    document.getElementById(MAIN_UI).style.display = "none";
+
 }
 
 function showLogoutCtrls() {
     document.getElementById(LOGIN_BTN).style.display = "none";
     document.getElementById(LOGOUT_BTN).style.display = "inline";
-}
-
-function addCredentials(xmlhttp) {
-    xmlhttp.setRequestHeader(KEY_EMAIL_ID, localStorage[KEY_EMAIL_ID]);
-    xmlhttp.setRequestHeader(KEY_ACCESS_TOKEN, localStorage[KEY_ACCESS_TOKEN]);
+    document.getElementById(MAIN_UI).style.display = "inline";
 }

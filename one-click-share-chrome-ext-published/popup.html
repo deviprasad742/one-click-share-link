@@ -1,27 +1,89 @@
 <html>
-	<head>
-	  	<style type="text/css">
-	  			* {
- 					font-size: 100%;
- 					font-family: Georgia;
-				}
-	  			a {
-	  				/*font-family: Tahoma, serif;*/
-	  				text-decoration: none;
-	  			}
-	  			.button {
-	  				width: 200px;
-	  			}
-				a:hover   { text-decoration: underline; }  /* user hovers     */
-				#links-content-div{
-					margin: 10px;
-				}
-	  	</style>
-	    <script src="popup.js"></script>
-	</head>
-  	<body style=min-width:20em>
-  		<div id="send-button-div"></div>
-        <div id="links-content-div"></div>
-  	</body>
+
+<head>
+    <link href="jqueryui/jquery-ui.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            overflow: hidden;
+        }
+        * {
+            font-size: 100%;
+            font-family: Helvetica;
+        }
+        .button {
+            width: 200px;
+        }
+        a {
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        a:link {
+            color: blue;
+        }
+        a:visited,
+        span.visited {
+            color: purple;
+        }
+        a:active,
+        span.active {
+            color: red;
+        }
+        /* user hovers     */
+        #links-content-div {
+            position: fixed;
+            width: 30em;
+            overflow: auto;
+            height: 100%;
+        }
+    </style>
+    <script src="jqueryui/external/jquery/jquery.js"></script>
+    <script src="jqueryui/jquery-ui.js"></script>
+    <script src="popup.js"></script>
+    <script src="login.js"></script>
+    <script src="background.js"></script>
+
+
+</head>
+
+<body>
+    <div style="width: 30em; background: white">
+        <div id="info-ui">
+        </div>
+        <div id="login-ui">
+            <button id="login">Login</button>
+            <button id="logout">Logout</button>
+            <p></p>
+        </div>
+        <div id="main-ui">
+            <div id="tabs" style="height: 100%;">
+                <ul>
+                    <li><a href="#tabs-1">Share</a>
+                    </li>
+                    <li><a href="#tabs-2">Feed</a>
+                    </li>
+                </ul>
+                <div id="tabs-1">
+                    <div id="send-button-div">
+                        <button id="send-button-id"></button>
+                    </div>
+                    <p>Email:
+                        <input type="text" id="email-id">
+                    </p>
+                    <div id="last-contact-div"></div>
+                </div>
+                <div id="tabs-2">
+                    <h3>Incoming Links:</h3>
+                    <div id="in-links-content-div"></div>
+                    <h3>Outgoing Links:</h3>
+                    <div id="out-links-content-div"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
 </html>
 
