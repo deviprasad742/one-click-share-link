@@ -15,45 +15,10 @@ function trimTitle(string) {
 
 }
 
-var linksGenerator = {
-
-    requestLinks: function () {
-        var xmlhttp = new XMLHttpRequest();
-        var url = "https://one-click-share-link.herokuapp.com/links";
-
-        xmlhttp.open("GET", url, true);
-        xmlhttp.send();
-
-        xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState == 4) {
-                var linksArr = JSON.parse(xmlhttp.responseText);
-                for (i in linksArr) {
-                    var link = document.createElement('a');
-                    //link.textContent = capitaliseFirstLetter(linksArr[i]["title"]);
-                    var itemIndex = parseInt(i) + 1;
-                    var title = itemIndex + ". " + linksArr[i]["title"];
-                    link.textContent = trimTitle(title);
-                    link.href = linksArr[i]["link"];
-                    link.onclick = function (loopIndex) {
-                        return function () {
-                            var location = linksArr[loopIndex]["link"];
-                            chrome.tabs.create({
-                                active: true,
-                                url: location
-                            });
-                            console.log(location + " link clicked");
-                        }
-                    }(i);
-
-                    document.getElementById("links-content-div").appendChild(link);
-                    document.getElementById("links-content-div").appendChild(document.createElement("br"));
-                }
-            }
-        };
-    },
-};
-
-
+DIV_IN_LINKS_ID = "in-links-content-div";
+DIV_OUT_LINKS_ID = "out-links-content-div";
+DIV_LAST_CONTACT_ID = "last-contact-div";
+TEXT_EMAIL_ID = "email-id"
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -81,39 +46,55 @@ document.addEventListener('DOMContentLoaded', function () {
     document.body.appendChild(document.createElement("br"));
     sendButton.addEventListener("click", function () {
 
-        //temporarily show the sending status by color change.
-        sendButton.style.background = "green";
-        sendButton.style.color = 'white';
-
         chrome.tabs.getSelected(null, function (tab) {
-            console.log(tab.url);
-            console.log(tab.title);
-
-            var xmlhttp = new XMLHttpRequest();
-            var url = "https://one-click-share-link.herokuapp.com/add" + "?title=" + tab.title + "&link=" + tab.url;
-            console.log(url);
-
-            xmlhttp.open("POST", url, true);
-            xmlhttp.send();
-
-            //show success status by reverting button style.
-            xmlhttp.onreadystatechange = function () {
-                if (xmlhttp.readyState == 4) {
+            var emailField = document.getElementById(TEXT_EMAIL_ID);
+            var emailId = emailField.value;
+            if (emailId != null) {
+                //temporarily show the sending status by color change.
+                sendButton.style.background = "green";
+                sendButton.style.color = 'white';
+                sendLink(emailId, tab.title, tab.url, function (result) {
                     sendButton.style.background = 'white';
                     sendButton.style.color = 'black';
-
-                    updateBadge();
-                }
-            };
+                    loadOutLinks(loadUI);
+                });
+            }
         });
 
     });
 
-    linksGenerator.requestLinks();
     checkAndsyncData(loadUI);
 });
 
 
 function loadUI(loaded) {
     console.log("Received callback data updated: " + loaded);
+    addLinks(DIV_IN_LINKS_ID, getInLinks());
+    addLinks(DIV_OUT_LINKS_ID, getOutLinks());
+}
+
+function addLinks(divId, linksJson) {
+    var linksArr = JSON.parse(linksJson);
+    document.getElementById(divId).innerHTML = "";
+    for (i in linksArr) {
+        var link = document.createElement('a');
+        var itemIndex = parseInt(i) + 1;
+        var curLink = linksArr[i];
+        var title = itemIndex + ". " + curLink[JSON_KEY_TITLE];
+        link.textContent = trimTitle(title) + "-" + curLink[JSON_KEY_NAME];
+        link.href = curLink[JSON_KEY_URL];
+        link.onclick = function (loopIndex) {
+            return function () {
+                var location = linksArr[loopIndex][JSON_KEY_URL];
+                chrome.tabs.create({
+                    active: true,
+                    url: location
+                });
+                console.log(location + " link clicked");
+            }
+        }(i);
+
+        document.getElementById(divId).appendChild(link);
+        document.getElementById(divId).appendChild(document.createElement("br"));
+    }
 }

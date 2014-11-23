@@ -59,18 +59,25 @@
         <div id="main-ui">
             <div id="tabs" style="height: 100%;">
                 <ul>
-                    <li><a href="#tabs-1">Sent</a>
+                    <li><a href="#tabs-1">Share</a>
                     </li>
-                    <li><a href="#tabs-2">Inbox</a>
+                    <li><a href="#tabs-2">Feed</a>
                     </li>
                 </ul>
                 <div id="tabs-1">
                     <div id="send-button-div">
                         <button id="send-button-id"></button>
                     </div>
+                    <p>Email:
+                        <input type="text" id="email-id">
+                    </p>
+                    <div id="last-contact-div"></div>
                 </div>
                 <div id="tabs-2">
-                    <div id="links-content-div"></div>
+                    <h3>Incoming Links:</h3>
+                    <div id="in-links-content-div"></div>
+                    <h3>Outgoing Links:</h3>
+                    <div id="out-links-content-div"></div>
                 </div>
             </div>
         </div>

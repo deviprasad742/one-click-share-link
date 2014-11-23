@@ -12,10 +12,15 @@ KEY_ACCESS_TOKEN = "access-token";
 KEY_EMAIL_ID = "email-id";
 KEY_NAME = "name";
 KEY_IMAGE = "image";
+URL_SEND = "send";
 KEY_URL_RECENT = "last-contact";
 KEY_URL_IN_LINKS = "in-links";
 KEY_URL_IN_LINKS_SIZE = "in-links-size";
 KEY_URL_OUT_LINKS = "out-links";
+JSON_KEY_NAME = "name";
+JSON_KEY_TITLE = "title";
+JSON_KEY_URL = "url";
+
 
 
 
@@ -110,6 +115,10 @@ function fetchData(callback, key_url) {
 }
 
 
+function loadOutLinks(callback) {
+    fetchData(callback, KEY_URL_OUT_LINKS);
+}
+
 function getInLinks() {
     return localStorage[KEY_URL_IN_LINKS];
 }
@@ -120,4 +129,22 @@ function getOutLinks() {
 
 function getRecentContacts() {
     return localStorage[KEY_URL_RECENT];
+}
+
+function sendLink(toEmail, title, url, callback) {
+    var xmlhttp = new XMLHttpRequest();
+    var url = DOMAIN_URL + URL_SEND + "?to=" + toEmail + "&title=" + title + "&url=" + url;
+    xmlhttp.open("POST", url, true);
+    addCredentials(xmlhttp);
+    xmlhttp.send();
+
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4) {
+            var result = xmlhttp.responseText;
+            console.log(URL_SEND + ": " + result);
+            if (callback != null) {
+                callback(result);
+            }
+        }
+    };
 }
