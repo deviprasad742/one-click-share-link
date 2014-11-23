@@ -21,6 +21,7 @@ JSON_KEY_NAME = "name";
 JSON_KEY_TITLE = "title";
 JSON_KEY_URL = "url";
 JSON_KEY_EMAIL_ID = "emailId";
+JSON_KEY_IMAGE = "image";
 
 
 function updateBadge() {
@@ -95,13 +96,17 @@ function isDataUnSynced() {
 }
 
 function forceSyncData(data_loaded) {
-    fetchData(null, KEY_URL_RECENT);
-    fetchData(null, KEY_URL_IN_LINKS);
-    fetchData(function (result) {
+    var loadedFunc = function (result) {
         data_loaded(true);
-    }, KEY_URL_OUT_LINKS);
+    };
+
+    fetchData(loadedFunc, KEY_URL_RECENT);
+    fetchData(loadedFunc, KEY_URL_IN_LINKS);
+    fetchData(loadedFunc, KEY_URL_OUT_LINKS);
 
 }
+
+
 
 function fetchData(callback, key_url) {
     var xmlhttp = new XMLHttpRequest();

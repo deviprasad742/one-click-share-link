@@ -115,6 +115,9 @@ function addLinks(divId, linksJson) {
 function addRecentContacts(divId, contactsJson) {
     var linksArr = JSON.parse(contactsJson);
     document.getElementById(divId).innerHTML = "";
+    var container = document.createElement("p");
+    document.getElementById(divId).appendChild(container);
+
     for (i in linksArr) {
         var link = document.createElement('a');
         var itemIndex = parseInt(i) + 1;
@@ -128,7 +131,18 @@ function addRecentContacts(divId, contactsJson) {
             }
         }(i);
 
-        document.getElementById(divId).appendChild(link);
-        document.getElementById(divId).appendChild(document.createElement("br"));
+        var image = document.createElement('img');
+        var imageUrl = curLink[JSON_KEY_IMAGE];
+        if (isBlank(imageUrl)) {
+            imageUrl = "icon.png";
+        }
+        image.src = imageUrl;
+        image.style.width = "16px";
+        image.style.height = "16px";
+        image.align = "left";
+        container.appendChild(image);
+        container.appendChild(link);
+        container.appendChild(document.createElement("p"));
+
     }
 }

@@ -115,8 +115,8 @@ function createUserInfoCtrls() {
     document.getElementById(LOGIN_UI).insertBefore(nameNode, loginBtn);
     var image = document.createElement('img');
     image.src = localStorage[KEY_IMAGE];
-    image.style.width = "32px";
-    image.style.height = "32px";
+    image.style.width = "24px";
+    image.style.height = "24px";
     image.align = "left";
     document.getElementById(LOGIN_UI).insertBefore(image, nameNode);
 
