@@ -74,7 +74,9 @@ public class LinkController {
 			user.addOutLink(outLink);
 			user.addToLastContacted(toEmailId);
 			user.addToFriends(toEmailId);
-			repository.save(user);
+			if (user != toUser) {
+				repository.save(user);
+			}
 
 			// update received user info
 			OneLink inLink = new OneLink(title, url, user.getEmailId());
