@@ -66,7 +66,7 @@ function sendLinkTo(email) {
             sendLink(email, tab.title, tab.url, function (result) {
                 sendButton.style.background = 'white';
                 sendButton.style.color = 'black';
-                loadOutLinks(loadUI);
+                forceSyncData(loadUI);
             });
         });
     }

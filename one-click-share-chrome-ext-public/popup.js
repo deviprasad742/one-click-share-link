@@ -1,4 +1,3 @@
-
 function capitaliseFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -18,7 +17,7 @@ var linksGenerator = {
 
     requestLinks: function () {
         var xmlhttp = new XMLHttpRequest();
-        var url = "https://one-click-share-link.herokuapp.com/links";
+        var url = DOMAIN_URL;
 
         xmlhttp.open("GET", url, true);
         xmlhttp.send();
@@ -55,26 +54,26 @@ var linksGenerator = {
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    
-    $(function() {
-        $( "#tabs" ).tabs({
-          event: "mouseover"
+
+    $(function () {
+        $("#tabs").tabs({
+            event: "mouseover"
         });
     });
-    
+
     var bt = document.getElementById("send-button-id");
     var text = document.createTextNode(">> Send Link");
     bt.appendChild(text);
     document.getElementById("send-button-div").appendChild(bt);
     bt.style.background = 'white';
     bt.style.color = 'black';
-    
-    $(function() {
-        $( "button" )
-          .button()
-          .click(function( event ) {
-            event.preventDefault();
-          });
+
+    $(function () {
+        $("button")
+            .button()
+            .click(function (event) {
+                event.preventDefault();
+            });
     });
 
     document.body.appendChild(document.createElement("br"));
@@ -89,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log(tab.title);
 
             var xmlhttp = new XMLHttpRequest();
-            var url = "https://one-click-share-link.herokuapp.com/add" + "?title=" + tab.title + "&link=" + tab.url;
+            var url = DOMAIN_URL + "?title=" + tab.title + "&link=" + tab.url;
             console.log(url);
 
             xmlhttp.open("POST", url, true);

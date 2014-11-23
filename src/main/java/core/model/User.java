@@ -109,6 +109,7 @@ public class User {
 		if (lastContacted.size() > LAST_CONTACT_LIMIT) {
 			lastContacted.remove(0);
 		}
+		System.out.println("Last contact updated" + lastContacted);
 	}
 
 	public void addOutLink(OneLink outLink) {

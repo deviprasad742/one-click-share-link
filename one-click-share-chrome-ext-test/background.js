@@ -73,11 +73,11 @@ function checkAndsyncData(callback) {
     if (hasCredentials()) {
 
         if (isDataUnSynced()) {
-            syncData(callback)
+            forceSyncData(callback)
         } else {
             fetchData(function (result) {
                 if (result > 0) {
-                    syncData(callback)
+                    forceSyncData(callback)
                 } else {
                     callback(true);
                 }
@@ -94,7 +94,7 @@ function isDataUnSynced() {
     return localStorage[KEY_URL_IN_LINKS] == null;
 }
 
-function syncData(data_loaded) {
+function forceSyncData(data_loaded) {
     fetchData(null, KEY_URL_RECENT);
     fetchData(null, KEY_URL_IN_LINKS);
     fetchData(function (result) {
