@@ -103,7 +103,7 @@ function forceSyncData(data_loaded) {
     fetchData(loadedFunc, KEY_URL_RECENT);
     fetchData(loadedFunc, KEY_URL_IN_LINKS);
     fetchData(loadedFunc, KEY_URL_OUT_LINKS);
-
+    updateBadge();
 }
 
 
