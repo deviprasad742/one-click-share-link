@@ -74,7 +74,7 @@ public class LinkController {
 			user.addOutLink(outLink);
 			user.addToLastContacted(toEmailId);
 			user.addToFriends(toEmailId);
-			if (user != toUser) {
+			if (!toEmailId.equals(user.getEmailId())) {
 				repository.save(user);
 			}
 
