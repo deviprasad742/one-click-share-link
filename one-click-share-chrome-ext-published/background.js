@@ -92,7 +92,7 @@ function checkAndsyncData(callback) {
 }
 
 function isDataUnSynced() {
-    return localStorage[KEY_URL_IN_LINKS] == null;
+    return isBlank(localStorage[KEY_URL_IN_LINKS]);
 }
 
 function forceSyncData(data_loaded) {
@@ -160,4 +160,9 @@ function sendLink(toEmail, title, url, callback) {
             }
         }
     };
+}
+
+
+function isBlank(string) {
+    return (!string || /^\s*$/.test(string));
 }

@@ -63,5 +63,7 @@
 	</classpathentry>
 	<classpathentry kind="var" path="M2_REPO/javax/javaee-web-api/7.0/javaee-web-api-7.0.jar"/>
 	<classpathentry kind="var" path="M2_REPO/javax/mail/mail/1.4.7/mail-1.4.7.jar"/>
+	<classpathentry kind="var" path="ASPECTJRT_LIB"/>
+	<classpathentry kind="var" path="JUNIT_HOME"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

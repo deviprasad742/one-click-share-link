@@ -76,14 +76,16 @@ public class LinkController {
 			user.addToFriends(toEmailId);
 			repository.save(user);
 
-			if (toEmailId.equals(user.getEmailId())) {
+			String fromEmailId = user.getEmailId();
+			if (toEmailId.equals(fromEmailId)) {
 				toUser = user;
 			}
 
 			// update received user info
-			OneLink inLink = new OneLink(title, url, user.getEmailId());
+			OneLink inLink = new OneLink(title, url, fromEmailId);
 			toUser.addInLink(inLink);
 			toUser.incrementInLinkCounter();
+			toUser.addToLastContacted(fromEmailId);			
 			repository.save(toUser);
 
 			System.out.println("Link Added -->" + outLink);

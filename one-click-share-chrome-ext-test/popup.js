@@ -51,6 +51,9 @@ document.addEventListener('DOMContentLoaded', function () {
         sendLinkTo(emailId);
     });
 
+    // first load ui with stored values
+    loadUI(true);
+    // load ui later after syncing data
     checkAndsyncData(loadUI);
 });
 
@@ -73,19 +76,21 @@ function sendLinkTo(email) {
 }
 
 
-function isBlank(string) {
-    return (!string || /^\s*$/.test(string));
-}
-
 
 function loadUI(loaded) {
     console.log("Received callback data updated: " + loaded);
-    addLinks(DIV_IN_LINKS_ID, getInLinks());
-    addLinks(DIV_OUT_LINKS_ID, getOutLinks());
-    addRecentContacts(DIV_LAST_CONTACT_ID, getRecentContacts());
+    if (loaded) {
+        addLinks(DIV_IN_LINKS_ID, getInLinks());
+        addLinks(DIV_OUT_LINKS_ID, getOutLinks());
+        addRecentContacts(DIV_LAST_CONTACT_ID, getRecentContacts());
+    }
 }
 
 function addLinks(divId, linksJson) {
+    if (isBlank(linksJson)) {
+        return;
+    }
+
     var linksArr = JSON.parse(linksJson);
     document.getElementById(divId).innerHTML = "";
     for (i in linksArr) {
@@ -93,7 +98,7 @@ function addLinks(divId, linksJson) {
         var itemIndex = parseInt(i) + 1;
         var curLink = linksArr[i];
         var title = itemIndex + ". " + curLink[JSON_KEY_TITLE];
-        link.textContent = trimTitle(title) + "-" + curLink[JSON_KEY_NAME];
+        link.textContent = trimTitle(title) + "-[" + curLink[JSON_KEY_NAME] + "]";
         link.href = curLink[JSON_KEY_URL];
         link.onclick = function (loopIndex) {
             return function () {
@@ -113,6 +118,9 @@ function addLinks(divId, linksJson) {
 
 
 function addRecentContacts(divId, contactsJson) {
+    if (isBlank(contactsJson)) {
+        return;
+    }
     var linksArr = JSON.parse(contactsJson);
     document.getElementById(divId).innerHTML = "";
     var container = document.createElement("p");
