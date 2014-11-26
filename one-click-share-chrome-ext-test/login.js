@@ -2,15 +2,66 @@ LOGOUT_BTN = "logout"
 LOGIN_BTN = "login"
 MAIN_UI = "main-ui";
 LOGIN_UI = "login-ui";
+DIV_OPTIONS_PAGE = "options-page";
 
+var STATE_START = 1;
+var STATE_ACQUIRING_AUTHTOKEN = 2;
+var STATE_AUTHTOKEN_ACQUIRED = 3;
+
+var state = STATE_START;
+
+var login_btn, logout_btn, main_ui;
+
+function disableButton(button) {
+    button.setAttribute('disabled', 'disabled');
+}
+
+function enableButton(button) {
+    button.removeAttribute('disabled');
+}
+
+function showElement(element) {
+    element.style.display = "inline";
+}
+
+function hideElement(element) {
+    element.style.display = "none";
+}
+
+function changeState(newState) {
+    state = newState;
+    switch (state) {
+    case STATE_START:
+        showElement(login_btn);
+        enableButton(login_btn);
+        hideElement(main_ui);
+        hideElement(logout_btn);
+        break;
+    case STATE_ACQUIRING_AUTHTOKEN:
+        showElement(login_btn);
+        disableButton(login_btn);
+        if (!isOptionsPage()) {
+            login_btn.textContent = "Loading User Information..."
+        }
+        hideElement(main_ui);
+        hideElement(logout_btn);
+        break;
+    case STATE_AUTHTOKEN_ACQUIRED:
+        hideElement(login_btn);
+        showElement(main_ui);
+        showElement(logout_btn);
+        break;
+    }
+}
 
 
 
 document.addEventListener('DOMContentLoaded', function () {
-
+    login_btn = document.getElementById(LOGIN_BTN);
+    logout_btn = document.getElementById(LOGOUT_BTN);
+    main_ui = document.getElementById(MAIN_UI);
 
     updateInfoFromLocal();
-
 
     var logoutBtn = document.getElementById(LOGOUT_BTN);
     logoutBtn.addEventListener("click", function () {
@@ -34,24 +85,31 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     var loginBtn = document.getElementById(LOGIN_BTN);
-
-
-    loginBtn.addEventListener("click", function () {
-        logIn();
-    });
-
-
+    if (loginBtn != null) {
+        loginBtn.addEventListener("click", function () {
+            changeState(STATE_ACQUIRING_AUTHTOKEN);
+            logIn();
+        });
+    }
 
 });
 
 
 function logIn() {
-    chrome.identity.getAuthToken({
-        'interactive': true
-    }, function (token) {
-        updateInfo(token);
-    });
+    if (isOptionsPage()) {
+        chrome.identity.getAuthToken({
+            'interactive': true
+        }, function (token) {
+            updateInfo(token);
+        });
+    } else {
+        window.open(chrome.extension.getURL("options.html"));
+    }
 };
+
+function isOptionsPage() {
+    return document.getElementById(DIV_OPTIONS_PAGE) != null;
+}
 
 
 function getParam(name) {
@@ -61,7 +119,6 @@ function getParam(name) {
 }
 
 function updateInfo(accessToken) {
-    showLogoutCtrls();
 
     var xmlhttp = new XMLHttpRequest();
     var reqUrl = DOMAIN_URL + "register-token" + "?token=" + accessToken;
@@ -87,6 +144,7 @@ function updateInfoFromLocal() {
 
 function updateLoginStatus(name) {
     if (name != null) {
+        changeState(STATE_ACQUIRING_AUTHTOKEN);
         var reqUrl = DOMAIN_URL + "is-valid";
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.open("GET", reqUrl, true);
@@ -100,12 +158,12 @@ function updateLoginStatus(name) {
                     createUserInfoCtrls();
                 } else {
                     clearLocalStorage();
-                    showLoginCtrls();
+                    changeState(STATE_START);
                 }
             }
         };
     } else {
-        showLoginCtrls();
+        changeState(STATE_START);
     }
 }
 
@@ -120,18 +178,5 @@ function createUserInfoCtrls() {
     image.align = "left";
     document.getElementById(LOGIN_UI).insertBefore(image, nameNode);
 
-    showLogoutCtrls();
-}
-
-function showLoginCtrls() {
-    document.getElementById(LOGIN_BTN).style.display = "inline";
-    document.getElementById(LOGOUT_BTN).style.display = "none";
-    document.getElementById(MAIN_UI).style.display = "none";
-
-}
-
-function showLogoutCtrls() {
-    document.getElementById(LOGIN_BTN).style.display = "none";
-    document.getElementById(LOGOUT_BTN).style.display = "inline";
-    document.getElementById(MAIN_UI).style.display = "inline";
+    changeState(STATE_AUTHTOKEN_ACQUIRED);
 }
