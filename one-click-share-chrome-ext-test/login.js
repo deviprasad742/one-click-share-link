@@ -43,7 +43,7 @@ function changeState(newState) {
         if (!isOptionsPage()) {
             login_btn.textContent = "Loading User Information..."
         }
-        hideElement(main_ui);
+        showElement(main_ui);
         hideElement(logout_btn);
         break;
     case STATE_AUTHTOKEN_ACQUIRED:

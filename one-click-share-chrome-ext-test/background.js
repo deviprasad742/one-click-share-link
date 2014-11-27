@@ -35,7 +35,7 @@ function updateBadge() {
 }
 
 function setBadgeText(count) {
-    var bg_color = "#0000FF";
+    var bg_color = "#FF0000";
     var bg_text = count > 0 ? "" + count : "";
     chrome.browserAction.setBadgeBackgroundColor({
         color: bg_color

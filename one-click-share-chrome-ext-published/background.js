@@ -5,8 +5,8 @@ function startRequest() {
     window.setTimeout(startRequest, pollInterval);
 }
 
-//DOMAIN_URL = "https://one-click-share-link-dev.herokuapp.com/";
-DOMAIN_URL = "https://one-click-share-link.herokuapp.com/"
+DOMAIN_URL = "https://one-click-share-link-dev.herokuapp.com/";
+//DOMAIN_URL = "https://one-click-share-link.herokuapp.com/"
 
 KEY_ACCESS_TOKEN = "access-token";
 KEY_EMAIL_ID = "email-id";
@@ -35,7 +35,7 @@ function updateBadge() {
 }
 
 function setBadgeText(count) {
-    var bg_color = "#0000FF";
+    var bg_color = "#FF0000";
     var bg_text = count > 0 ? "" + count : "";
     chrome.browserAction.setBadgeBackgroundColor({
         color: bg_color
