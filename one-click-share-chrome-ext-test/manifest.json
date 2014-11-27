@@ -3,7 +3,7 @@
 
     "name": "1-Click Share Link",
     "description": "Share and receive links with 1 click",
-    "version": "1.7.1",
+    "version": "1.7.2",
 
     "browser_action": {
         "default_icon": "icon16.png",
