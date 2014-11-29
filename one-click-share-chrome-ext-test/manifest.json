@@ -18,7 +18,8 @@
         "page": "background.html"
     },
     "oauth2": {
-        "client_id": "100034805102-nqe03ff7bdhtf9ou91vcnbnpe8fk2vo4.apps.googleusercontent.com",
+        //"client_id": "100034805102-nqe03ff7bdhtf9ou91vcnbnpe8fk2vo4.apps.googleusercontent.com",
+        "client_id": "100034805102-5ppathljps2ip1qaonbcdl67delefvef.apps.googleusercontent.com",    
         "scopes": [
       "https://www.googleapis.com/auth/userinfo.profile",
             "https://www.googleapis.com/auth/userinfo.email"
