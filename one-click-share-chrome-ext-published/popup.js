@@ -19,9 +19,14 @@ DIV_IN_LINKS_ID = "in-links-content-div";
 DIV_OUT_LINKS_ID = "out-links-content-div";
 DIV_LAST_CONTACT_ID = "last-contact-div";
 TEXT_EMAIL_ID = "email-id"
-SEND_BUTTON_ID = "send-button-id";
+SEND_BUTTON_ID = "send-button";
+
+var titleField, urlField;
 
 document.addEventListener('DOMContentLoaded', function () {
+    titleField = document.getElementById("link-title");
+    urlField = document.getElementById("link-url");
+    fillLinkInfo();
 
     $(function () {
         $("#tabs").tabs({
@@ -30,11 +35,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     var sendButton = document.getElementById(SEND_BUTTON_ID);
-    var text = document.createTextNode(">> Send Link");
-    sendButton.appendChild(text);
-    document.getElementById("send-button-div").appendChild(sendButton);
-    sendButton.style.background = 'white';
-    sendButton.style.color = 'black';
 
     $(function () {
         $("button")
@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     });
 
-    document.body.appendChild(document.createElement("br"));
     sendButton.addEventListener("click", function () {
         var emailField = document.getElementById(TEXT_EMAIL_ID);
         var emailId = emailField.value;
@@ -61,18 +60,31 @@ document.addEventListener('DOMContentLoaded', function () {
 function sendLinkTo(email) {
     if (!isBlank(email)) {
         var sendButton = document.getElementById(SEND_BUTTON_ID);
-
         //temporarily show the sending status by color change.
+        var oldStyleBg = sendButton.style.background;
+        var oldStyleColor = sendButton.style.color;
+
         sendButton.style.background = "green";
-        sendButton.style.color = 'white';
-        chrome.tabs.getSelected(null, function (tab) {
-            sendLink(email, tab.title, tab.url, function (result) {
-                sendButton.style.background = 'white';
-                sendButton.style.color = 'black';
+        sendButton.style.color = "white";
+
+
+        var title = titleField.value;
+        var url = urlField.value;
+        if (!isBlank(title)) {
+            sendLink(email, title, url, function (result) {
+                sendButton.style.background = oldStyleBg;
+                sendButton.style.color = oldStyleColor;
                 forceSyncData(loadUI);
             });
-        });
+        }
     }
+}
+
+function fillLinkInfo() {
+    chrome.tabs.getSelected(null, function (tab) {
+        titleField.value = tab.title;
+        urlField.value = tab.url;
+    });
 }
 
 
@@ -130,6 +142,7 @@ function addRecentContacts(divId, contactsJson) {
         var link = document.createElement('a');
         var itemIndex = parseInt(i) + 1;
         var curLink = linksArr[i];
+        link.class = "contact";
         link.textContent = curLink[JSON_KEY_NAME];
         link.href = "https://www.google.co.in";
         link.onclick = function (loopIndex) {

@@ -152,7 +152,7 @@ function updateLoginStatus(name) {
         xmlhttp.send();
 
         xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState == 4) {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 var data = xmlhttp.responseText;
                 if (data.valueOf() == "true".valueOf()) {
                     createUserInfoCtrls();
