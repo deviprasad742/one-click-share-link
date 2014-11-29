@@ -1,0 +1,1 @@
+DOMAIN_URL = "https://one-click-share-link.herokuapp.com/";
