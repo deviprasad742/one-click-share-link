@@ -2,55 +2,13 @@
 
 <head>
     <link href="jqueryui/jquery-ui.css" rel="stylesheet">
-    <style type="text/css">
-        body {
-            overflow: hidden;
-        }
-        * {
-            font-size: 100%;
-            font-family: Helvetica;
-        }
-        .button {
-            width: 200px;
-        }
-        a {
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        a:link {
-            color: blue;
-        }
-        a:visited,
-        span.visited {
-            color: purple;
-        }
-        a:active,
-        span.active {
-            color: red;
-        }
-        /* user hovers     */
-        #links-content-div {
-            position: fixed;
-            width: 30em;
-            overflow: auto;
-            height: 100%;
-        }
-        label.aligned {
-            display: inline-block;
-            width: 3em;
-        }
-        .link-field input {
-            width: 19em;
-        }
-    </style>
     <script src="jqueryui/external/jquery/jquery.js"></script>
     <script src="jqueryui/jquery-ui.js"></script>
-    <script src="popup.js"></script>
     <script src="login.js"></script>
     <script src="background.js"></script>
     <script src="env.js"></script>
+    <link href="popup.css" rel="stylesheet">
+    <script src="popup.js"></script>
 
 </head>
 
@@ -95,7 +53,6 @@
                     <p>
                         <label style="font-size:10px">Note: To send a link either click on the user name or specify email id and click on the 'Send' button.</label>
                     </p>
-
                 </div>
                 <div id="tabs-2">
                     <div id="in-links-content-div"></div>

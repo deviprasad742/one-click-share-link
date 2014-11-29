@@ -106,13 +106,39 @@ function addLinks(divId, linksJson) {
     var linksArr = JSON.parse(linksJson);
     document.getElementById(divId).innerHTML = "";
     for (i in linksArr) {
-        var link = document.createElement('a');
+
         var itemIndex = parseInt(i) + 1;
         var curLink = linksArr[i];
         var title = itemIndex + ". " + curLink[JSON_KEY_TITLE];
-        link.textContent = trimTitle(title) + "-[" + curLink[JSON_KEY_NAME] + "]";
-        link.href = curLink[JSON_KEY_URL];
-        link.onclick = function (loopIndex) {
+        var senderName = curLink[JSON_KEY_NAME];
+
+        /*
+        linkDivElem.in-links-div(
+            linkElem.a
+            senderDivElem.in-sender-div(
+                a
+            )
+        )
+        */
+        var linkDivElem = document.createElement('div');
+        linkDivElem.setAttribute('class', 'in-links-div');
+
+        var linkElem = document.createElement('a');
+        linkElem.setAttribute('class', 'in-links-text-class');
+        linkElem.href = curLink[JSON_KEY_URL];
+        linkElem.innerHTML = trimTitle(title);
+
+
+
+        var senderDivElem = document.createElement('div');
+        senderDivElem.setAttribute('class', 'in-sender-div');
+        senderDivElem.innerHTML = senderName;
+
+        linkDivElem.appendChild(linkElem);
+        linkDivElem.appendChild(senderDivElem);
+
+
+        linkElem.onclick = function (loopIndex) {
             return function () {
                 var location = linksArr[loopIndex][JSON_KEY_URL];
                 chrome.tabs.create({
@@ -123,8 +149,8 @@ function addLinks(divId, linksJson) {
             }
         }(i);
 
-        document.getElementById(divId).appendChild(link);
-        document.getElementById(divId).appendChild(document.createElement("br"));
+        document.getElementById(divId).appendChild(linkDivElem);
+        //document.getElementById(divId).appendChild(senderDivElem);
     }
 }
 
