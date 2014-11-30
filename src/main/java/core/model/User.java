@@ -17,6 +17,7 @@ public class User {
 	private String id;
 	private UserInfo userInfo;
 	private int inLinkCounter;
+	private String emailId;
 
 	private List<OneLink> outLinks = new LinkedList<OneLink>();
 	private List<OneLink> inLinks = new LinkedList<OneLink>();
@@ -28,10 +29,11 @@ public class User {
 
 	public User(UserInfo userInfo) {
 		this.userInfo = userInfo;
+		emailId = userInfo.getEmailId();
 	}
 
 	public String getEmailId() {
-		return userInfo.getEmailId();
+		return emailId;
 	}
 
 	public List<OneLink> getInLinks() {
@@ -124,4 +126,5 @@ public class User {
 			links.remove(0);
 		}
 	}
+	
 }
