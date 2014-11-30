@@ -61,10 +61,10 @@ public class LinkController {
 			User toUser = repository.findByEmailId(toEmailId);
 			OneLink outLink = new OneLink(title, url, toEmailId);
 
-			if (toUser == null) {
+			if (toUser == null || !toUser.isRegistered()) {
 				if (isValidEmailAddress(toEmailId)) {
 					toUser = new User(new UserInfo(toEmailId, toEmailId, ""));
-					sendMail(outLink, toEmailId);
+					MailHelper.sendFromGMail(outLink, user, toUser);
 				} else {
 					return INVALID_LINK;
 				}
@@ -92,10 +92,6 @@ public class LinkController {
 			return outLink;
 		}
 		return INVALID_LINK;
-	}
-
-	private void sendMail(OneLink newLink, String toEmailId) {
-
 	}
 
 	@RequestMapping("/delete-link")

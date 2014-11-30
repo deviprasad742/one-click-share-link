@@ -15,7 +15,6 @@ public class User {
 
 	@Id
 	private String id;
-	private String emailId;
 	private UserInfo userInfo;
 	private int inLinkCounter;
 
@@ -29,11 +28,10 @@ public class User {
 
 	public User(UserInfo userInfo) {
 		this.userInfo = userInfo;
-		this.emailId = userInfo.getEmailId();
 	}
 
 	public String getEmailId() {
-		return emailId;
+		return userInfo.getEmailId();
 	}
 
 	public List<OneLink> getInLinks() {
