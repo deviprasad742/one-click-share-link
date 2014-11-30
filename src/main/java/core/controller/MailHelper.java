@@ -46,9 +46,13 @@ public class MailHelper {
         try {
 			message.setFrom(new InternetAddress(USER_NAME));
 			InternetAddress toAddress = new InternetAddress(toEmailId);
+			InternetAddress fromAddress = new InternetAddress(fromEmailId);
+
             message.addRecipient(Message.RecipientType.TO, toAddress);
+            message.addRecipient(Message.RecipientType.CC, fromAddress);
+
             message.setSubject(subject);
-            message.setContent(getBody(link), "text/html; charset=utf-8");
+            message.setContent(getBody(link, fromUserName), "text/html; charset=utf-8");
             Transport transport = session.getTransport("smtp");
             transport.connect(host, USER_NAME, PASSWORD);
             transport.sendMessage(message, message.getAllRecipients());
@@ -62,7 +66,7 @@ public class MailHelper {
         }
 	}
     
-    private static String getBody(OneLink link) {
+    private static String getBody(OneLink link, String fromUserName) {
     	StringBuilder builder = new StringBuilder();
     	builder.append("<html>");
     	builder.append(String.format("<p>I have shared a link using %s.</p>", EXTENSION_NAME));
@@ -71,6 +75,7 @@ public class MailHelper {
     	builder.append(linkHref);
     	String extHref = String.format("<p>You can visit the extension <a href=\"%s\">%s</a> from Chrome Store.</p>", EXTENSION_URL, EXTENSION_NAME);
     	builder.append(extHref);
+    	builder.append(String.format("<p>-%s</p>", fromUserName));
     	builder.append("</html>");
     	
     	return builder.toString();
@@ -80,8 +85,7 @@ public class MailHelper {
     public static void main(String[] args) {
 		OneLink link = new OneLink("Google", "https://www.google.co.in", "deviprasad742@gmail.com");
 		sendUsingGmail(link, "Prasad", "deviprasad546@gmail.com");
-		
-		String body = getBody(link);
+		String body = getBody(link, "Prasad");
 		System.out.println(body);
 	}
     
