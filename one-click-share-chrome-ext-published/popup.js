@@ -127,12 +127,12 @@ function addLinks(divId, linksJson) {
         linkElem.setAttribute('class', 'in-links-text-class');
         linkElem.href = curLink[JSON_KEY_URL];
         linkElem.innerHTML = trimTitle(title);
-
-
+        linkElem.title = curLink[JSON_KEY_URL];
 
         var senderDivElem = document.createElement('div');
         senderDivElem.setAttribute('class', 'in-sender-div');
         senderDivElem.innerHTML = senderName;
+        senderDivElem.title = curLink[JSON_KEY_EMAIL_ID];
 
         linkDivElem.appendChild(linkElem);
         linkDivElem.appendChild(senderDivElem);
@@ -170,6 +170,7 @@ function addRecentContacts(divId, contactsJson) {
         var curLink = linksArr[i];
         link.class = "contact";
         link.textContent = curLink[JSON_KEY_NAME];
+        link.title = curLink[JSON_KEY_EMAIL_ID];
         link.href = "https://www.google.co.in";
         link.onclick = function (loopIndex) {
             return function () {
