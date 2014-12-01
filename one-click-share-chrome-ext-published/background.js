@@ -5,6 +5,7 @@ function startRequest() {
     window.setTimeout(startRequest, pollInterval);
 }
 
+
 KEY_ACCESS_TOKEN = "access-token";
 KEY_EMAIL_ID = "email-id";
 KEY_NAME = "name";
