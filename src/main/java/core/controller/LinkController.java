@@ -63,7 +63,9 @@ public class LinkController {
 
 			if (toUser == null || !toUser.isRegistered()) {
 				if (isValidEmailAddress(toEmailId)) {
-					toUser = new User(new UserInfo(toEmailId, toEmailId, ""));
+					if (toUser == null) {
+						toUser = new User(new UserInfo(toEmailId, toEmailId, ""));
+					}
 					MailHelper.sendFromGMail(outLink, user, toUser);
 				} else {
 					return INVALID_LINK;
