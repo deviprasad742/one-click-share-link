@@ -12,21 +12,6 @@ var state = STATE_START;
 
 var login_btn, logout_btn, main_ui;
 
-function disableButton(button) {
-    button.setAttribute('disabled', 'disabled');
-}
-
-function enableButton(button) {
-    button.removeAttribute('disabled');
-}
-
-function showElement(element) {
-    element.style.display = "inline";
-}
-
-function hideElement(element) {
-    element.style.display = "none";
-}
 
 function changeState(newState) {
     state = newState;

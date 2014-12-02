@@ -22,10 +22,16 @@ TEXT_EMAIL_ID = "email-id"
 SEND_BUTTON_ID = "send-button";
 
 var titleField, urlField;
+var linkStatusField, sendButton;
+var avblFrenz;
 
 document.addEventListener('DOMContentLoaded', function () {
     titleField = document.getElementById("link-title");
     urlField = document.getElementById("link-url");
+    linkStatusField = document.getElementById("link-status");
+    sendButton = document.getElementById(SEND_BUTTON_ID);
+
+    hideElement(linkStatusField);
     fillLinkInfo();
 
     $(function () {
@@ -33,8 +39,6 @@ document.addEventListener('DOMContentLoaded', function () {
             event: "mouseover"
         });
     });
-
-    var sendButton = document.getElementById(SEND_BUTTON_ID);
 
     $(function () {
         $("button")
@@ -59,14 +63,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function sendLinkTo(email) {
     if (!isBlank(email)) {
-        var sendButton = document.getElementById(SEND_BUTTON_ID);
         //temporarily show the sending status by color change.
         var oldStyleBg = sendButton.style.background;
         var oldStyleColor = sendButton.style.color;
 
         sendButton.style.background = "green";
         sendButton.style.color = "white";
-
+        linkStatusField.textContent = "Sending Link...";
+        linkStatusField.style.color = "blue";
+        showElement(linkStatusField);
 
         var title = titleField.value;
         var url = urlField.value;
@@ -74,9 +79,20 @@ function sendLinkTo(email) {
             sendLink(email, title, url, function (result) {
                 sendButton.style.background = oldStyleBg;
                 sendButton.style.color = oldStyleColor;
+                updateLinkStatus(result);
                 forceSyncData(loadUI);
             });
         }
+    }
+}
+
+function updateLinkStatus(result) {
+    if (isValidLinkResult(result)) {
+        linkStatusField.textContent = "Link sent successfully.";
+        linkStatusField.style.color = "green";
+    } else {
+        linkStatusField.textContent = "Failed to send link.";
+        linkStatusField.style.color = "red";
     }
 }
 
@@ -95,7 +111,30 @@ function loadUI(loaded) {
         addLinks(DIV_IN_LINKS_ID, getInLinks());
         addLinks(DIV_OUT_LINKS_ID, getOutLinks());
         addRecentContacts(DIV_LAST_CONTACT_ID, getRecentContacts());
+
+        avblFrenz = getAvblFrenz();
+
+        $(function () {
+            $(".auto-frnd").autocomplete({
+                source: avblFrenz
+            });
+        });
+
     }
+}
+
+function getAvblFrenz() {
+    var avblFrenz = [];
+    var jsonText = getFriends();
+    if (!isBlank(jsonText)) {
+        var jsonArr = JSON.parse(jsonText);
+        for (i in jsonArr) {
+            var emailId = jsonArr[i][JSON_KEY_EMAIL_ID];
+            avblFrenz.push(emailId);
+        }
+        console.log("Freinds List: " + avblFrenz);
+    }
+    return avblFrenz;
 }
 
 function addLinks(divId, linksJson) {

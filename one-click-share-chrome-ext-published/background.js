@@ -6,15 +6,18 @@ function startRequest() {
 }
 
 
-KEY_ACCESS_TOKEN = "access-token";
-KEY_EMAIL_ID = "email-id";
+PARAM_ACCESS_TOKEN = "access-token";
+PARAM_EMAIL_ID = "email-id";
 KEY_NAME = "name";
 KEY_IMAGE = "image";
 URL_SEND = "send";
+
 KEY_URL_RECENT = "last-contact";
+KEY_URL_FRIENDS = "friends";
 KEY_URL_IN_LINKS = "in-links";
 KEY_URL_IN_LINKS_SIZE = "in-links-size";
 KEY_URL_OUT_LINKS = "out-links";
+
 JSON_KEY_NAME = "name";
 JSON_KEY_TITLE = "title";
 JSON_KEY_URL = "url";
@@ -49,15 +52,15 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function addCredentials(xmlhttp) {
-    xmlhttp.setRequestHeader(KEY_EMAIL_ID, localStorage[KEY_EMAIL_ID]);
-    xmlhttp.setRequestHeader(KEY_ACCESS_TOKEN, localStorage[KEY_ACCESS_TOKEN]);
+    xmlhttp.setRequestHeader(PARAM_EMAIL_ID, localStorage[PARAM_EMAIL_ID]);
+    xmlhttp.setRequestHeader(PARAM_ACCESS_TOKEN, localStorage[PARAM_ACCESS_TOKEN]);
 }
 
 function createLocalStorage(jsonData) {
     localStorage[KEY_NAME] = jsonData.name;
-    localStorage[KEY_EMAIL_ID] = jsonData.emailId;
+    localStorage[PARAM_EMAIL_ID] = jsonData.emailId;
     localStorage[KEY_IMAGE] = jsonData.image;
-    localStorage[KEY_ACCESS_TOKEN] = jsonData.accessToken;
+    localStorage[PARAM_ACCESS_TOKEN] = jsonData.accessToken;
 }
 
 function clearLocalStorage() {
@@ -65,7 +68,7 @@ function clearLocalStorage() {
 }
 
 function hasCredentials() {
-    return localStorage[KEY_EMAIL_ID] != null;
+    return localStorage[PARAM_EMAIL_ID] != null;
 }
 
 function checkAndsyncData(callback) {
@@ -101,6 +104,7 @@ function forceSyncData(data_loaded) {
     fetchData(loadedFunc, KEY_URL_RECENT);
     fetchData(loadedFunc, KEY_URL_IN_LINKS);
     fetchData(loadedFunc, KEY_URL_OUT_LINKS);
+    fetchData(loadedFunc, KEY_URL_FRIENDS);
     updateBadge();
 }
 
@@ -142,6 +146,10 @@ function getRecentContacts() {
     return localStorage[KEY_URL_RECENT];
 }
 
+function getFriends() {
+    return localStorage[KEY_URL_RECENT];
+}
+
 function sendLink(toEmail, title, url, callback) {
     var xmlhttp = new XMLHttpRequest();
     var url = DOMAIN_URL + URL_SEND + "?to=" + toEmail + "&title=" + title + "&url=" + url;
@@ -160,7 +168,32 @@ function sendLink(toEmail, title, url, callback) {
     };
 }
 
+function isValidLinkResult(result) {
+    if (!isBlank(result)) {
+        var jsonData = JSON.parse(result);
+        if (jsonData[JSON_KEY_TITLE] != "Invalid") {
+            return true;
+        }
+    }
+    return false;
+}
 
 function isBlank(string) {
     return (!string || /^\s*$/.test(string));
+}
+
+function disableButton(button) {
+    button.setAttribute('disabled', 'disabled');
+}
+
+function enableButton(button) {
+    button.removeAttribute('disabled');
+}
+
+function showElement(element) {
+    element.style.display = "inline";
+}
+
+function hideElement(element) {
+    element.style.display = "none";
 }
