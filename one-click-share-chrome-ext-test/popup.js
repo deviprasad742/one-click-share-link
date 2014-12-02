@@ -22,10 +22,15 @@ TEXT_EMAIL_ID = "email-id"
 SEND_BUTTON_ID = "send-button";
 
 var titleField, urlField;
+var linkStatusField, sendButton;
 
 document.addEventListener('DOMContentLoaded', function () {
     titleField = document.getElementById("link-title");
     urlField = document.getElementById("link-url");
+    linkStatusField = document.getElementById("link-status");
+    sendButton = document.getElementById(SEND_BUTTON_ID);
+
+    hideElement(linkStatusField);
     fillLinkInfo();
 
     $(function () {
@@ -33,8 +38,6 @@ document.addEventListener('DOMContentLoaded', function () {
             event: "mouseover"
         });
     });
-
-    var sendButton = document.getElementById(SEND_BUTTON_ID);
 
     $(function () {
         $("button")
@@ -59,14 +62,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function sendLinkTo(email) {
     if (!isBlank(email)) {
-        var sendButton = document.getElementById(SEND_BUTTON_ID);
         //temporarily show the sending status by color change.
         var oldStyleBg = sendButton.style.background;
         var oldStyleColor = sendButton.style.color;
 
         sendButton.style.background = "green";
         sendButton.style.color = "white";
-
+        linkStatusField.textContent = "Sending Link...";
+        linkStatusField.style.color = "blue";
+        showElement(linkStatusField);
 
         var title = titleField.value;
         var url = urlField.value;
@@ -74,9 +78,20 @@ function sendLinkTo(email) {
             sendLink(email, title, url, function (result) {
                 sendButton.style.background = oldStyleBg;
                 sendButton.style.color = oldStyleColor;
+                updateLinkStatus(result);
                 forceSyncData(loadUI);
             });
         }
+    }
+}
+
+function updateLinkStatus(result) {
+    if (isValidLinkResult(result)) {
+        linkStatusField.textContent = "Link sent successfully.";
+        linkStatusField.style.color = "green";
+    } else {
+        linkStatusField.textContent = "Failed to send link.";
+        linkStatusField.style.color = "red";
     }
 }
 

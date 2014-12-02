@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -32,6 +33,7 @@ public class UserController {
 	private static final String KEY_PICTURE = "picture";
 	private static final String KEY_NAME = "name";
 	private static final String KEY_EMAIL = "email";
+	private static final Pattern GMAIL_PATTERN = Pattern.compile("(.*@gmail.*)"); 
 
 	@Autowired
 	private UserRepository repository;
@@ -60,6 +62,10 @@ public class UserController {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public boolean canSaveUser(User user) {
+		return GMAIL_PATTERN.matcher(user.getEmailId()).matches();
 	}
 	
 	@RequestMapping(value = "/register-token", method = RequestMethod.POST)
@@ -145,16 +151,17 @@ public class UserController {
 	public boolean isValidRequest(HttpServletRequest request) {
 		String emailId = getEmailId(request);
 		String token = getAccessToken(request);
-		System.out.println(emailId + "-----" + token);
 		if (!StringUtils.isEmpty(token) && !StringUtils.isEmpty(emailId)) {
 			User user = repository.findByEmailId(emailId);
 			if (user != null) {
 				boolean validToken = user.isValidToken(token);
-				System.out.println("Token validity:" + validToken);
+				System.out.println("User token is valid for " + emailId);
 				return validToken;
+			} else {
+				System.out.println("User not found in the repository: " + emailId);
 			}
 		} else {
-			System.out.println("Invalid request: " + request.getHeaderNames());
+			System.out.println(String.format("Invalid request: %s,%s", emailId, token));
 		}
 		return false;
 	}

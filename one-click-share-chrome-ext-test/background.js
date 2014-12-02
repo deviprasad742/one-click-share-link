@@ -160,7 +160,32 @@ function sendLink(toEmail, title, url, callback) {
     };
 }
 
+function isValidLinkResult(result) {
+    if (!isBlank(result)) {
+        var jsonData = JSON.parse(result);
+        if (jsonData[JSON_KEY_TITLE] != "Invalid") {
+            return true;
+        }
+    }
+    return false;
+}
 
 function isBlank(string) {
     return (!string || /^\s*$/.test(string));
+}
+
+function disableButton(button) {
+    button.setAttribute('disabled', 'disabled');
+}
+
+function enableButton(button) {
+    button.removeAttribute('disabled');
+}
+
+function showElement(element) {
+    element.style.display = "inline";
+}
+
+function hideElement(element) {
+    element.style.display = "none";
 }

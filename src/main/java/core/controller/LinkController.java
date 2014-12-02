@@ -58,6 +58,7 @@ public class LinkController {
 			@RequestParam(value = "url") String url) {
 		User user = getValidatedUser();
 		if (user != null) {
+		    toEmailId = toEmailId.trim();
 			User toUser = repository.findByEmailId(toEmailId);
 			OneLink outLink = new OneLink(title, url, toEmailId);
 
@@ -84,13 +85,16 @@ public class LinkController {
 			}
 
 			// update received user info
-			OneLink inLink = new OneLink(title, url, fromEmailId);
-			toUser.addInLink(inLink);
-			toUser.incrementInLinkCounter();
-			toUser.addToLastContacted(fromEmailId);			
-			repository.save(toUser);
-
+			if (controller.canSaveUser(toUser)) {
+				OneLink inLink = new OneLink(title, url, fromEmailId);
+				toUser.addInLink(inLink);
+				toUser.incrementInLinkCounter();
+				toUser.addToLastContacted(fromEmailId);	
+				repository.save(toUser);
+				System.out.println("Incoming links updated for user: " + toUser.getEmailId());
+			}
 			System.out.println("Link Added -->" + outLink);
+
 			return outLink;
 		}
 		return INVALID_LINK;
