@@ -6,15 +6,18 @@ function startRequest() {
 }
 
 
-KEY_ACCESS_TOKEN = "access-token";
-KEY_EMAIL_ID = "email-id";
+PARAM_ACCESS_TOKEN = "access-token";
+PARAM_EMAIL_ID = "email-id";
 KEY_NAME = "name";
 KEY_IMAGE = "image";
 URL_SEND = "send";
+
 KEY_URL_RECENT = "last-contact";
+KEY_URL_FRIENDS = "friends";
 KEY_URL_IN_LINKS = "in-links";
 KEY_URL_IN_LINKS_SIZE = "in-links-size";
 KEY_URL_OUT_LINKS = "out-links";
+
 JSON_KEY_NAME = "name";
 JSON_KEY_TITLE = "title";
 JSON_KEY_URL = "url";
@@ -49,15 +52,15 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function addCredentials(xmlhttp) {
-    xmlhttp.setRequestHeader(KEY_EMAIL_ID, localStorage[KEY_EMAIL_ID]);
-    xmlhttp.setRequestHeader(KEY_ACCESS_TOKEN, localStorage[KEY_ACCESS_TOKEN]);
+    xmlhttp.setRequestHeader(PARAM_EMAIL_ID, localStorage[PARAM_EMAIL_ID]);
+    xmlhttp.setRequestHeader(PARAM_ACCESS_TOKEN, localStorage[PARAM_ACCESS_TOKEN]);
 }
 
 function createLocalStorage(jsonData) {
     localStorage[KEY_NAME] = jsonData.name;
-    localStorage[KEY_EMAIL_ID] = jsonData.emailId;
+    localStorage[PARAM_EMAIL_ID] = jsonData.emailId;
     localStorage[KEY_IMAGE] = jsonData.image;
-    localStorage[KEY_ACCESS_TOKEN] = jsonData.accessToken;
+    localStorage[PARAM_ACCESS_TOKEN] = jsonData.accessToken;
 }
 
 function clearLocalStorage() {
@@ -65,7 +68,7 @@ function clearLocalStorage() {
 }
 
 function hasCredentials() {
-    return localStorage[KEY_EMAIL_ID] != null;
+    return localStorage[PARAM_EMAIL_ID] != null;
 }
 
 function checkAndsyncData(callback) {
@@ -101,6 +104,7 @@ function forceSyncData(data_loaded) {
     fetchData(loadedFunc, KEY_URL_RECENT);
     fetchData(loadedFunc, KEY_URL_IN_LINKS);
     fetchData(loadedFunc, KEY_URL_OUT_LINKS);
+    fetchData(loadedFunc, KEY_URL_FRIENDS);
     updateBadge();
 }
 
@@ -139,6 +143,10 @@ function getOutLinks() {
 }
 
 function getRecentContacts() {
+    return localStorage[KEY_URL_RECENT];
+}
+
+function getFriends() {
     return localStorage[KEY_URL_RECENT];
 }
 

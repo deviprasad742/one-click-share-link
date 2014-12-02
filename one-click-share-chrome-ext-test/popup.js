@@ -23,6 +23,7 @@ SEND_BUTTON_ID = "send-button";
 
 var titleField, urlField;
 var linkStatusField, sendButton;
+var avblFrenz;
 
 document.addEventListener('DOMContentLoaded', function () {
     titleField = document.getElementById("link-title");
@@ -110,7 +111,30 @@ function loadUI(loaded) {
         addLinks(DIV_IN_LINKS_ID, getInLinks());
         addLinks(DIV_OUT_LINKS_ID, getOutLinks());
         addRecentContacts(DIV_LAST_CONTACT_ID, getRecentContacts());
+
+        avblFrenz = getAvblFrenz();
+
+        $(function () {
+            $(".auto-frnd").autocomplete({
+                source: avblFrenz
+            });
+        });
+
     }
+}
+
+function getAvblFrenz() {
+    var avblFrenz = [];
+    var jsonText = getFriends();
+    if (!isBlank(jsonText)) {
+        var jsonArr = JSON.parse(jsonText);
+        for (i in jsonArr) {
+            var emailId = jsonArr[i][JSON_KEY_EMAIL_ID];
+            avblFrenz.push(emailId);
+        }
+        console.log("Freinds List: " + avblFrenz);
+    }
+    return avblFrenz;
 }
 
 function addLinks(divId, linksJson) {
