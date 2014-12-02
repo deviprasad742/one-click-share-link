@@ -147,7 +147,7 @@ function getRecentContacts() {
 }
 
 function getFriends() {
-    return localStorage[KEY_URL_RECENT];
+    return localStorage[KEY_URL_FRIENDS];
 }
 
 function sendLink(toEmail, title, url, callback) {
