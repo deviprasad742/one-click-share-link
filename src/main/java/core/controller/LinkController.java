@@ -151,6 +151,7 @@ public class LinkController {
 		User user = getValidatedUser();
 		if (user != null) {
 			user.clearInLinkCounter();
+			repository.save(user);
 		}
 	}
 
