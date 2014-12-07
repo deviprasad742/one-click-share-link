@@ -32,6 +32,8 @@ function updateBadge() {
         fetchData(function (result) {
             if (result == "true") {
                 updateInLinks();
+            } else {
+                setBadgeText(localStorage[KEY_URL_IN_LINKS_SIZE]);
             }
         }, KEY_URL_HAS_IN_LINKS);
     } else {
@@ -43,7 +45,6 @@ function updateInLinks() {
     console.log("Updating in links information");
     fetchData(null, KEY_URL_IN_LINKS);
     fetchData(function (result) {
-
         setBadgeText(result);
     }, KEY_URL_IN_LINKS_SIZE);
 }
@@ -143,6 +144,7 @@ function loadOutLinks(callback) {
 
 function clearInLinks(callback) {
     fetchData(callback, KEY_URL_CLEAR_IN_LINKS);
+    localStorage[KEY_URL_IN_LINKS_SIZE] = 0;
     setBadgeText(0);
 }
 
