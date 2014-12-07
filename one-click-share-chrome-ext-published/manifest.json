@@ -3,7 +3,7 @@
 
     "name": "1-Click Share Link",
     "description": "Share and receive links with 1 click",
-    "version": "1.7.8",
+    "version": "1.7.9",
 
     "browser_action": {
         "default_icon": "icon16.png",
@@ -29,8 +29,6 @@
     "identity",
     "tabs",
     "activeTab",
-    "https://one-click-share-link-dev.herokuapp.com/*",
     "https://one-click-share-link.herokuapp.com/*"
-
   ]
 }

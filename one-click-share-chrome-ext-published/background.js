@@ -17,6 +17,8 @@ KEY_URL_FRIENDS = "friends";
 KEY_URL_IN_LINKS = "in-links";
 KEY_URL_IN_LINKS_SIZE = "in-links-size";
 KEY_URL_OUT_LINKS = "out-links";
+KEY_URL_HAS_IN_LINKS = "has-in-links";
+KEY_URL_CLEAR_IN_LINKS = "clear-in-links";
 
 JSON_KEY_NAME = "name";
 JSON_KEY_TITLE = "title";
@@ -28,15 +30,26 @@ JSON_KEY_IMAGE = "image";
 function updateBadge() {
     if (hasCredentials()) {
         fetchData(function (result) {
-            setBadgeText(result);
-        }, KEY_URL_IN_LINKS_SIZE);
+            if (result == "true") {
+                updateInLinks();
+            }
+        }, KEY_URL_HAS_IN_LINKS);
     } else {
         setBadgeText(0);
     }
 }
 
+function updateInLinks() {
+    console.log("Updating in links information");
+    fetchData(null, KEY_URL_IN_LINKS);
+    fetchData(function (result) {
+
+        setBadgeText(result);
+    }, KEY_URL_IN_LINKS_SIZE);
+}
+
 function setBadgeText(count) {
-    var bg_color = "#FF0000";
+    var bg_color = "#00FF00";
     var bg_text = count > 0 ? "" + count : "";
     chrome.browserAction.setBadgeBackgroundColor({
         color: bg_color
@@ -73,20 +86,14 @@ function hasCredentials() {
 
 function checkAndsyncData(callback) {
     if (hasCredentials()) {
+        fetchData(function (result) {
+            if (result == "true") {
+                forceSyncData(callback)
+            } else {
+                callback(true);
+            }
 
-        if (isDataUnSynced()) {
-            forceSyncData(callback)
-        } else {
-            fetchData(function (result) {
-                if (result > 0) {
-                    forceSyncData(callback)
-                } else {
-                    callback(true);
-                }
-
-            }, KEY_URL_IN_LINKS_SIZE);
-        }
-
+        }, KEY_URL_HAS_IN_LINKS);
     } else {
         callback(false);
     }
@@ -132,6 +139,11 @@ function fetchData(callback, key_url) {
 
 function loadOutLinks(callback) {
     fetchData(callback, KEY_URL_OUT_LINKS);
+}
+
+function clearInLinks(callback) {
+    fetchData(callback, KEY_URL_CLEAR_IN_LINKS);
+    setBadgeText(0);
 }
 
 function getInLinks() {
