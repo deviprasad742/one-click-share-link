@@ -21,8 +21,11 @@ import core.model.UserInfo;
 
 @RestController
 public class LinkController {
+	private static final String INVALID_STATUS = "invalid";
 	private static final int LINK_LIMIT = 50;
-	private static final OneLink INVALID_LINK = new OneLink("Invalid", "Invalid", "Invalid");
+	private static final OneLink INVALID_LINK = new OneLink(INVALID_STATUS, INVALID_STATUS, INVALID_STATUS);
+	private static final String PROMPT_MAIL_STATUS = "prompt_mail";
+	private static final OneLink PROMPT_MAIL_LINK = new OneLink(PROMPT_MAIL_STATUS, PROMPT_MAIL_STATUS, PROMPT_MAIL_STATUS);
 
 	@Autowired
 	private UserRepository repository;
@@ -62,12 +65,13 @@ public class LinkController {
 			User toUser = repository.findByEmailId(toEmailId);
 			OneLink outLink = new OneLink(title, url, toEmailId);
 
+			boolean promptMail = false;
 			if (toUser == null || !toUser.isRegistered()) {
 				if (isValidEmailAddress(toEmailId)) {
 					if (toUser == null) {
 						toUser = new User(new UserInfo(toEmailId, toEmailId, ""));
 					}
-					MailHelper.sendFromGMail(outLink, user, toUser);
+					promptMail =  true;
 				} else {
 					return INVALID_LINK;
 				}
@@ -95,8 +99,12 @@ public class LinkController {
 				System.out.println("Incoming links updated for user: " + toUser.getEmailId());
 			}
 			System.out.println("Link Added -->" + outLink);
-
-			return outLink;
+			
+			if (promptMail) {
+				return PROMPT_MAIL_LINK;
+			} else {
+				return outLink;
+			}
 		}
 		return INVALID_LINK;
 	}
