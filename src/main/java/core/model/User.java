@@ -22,6 +22,7 @@ public class User {
 	private List<OneLink> outLinks = new LinkedList<OneLink>();
 	private List<OneLink> inLinks = new LinkedList<OneLink>();
 	private List<String> accessTokens = new LinkedList<String>();
+	private boolean isInLinksSynced;
 
 	private List<String> friends = new LinkedList<String>();
 	private List<String> lastContacted = new LinkedList<String>();
@@ -125,6 +126,15 @@ public class User {
 		if (links.size() > MAX_LINK_LIMIT) {
 			links.remove(0);
 		}
+	}
+	
+
+	public boolean isInLinksSynced() {
+		return isInLinksSynced;
+	}
+	
+	public void setInLinksSynced(boolean isInLinksSynced) {
+		this.isInLinksSynced = isInLinksSynced;
 	}
 	
 }

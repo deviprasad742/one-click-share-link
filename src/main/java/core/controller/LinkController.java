@@ -36,7 +36,7 @@ public class LinkController {
 		User user = getValidatedUser();
 		if (user != null) {
 			// clear counters
-			user.clearInLinkCounter();
+			user.setInLinksSynced(true);
 			repository.save(user);
 
 			return getTopInfoLinks(user.getInLinks());
@@ -128,11 +128,11 @@ public class LinkController {
 		}
 	}
 
-	@RequestMapping("/has-links")
+	@RequestMapping("/has-in-links")
 	public boolean hasIncomingLinks() {
 		User user = getValidatedUser();
 		if (user != null) {
-			return user.getInLinkCounter() > 0;
+			return !user.isInLinksSynced();
 		}
 		return false;
 	}
@@ -145,6 +145,15 @@ public class LinkController {
 		}
 		return 0;
 	}
+	
+	@RequestMapping("/clear-in-links")
+	public void clearIncomingLinksSize() {
+		User user = getValidatedUser();
+		if (user != null) {
+			user.clearInLinkCounter();
+		}
+	}
+
 
 	@RequestMapping("/key")
 	public String getOAuthKey() {
