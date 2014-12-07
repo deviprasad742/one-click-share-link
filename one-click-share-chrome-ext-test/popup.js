@@ -79,22 +79,37 @@ function sendLinkTo(email) {
             sendLink(email, title, url, function (result) {
                 sendButton.style.background = oldStyleBg;
                 sendButton.style.color = oldStyleColor;
-                updateLinkStatus(result);
+                updateLinkStatus(result, email, title, url);
                 forceSyncData(loadUI);
             });
         }
     }
 }
 
-function updateLinkStatus(result) {
+function updateLinkStatus(result, email, title, url) {
     if (isValidLinkResult(result)) {
-        linkStatusField.textContent = "Link sent successfully.";
-        linkStatusField.style.color = "green";
+        if (isPromptMail(result)) {
+            promptMail(email, title, url);
+            hideElement(linkStatusField);
+        } else {
+            linkStatusField.textContent = "Link sent successfully.";
+            linkStatusField.style.color = "green";
+        }
+
     } else {
         linkStatusField.textContent = "Failed to send link.";
         linkStatusField.style.color = "red";
     }
 }
+
+
+function promptMail(email, title, url) {
+    body = url;
+    var composeUrl = "https://mail.google.com/mail/?view=cm&fs=1&to="
+    composeUrl = composeUrl + email + "&su=" + title + "&body=" + body;
+    window.open(composeUrl);
+}
+
 
 function fillLinkInfo() {
     chrome.tabs.getSelected(null, function (tab) {

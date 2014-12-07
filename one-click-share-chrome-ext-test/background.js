@@ -26,6 +26,11 @@ JSON_KEY_URL = "url";
 JSON_KEY_EMAIL_ID = "emailId";
 JSON_KEY_IMAGE = "image";
 
+MAIL_STATUS_INVALID = "invalid";
+MAIL_STATUS_PROMPT_MAIL = "prompt_mail";
+EXTENSION_URL = "https://chrome.google.com/webstore/detail/1-click-share-link/ahphcmppigmmngfoehcncdfpafapijmj";
+EXTENSION_NAME = "1-Click Share Link";
+
 
 function updateBadge() {
     if (hasCredentials()) {
@@ -87,14 +92,18 @@ function hasCredentials() {
 
 function checkAndsyncData(callback) {
     if (hasCredentials()) {
-        fetchData(function (result) {
-            if (result == "true") {
-                forceSyncData(callback)
-            } else {
-                callback(true);
-            }
+        if (isDataUnSynced()) {
+            forceSyncData(callback)
+        } else {
+            fetchData(function (result) {
+                if (result == "true") {
+                    forceSyncData(callback)
+                } else {
+                    callback(true);
+                }
 
-        }, KEY_URL_HAS_IN_LINKS);
+            }, KEY_URL_HAS_IN_LINKS);
+        }
     } else {
         callback(false);
     }
@@ -185,7 +194,17 @@ function sendLink(toEmail, title, url, callback) {
 function isValidLinkResult(result) {
     if (!isBlank(result)) {
         var jsonData = JSON.parse(result);
-        if (jsonData[JSON_KEY_TITLE] != "Invalid") {
+        if (jsonData[JSON_KEY_TITLE] != MAIL_STATUS_INVALID) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function isPromptMail(result) {
+    if (!isBlank(result)) {
+        var jsonData = JSON.parse(result);
+        if (jsonData[JSON_KEY_TITLE] == MAIL_STATUS_PROMPT_MAIL) {
             return true;
         }
     }
