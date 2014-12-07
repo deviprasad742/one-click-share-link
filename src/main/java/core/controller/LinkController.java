@@ -89,6 +89,7 @@ public class LinkController {
 				OneLink inLink = new OneLink(title, url, fromEmailId);
 				toUser.addInLink(inLink);
 				toUser.incrementInLinkCounter();
+				toUser.setInLinksSynced(false);
 				toUser.addToLastContacted(fromEmailId);	
 				repository.save(toUser);
 				System.out.println("Incoming links updated for user: " + toUser.getEmailId());
