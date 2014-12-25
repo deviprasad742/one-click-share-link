@@ -1,7 +1,7 @@
 var pollInterval = 1000 * 60; // 1 minute, in milliseconds
 
 function startRequest() {
-    updateBadge();
+    updateInBackGround();
     window.setTimeout(startRequest, pollInterval);
 }
 
@@ -20,11 +20,20 @@ KEY_URL_OUT_LINKS = "out-links";
 KEY_URL_HAS_IN_LINKS = "has-in-links";
 KEY_URL_CLEAR_IN_LINKS = "clear-in-links";
 
+KEY_URL_HAS_IN_UNREAD_UPDATE = "has-in-unread-update";
+KEY_URL_HAS_OUT_UNREAD_UPDATE = "has-out-unread-update";
+KEY_URL_HAS_UPDATES = "has-updates";
+URL_MARK_READ = "mark-read";
+
+
+
 JSON_KEY_NAME = "name";
 JSON_KEY_TITLE = "title";
 JSON_KEY_URL = "url";
 JSON_KEY_EMAIL_ID = "emailId";
 JSON_KEY_IMAGE = "image";
+JSON_LINK_KEY_UNREAD = "unread";
+
 
 MAIL_STATUS_INVALID = "invalid";
 MAIL_STATUS_PROMPT_MAIL = "prompt_mail";
@@ -32,48 +41,87 @@ EXTENSION_URL = "https://chrome.google.com/webstore/detail/1-click-share-link/ah
 EXTENSION_NAME = "1-Click Share Link";
 
 
-function updateBadge() {
+function updateInBackGround() {
     if (hasCredentials()) {
         fetchData(function (result) {
             if (result == "true") {
-                updateInLinks(true);
-            } else {
-                setBadgeText(localStorage[KEY_URL_IN_LINKS_SIZE]);
+                checkAndUpdateInLinks();
+                checkUnreadAndUpdateOutLinks();
             }
-        }, KEY_URL_HAS_IN_LINKS);
+        }, KEY_URL_HAS_UPDATES);
     } else {
         setBadgeText(0);
     }
 }
 
-function updateInLinks(notify) {
+function checkAndUpdateInLinks(callback) {
+    fetchData(function (result) {
+        if (result == "true") {
+            updateInLinks(callback, true);
+            fetchData(null, KEY_URL_RECENT);
+        } else {
+            checkUnreadAndUpdateInLinks(callback);
+        }
+    }, KEY_URL_HAS_IN_LINKS);
+}
+
+function updateInLinks(callback, notify) {
     console.log("Updating in links information");
-    fetchData(null, KEY_URL_IN_LINKS);
+    fetchData(callback, KEY_URL_IN_LINKS);
     fetchData(function (result) {
         setBadgeText(result);
-
         if (notify) {
             notifyIncomingLinks(result);
         }
     }, KEY_URL_IN_LINKS_SIZE);
 }
 
+function checkUnreadAndUpdateInLinks(callback) {
+    fetchData(function (result) {
+        if (result == "true") {
+            updateInLinks(callback, false);
+        }
+    }, KEY_URL_HAS_IN_UNREAD_UPDATE);
+}
+
+function checkUnreadAndUpdateOutLinks(callback) {
+    fetchData(function (result) {
+        if (result == "true") {
+            updateOutLinks(callback);
+        } else {
+            setBadgeText(localStorage[KEY_URL_IN_LINKS_SIZE]);
+        }
+    }, KEY_URL_HAS_OUT_UNREAD_UPDATE);
+}
+
+function updateOutLinks(callback) {
+    console.log("Updating out links information");
+    fetchData(callback, KEY_URL_OUT_LINKS);
+}
+
+
 function notifyIncomingLinks(size) {
+    if (size == 0) {
+        return;
+    }
+
     if (Notification.permission !== "granted")
         Notification.requestPermission();
-    String title = "You have " +
-
-    var notification = new Notification(title, {
+    var message = "You have " + size + " incoming link(s). Click to view them";
+    var notification = new Notification(EXTENSION_NAME, {
         icon: 'icon16.png',
-        body: url,
+        body: message,
     });
 
     notification.onclick = function () {
         chrome.tabs.create({
             url: "inbox.html"
         });
-        popup.cancel();
     };
+
+    setTimeout(function () {
+        notification.close();
+    }, 10000);
 }
 
 function setBadgeText(count) {
@@ -121,7 +169,7 @@ function checkAndsyncData(callback) {
                 if (result == "true") {
                     forceSyncData(callback)
                 } else {
-                    callback(true);
+                    checkAndUpdateNotifications(callback);
                 }
 
             }, KEY_URL_HAS_IN_LINKS);
@@ -131,23 +179,30 @@ function checkAndsyncData(callback) {
     }
 }
 
+function checkAndUpdateNotifications(data_loaded) {
+    var loadedFunc = getLoadedFunc(data_loaded);
+    checkUnreadAndUpdateInLinks(loadedFunc);
+    checkUnreadAndUpdateOutLinks(loadedFunc);
+}
+
 function isDataUnSynced() {
     return isBlank(localStorage[KEY_URL_IN_LINKS]);
 }
 
 function forceSyncData(data_loaded) {
-    var loadedFunc = function (result) {
-        data_loaded(true);
-    };
-
+    var loadedFunc = getLoadedFunc(data_loaded);
     fetchData(loadedFunc, KEY_URL_RECENT);
+    fetchData(loadedFunc, KEY_URL_FRIENDS);
     fetchData(loadedFunc, KEY_URL_IN_LINKS);
     fetchData(loadedFunc, KEY_URL_OUT_LINKS);
-    fetchData(loadedFunc, KEY_URL_FRIENDS);
-    updateBadge();
+    setBadgeText(0);
 }
 
-
+function getLoadedFunc(data_loaded) {
+    return function (result) {
+        data_loaded(true);
+    };
+}
 
 function fetchData(callback, key_url) {
     var xmlhttp = new XMLHttpRequest();
@@ -197,6 +252,8 @@ function getFriends() {
 
 function sendLink(toEmail, title, url, callback) {
     var xmlhttp = new XMLHttpRequest();
+    title = encodeURIComponent(title);
+    url = encodeURIComponent(url);
     var url = DOMAIN_URL + URL_SEND + "?to=" + toEmail + "&title=" + title + "&url=" + url;
     xmlhttp.open("POST", url, true);
     addCredentials(xmlhttp);
@@ -209,6 +266,30 @@ function sendLink(toEmail, title, url, callback) {
             if (callback != null) {
                 callback(result);
             }
+        }
+    };
+}
+
+function markLinkRead(link) {
+    var fromEmail = link[JSON_KEY_EMAIL_ID];
+    var title = link[JSON_KEY_TITLE];
+    var url = link[JSON_KEY_URL];
+
+    title = encodeURIComponent(title);
+    url = encodeURIComponent(url);
+
+    var xmlhttp = new XMLHttpRequest();
+    var url = DOMAIN_URL + URL_MARK_READ + "?from=" + fromEmail + "&title=" + title + "&url=" + url;
+    xmlhttp.open("POST", url, true);
+    addCredentials(xmlhttp);
+    xmlhttp.send();
+
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4) {
+            var result = xmlhttp.responseText;
+            console.log(URL_MARK_READ + ": " + result);
+            // force and update of links to update read status
+            updateInBackGround();
         }
     };
 }

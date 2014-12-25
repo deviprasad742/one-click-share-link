@@ -4,16 +4,6 @@ function capitaliseFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-var MAX_CHAR_LENGTH = 45;
-
-function trimTitle(string) {
-
-    if (string.length > MAX_CHAR_LENGTH) {
-        return string.substring(0, MAX_CHAR_LENGTH - 3) + "...";
-    }
-    return string;
-
-}
 
 DIV_IN_LINKS_ID = "in-links-content-div";
 DIV_OUT_LINKS_ID = "out-links-content-div";
@@ -124,8 +114,8 @@ function loadUI(loaded) {
     console.log("Received callback data updated: " + loaded);
     if (loaded) {
         clearInLinks();
-        addLinks(DIV_IN_LINKS_ID, getInLinks());
-        addLinks(DIV_OUT_LINKS_ID, getOutLinks());
+        addLinks(DIV_IN_LINKS_ID, getInLinks(), true, true);
+        addLinks(DIV_OUT_LINKS_ID, getOutLinks(), false, true);
         addRecentContacts(DIV_LAST_CONTACT_ID, getRecentContacts());
 
         avblFrenz = getAvblFrenz();
@@ -151,62 +141,6 @@ function getAvblFrenz() {
         console.log("Freinds List: " + avblFrenz);
     }
     return avblFrenz;
-}
-
-function addLinks(divId, linksJson) {
-    if (isBlank(linksJson)) {
-        return;
-    }
-
-    var linksArr = JSON.parse(linksJson);
-    document.getElementById(divId).innerHTML = "";
-    for (i in linksArr) {
-
-        var itemIndex = parseInt(i) + 1;
-        var curLink = linksArr[i];
-        var title = itemIndex + ". " + curLink[JSON_KEY_TITLE];
-        var senderName = curLink[JSON_KEY_NAME];
-
-        /*
-        linkDivElem.in-links-div(
-            linkElem.a
-            senderDivElem.in-sender-div(
-                a
-            )
-        )
-        */
-        var linkDivElem = document.createElement('div');
-        linkDivElem.setAttribute('class', 'in-links-div');
-
-        var linkElem = document.createElement('a');
-        linkElem.setAttribute('class', 'in-links-text-class');
-        linkElem.href = curLink[JSON_KEY_URL];
-        linkElem.innerHTML = trimTitle(title);
-        linkElem.title = curLink[JSON_KEY_URL];
-
-        var senderDivElem = document.createElement('div');
-        senderDivElem.setAttribute('class', 'in-sender-div');
-        senderDivElem.innerHTML = senderName;
-        senderDivElem.title = curLink[JSON_KEY_EMAIL_ID];
-
-        linkDivElem.appendChild(linkElem);
-        linkDivElem.appendChild(senderDivElem);
-
-
-        linkElem.onclick = function (loopIndex) {
-            return function () {
-                var location = linksArr[loopIndex][JSON_KEY_URL];
-                chrome.tabs.create({
-                    active: true,
-                    url: location
-                });
-                console.log(location + " link clicked");
-            }
-        }(i);
-
-        document.getElementById(divId).appendChild(linkDivElem);
-        //document.getElementById(divId).appendChild(senderDivElem);
-    }
 }
 
 

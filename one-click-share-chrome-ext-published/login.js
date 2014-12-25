@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 var data = xmlhttp.responseText;
                 if (data == "true") {
                     clearLocalStorage();
-                    updateBadge();
+                    updateInBackGround();
                     location.reload();
                 }
 
@@ -118,7 +118,7 @@ function updateInfo(accessToken) {
             var jsonData = JSON.parse(data);
             createLocalStorage(jsonData);
             location.reload();
-            updateBadge();
+            updateInBackGround();
         }
     };
 }
