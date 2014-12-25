@@ -1,4 +1,4 @@
-var pollInterval = 1000 * 5; // 1 minute, in milliseconds
+var pollInterval = 1000 * 20; // 1 minute, in milliseconds
 
 function startRequest() {
     updateInBackGround();
@@ -73,7 +73,7 @@ function updateInLinks(notify) {
 function checkUnreadAndUpdateInLinks() {
     fetchData(function (result) {
         if (result == "true") {
-            updateOutLinks();
+            updateInLinks(false);
         }
     }, KEY_URL_HAS_IN_UNREAD_UPDATE);
 }
@@ -81,7 +81,7 @@ function checkUnreadAndUpdateInLinks() {
 function checkUnreadAndUpdateOutLinks() {
     fetchData(function (result) {
         if (result == "true") {
-            updateInLinks(false);
+            updateOutLinks();
         } else {
             setBadgeText(localStorage[KEY_URL_IN_LINKS_SIZE]);
         }
@@ -232,6 +232,8 @@ function getFriends() {
 
 function sendLink(toEmail, title, url, callback) {
     var xmlhttp = new XMLHttpRequest();
+    title = encodeURIComponent(title);
+    url = encodeURIComponent(url);
     var url = DOMAIN_URL + URL_SEND + "?to=" + toEmail + "&title=" + title + "&url=" + url;
     xmlhttp.open("POST", url, true);
     addCredentials(xmlhttp);
@@ -262,6 +264,8 @@ function markLinkRead(link) {
         if (xmlhttp.readyState == 4) {
             var result = xmlhttp.responseText;
             console.log(URL_MARK_READ + ": " + result);
+            // force and update of links to update read status
+            updateInBackGround();
         }
     };
 }

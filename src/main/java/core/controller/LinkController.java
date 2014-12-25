@@ -267,7 +267,7 @@ public class LinkController {
 
 	private OneLink findLink(List<OneLink> links, String title, String url, String emailId) {
 		for (OneLink oneLink : links) {
-			if (oneLink.getTitle().equals(title) && oneLink.getUrl().equals(url)
+			if (oneLink.getUrl().equals(url)
 					&& oneLink.getEmailId().equals(emailId)) {
 				return oneLink;
 			}
@@ -278,7 +278,7 @@ public class LinkController {
 	private List<OneLink> findLinks(List<OneLink> links, String title, String url, String emailId) {
 		List<OneLink> foundLinks = new ArrayList<OneLink>();
 		for (OneLink oneLink : links) {
-			if (oneLink.getTitle().equals(title) && oneLink.getUrl().equals(url)
+			if (oneLink.getUrl().equals(url)
 					&& oneLink.getEmailId().equals(emailId)) {
 				foundLinks.add(oneLink);
 			}

@@ -38,7 +38,7 @@ function addLinks(divId, linksJson, isInlink) {
             linkElem.setAttribute('class', CSS_LINKS_READ_CLASS);
         }
         //commenting the below line allows customization of style for links
-        //linkElem.href = curLink[JSON_KEY_URL];
+        linkElem.href = curLink[JSON_KEY_URL];
         linkElem.innerHTML = trimTitle(title);
         linkElem.title = curLink[JSON_KEY_URL];
 
