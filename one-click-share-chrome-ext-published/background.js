@@ -36,7 +36,7 @@ function updateBadge() {
     if (hasCredentials()) {
         fetchData(function (result) {
             if (result == "true") {
-                updateInLinks();
+                updateInLinks(true);
             } else {
                 setBadgeText(localStorage[KEY_URL_IN_LINKS_SIZE]);
             }
@@ -46,12 +46,34 @@ function updateBadge() {
     }
 }
 
-function updateInLinks() {
+function updateInLinks(notify) {
     console.log("Updating in links information");
     fetchData(null, KEY_URL_IN_LINKS);
     fetchData(function (result) {
         setBadgeText(result);
+
+        if (notify) {
+            notifyIncomingLinks(result);
+        }
     }, KEY_URL_IN_LINKS_SIZE);
+}
+
+function notifyIncomingLinks(size) {
+    if (Notification.permission !== "granted")
+        Notification.requestPermission();
+    String title = "You have " +
+
+    var notification = new Notification(title, {
+        icon: 'icon16.png',
+        body: url,
+    });
+
+    notification.onclick = function () {
+        chrome.tabs.create({
+            url: "inbox.html"
+        });
+        popup.cancel();
+    };
 }
 
 function setBadgeText(count) {

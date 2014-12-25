@@ -23,6 +23,8 @@ public class User {
 	private List<OneLink> inLinks = new LinkedList<OneLink>();
 	private List<String> accessTokens = new LinkedList<String>();
 	private boolean isInLinksSynced;
+	private boolean isInUnreadSynced;
+	private boolean isOutUnreadSynced;
 
 	private List<String> friends = new LinkedList<String>();
 	private List<String> lastContacted = new LinkedList<String>();
@@ -135,6 +137,22 @@ public class User {
 	
 	public void setInLinksSynced(boolean isInLinksSynced) {
 		this.isInLinksSynced = isInLinksSynced;
+	}
+	
+	public boolean isInUnreadSynced() {
+		return isInUnreadSynced;
+	}
+	
+	public void setInUnreadSynced(boolean isInUnreadSynced) {
+		this.isInUnreadSynced = isInUnreadSynced;
+	}
+	
+	public boolean isOutUnreadSynced() {
+		return isOutUnreadSynced;
+	}
+	
+	public void setOutUnreadSynced(boolean isOutUndreadSynced) {
+		this.isOutUnreadSynced = isOutUndreadSynced;
 	}
 	
 }

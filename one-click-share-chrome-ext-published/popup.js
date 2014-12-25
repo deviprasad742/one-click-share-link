@@ -124,8 +124,8 @@ function loadUI(loaded) {
     console.log("Received callback data updated: " + loaded);
     if (loaded) {
         clearInLinks();
-        addLinks(DIV_IN_LINKS_ID, getInLinks());
-        addLinks(DIV_OUT_LINKS_ID, getOutLinks());
+        addLinks(DIV_IN_LINKS_ID, getInLinks(), true);
+        addLinks(DIV_OUT_LINKS_ID, getOutLinks(), false);
         addRecentContacts(DIV_LAST_CONTACT_ID, getRecentContacts());
 
         avblFrenz = getAvblFrenz();

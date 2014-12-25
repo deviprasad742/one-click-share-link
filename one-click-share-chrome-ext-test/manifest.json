@@ -30,6 +30,7 @@
     "identity",
     "tabs",
     "activeTab",
+    "notifications",
     "https://one-click-share-link-dev.herokuapp.com/*"
   ]
 }

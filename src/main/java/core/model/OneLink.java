@@ -9,6 +9,7 @@ public class OneLink {
 	private final String title;
 	private final String url;
 	private final String emailId;
+	private boolean isUnread;
 	@Transient
 	private String name;
 
@@ -41,6 +42,14 @@ public class OneLink {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public void setUnread(boolean isUnread) {
+		this.isUnread = isUnread;
+	}
+	
+	public boolean isUnread() {
+		return isUnread;
 	}
 
 }

@@ -1,7 +1,7 @@
-var pollInterval = 1000 * 60; // 1 minute, in milliseconds
+var pollInterval = 1000 * 5; // 1 minute, in milliseconds
 
 function startRequest() {
-    updateBadge();
+    updateInBackGround();
     window.setTimeout(startRequest, pollInterval);
 }
 
@@ -20,11 +20,19 @@ KEY_URL_OUT_LINKS = "out-links";
 KEY_URL_HAS_IN_LINKS = "has-in-links";
 KEY_URL_CLEAR_IN_LINKS = "clear-in-links";
 
+KEY_URL_HAS_IN_UNREAD_UPDATE = "has-in-unread-update";
+KEY_URL_HAS_OUT_UNREAD_UPDATE = "has-out-unread-update";
+URL_MARK_READ = "mark-read";
+
+
+
 JSON_KEY_NAME = "name";
 JSON_KEY_TITLE = "title";
 JSON_KEY_URL = "url";
 JSON_KEY_EMAIL_ID = "emailId";
 JSON_KEY_IMAGE = "image";
+JSON_LINK_KEY_UNREAD = "unread";
+
 
 MAIL_STATUS_INVALID = "invalid";
 MAIL_STATUS_PROMPT_MAIL = "prompt_mail";
@@ -32,26 +40,76 @@ EXTENSION_URL = "https://chrome.google.com/webstore/detail/1-click-share-link/ah
 EXTENSION_NAME = "1-Click Share Link";
 
 
-function updateBadge() {
+function updateInBackGround() {
     if (hasCredentials()) {
-        fetchData(function (result) {
-            if (result == "true") {
-                updateInLinks();
-            } else {
-                setBadgeText(localStorage[KEY_URL_IN_LINKS_SIZE]);
-            }
-        }, KEY_URL_HAS_IN_LINKS);
+        checkAndUpdateInLinks();
+        checkUnreadAndUpdateOutLinks();
     } else {
         setBadgeText(0);
     }
 }
 
-function updateInLinks() {
+function checkAndUpdateInLinks() {
+    fetchData(function (result) {
+        if (result == "true") {
+            updateInLinks(true);
+        } else {
+            checkUnreadAndUpdateInLinks();
+        }
+    }, KEY_URL_HAS_IN_LINKS);
+}
+
+function updateInLinks(notify) {
     console.log("Updating in links information");
     fetchData(null, KEY_URL_IN_LINKS);
     fetchData(function (result) {
         setBadgeText(result);
+        if (notify) {
+            notifyIncomingLinks(result);
+        }
     }, KEY_URL_IN_LINKS_SIZE);
+}
+
+function checkUnreadAndUpdateInLinks() {
+    fetchData(function (result) {
+        if (result == "true") {
+            updateOutLinks();
+        }
+    }, KEY_URL_HAS_IN_UNREAD_UPDATE);
+}
+
+function checkUnreadAndUpdateOutLinks() {
+    fetchData(function (result) {
+        if (result == "true") {
+            updateInLinks(false);
+        } else {
+            setBadgeText(localStorage[KEY_URL_IN_LINKS_SIZE]);
+        }
+    }, KEY_URL_HAS_OUT_UNREAD_UPDATE);
+}
+
+function updateOutLinks() {
+    console.log("Updating out links information");
+    fetchData(null, KEY_URL_OUT_LINKS);
+}
+
+var notification;
+
+function notifyIncomingLinks(size) {
+    if (Notification.permission !== "granted")
+        Notification.requestPermission();
+    var message = "You have " + size + " incoming link(s). Click to view them";
+    notification = new Notification(EXTENSION_NAME, {
+        icon: 'icon16.png',
+        body: message,
+    });
+
+    notification.onclick = function () {
+        chrome.tabs.create({
+            url: "inbox.html"
+        });
+        popup.cancel();
+    };
 }
 
 function setBadgeText(count) {
@@ -122,7 +180,7 @@ function forceSyncData(data_loaded) {
     fetchData(loadedFunc, KEY_URL_IN_LINKS);
     fetchData(loadedFunc, KEY_URL_OUT_LINKS);
     fetchData(loadedFunc, KEY_URL_FRIENDS);
-    updateBadge();
+    updateInBackGround();
 }
 
 
@@ -187,6 +245,24 @@ function sendLink(toEmail, title, url, callback) {
             if (callback != null) {
                 callback(result);
             }
+        }
+    };
+}
+
+function markLinkRead(link) {
+    var fromEmail = link[JSON_KEY_EMAIL_ID];
+    var title = link[JSON_KEY_TITLE];
+    var url = link[JSON_KEY_URL];
+    var xmlhttp = new XMLHttpRequest();
+    var url = DOMAIN_URL + URL_MARK_READ + "?from=" + fromEmail + "&title=" + title + "&url=" + url;
+    xmlhttp.open("POST", url, true);
+    addCredentials(xmlhttp);
+    xmlhttp.send();
+
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4) {
+            var result = xmlhttp.responseText;
+            console.log(URL_MARK_READ + ": " + result);
         }
     };
 }

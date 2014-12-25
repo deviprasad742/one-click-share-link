@@ -40,6 +40,7 @@ public class LinkController {
 		if (user != null) {
 			// clear counters
 			user.setInLinksSynced(true);
+			user.setInUnreadSynced(true);
 			repository.save(user);
 
 			return getTopInfoLinks(user.getInLinks());
@@ -51,6 +52,8 @@ public class LinkController {
 	public List<OneLink> outLinks() {
 		User user = getValidatedUser();
 		if (user != null) {
+			user.setOutUnreadSynced(true);
+			repository.save(user);
 			return getTopInfoLinks(user.getOutLinks());
 		}
 		return new ArrayList<OneLink>();
@@ -64,6 +67,7 @@ public class LinkController {
 		    toEmailId = toEmailId.trim();
 			User toUser = repository.findByEmailId(toEmailId);
 			OneLink outLink = new OneLink(title, url, toEmailId);
+			outLink.setUnread(true);
 
 			boolean promptMail = false;
 			if (toUser == null || !toUser.isRegistered()) {
@@ -91,6 +95,7 @@ public class LinkController {
 			// update received user info
 			if (controller.canSaveUser(toUser)) {
 				OneLink inLink = new OneLink(title, url, fromEmailId);
+				inLink.setUnread(true);
 				toUser.addInLink(inLink);
 				toUser.incrementInLinkCounter();
 				toUser.setInLinksSynced(false);
@@ -122,17 +127,41 @@ public class LinkController {
 
 			User toUser = repository.findByEmailId(toEmailId);
 			if (toUser != null) {
-				OneLink inLink = findLink(user.getOutLinks(), title, url, user.getEmailId());
+				OneLink inLink = findLink(toUser.getInLinks(), title, url, user.getEmailId());
 				if (inLink != null) {
 					toUser.getInLinks().remove(inLink);
 
 					// remove user if there are no incoming links and is not
-					// regestered
+					// registered
 					if (toUser.getInLinks().isEmpty() && !toUser.isRegistered()) {
 						repository.delete(toUser);
 					}
 				}
 				repository.save(toUser);
+			}
+		}
+	}
+	
+	@RequestMapping("/mark-read")
+	public void markRead(@RequestParam(value = "from") String fromEmailId, @RequestParam(value = "title") String title,
+			@RequestParam(value = "url") String url) {
+		User user = getValidatedUser();
+		if (user != null) {
+			OneLink inLink = findLink(user.getInLinks(), title, url, fromEmailId);
+			if (inLink != null) {
+				inLink.setUnread(false);
+				user.setInUnreadSynced(false);
+				repository.save(user);
+			}
+
+			User fromUser = repository.findByEmailId(fromEmailId);
+			if (fromUser != null) {
+				OneLink outLink = findLink(user.getOutLinks(), title, url, user.getEmailId());
+				if (outLink != null) {
+					outLink.setUnread(false);
+					fromUser.setOutUnreadSynced(false);
+					repository.save(fromUser);
+				}
 			}
 		}
 	}
@@ -142,6 +171,25 @@ public class LinkController {
 		User user = getValidatedUser();
 		if (user != null) {
 			return !user.isInLinksSynced();
+		}
+		return false;
+	}
+	
+	@RequestMapping("/has-in-unread-update")
+	public boolean hasInUnreadUpdates() {
+		User user = getValidatedUser();
+		if (user != null) {
+			return !user.isInUnreadSynced();
+		}
+		return false;
+	}
+	
+	
+	@RequestMapping("/has-out-unread-update")
+	public boolean hasOutUnreadUpdates() {
+		User user = getValidatedUser();
+		if (user != null) {
+			return !user.isOutUnreadSynced();
 		}
 		return false;
 	}

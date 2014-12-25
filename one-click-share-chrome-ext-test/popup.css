@@ -37,14 +37,24 @@ label.aligned {
 .in-sender-div {
     font-size: 0.8em;
 }
-.in-links-text-class {
+.links-class {
     text-decoration: none;
 }
-.in-links-text-class:hover {
+.links-class:hover {
     text-decoration: underline;
+    cursor: pointer;
 }
-a:-webkit-any-link {
+.links-unread-class {
+    text-decoration: none;
+    font-weight: bold;
+}
+.links-unread-class:hover {
+    text-decoration: underline;
+    font-weight: bold;
+    cursor: pointer;
+}
+/*a:-webkit-any-link {
     color: -webkit-link;
     text-decoration: underline;
     cursor: auto;
-}
+}*/
