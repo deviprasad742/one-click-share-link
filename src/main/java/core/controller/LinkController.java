@@ -219,7 +219,7 @@ public class LinkController {
 			}
 			
 			if (outUnreadCounter > 0) {
-				badge = badge + "[" + outUnreadCounter + "]";
+				badge = badge + "-" + outUnreadCounter;
 			}
 		}
 		return badge;
@@ -249,6 +249,7 @@ public class LinkController {
 		User user = getValidatedUser();
 		if (user != null) {
 			user.clearInLinkCounter();
+			user.setInLinksSynced(false);
 			repository.save(user);
 		}
 	}

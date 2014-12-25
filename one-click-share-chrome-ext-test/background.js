@@ -1,11 +1,3 @@
-var pollInterval = 1000 * 5; // 1 minute, in milliseconds
-
-function startRequest() {
-    updateInBackGround();
-    window.setTimeout(startRequest, pollInterval);
-}
-
-
 PARAM_ACCESS_TOKEN = "access-token";
 PARAM_EMAIL_ID = "email-id";
 KEY_NAME = "name";
@@ -41,6 +33,12 @@ EXTENSION_URL = "https://chrome.google.com/webstore/detail/1-click-share-link/ah
 EXTENSION_NAME = "1-Click Share Link";
 
 
+function startRequest() {
+    updateInBackGround();
+    window.setTimeout(startRequest, POLL_INTERVAL);
+}
+
+
 function updateInBackGround() {
     if (hasCredentials()) {
         fetchData(function (result) {
@@ -50,7 +48,7 @@ function updateInBackGround() {
             }
         }, KEY_URL_HAS_UPDATES);
     } else {
-        setBadgeText(0);
+        setBadgeText("");
     }
 }
 
@@ -82,9 +80,9 @@ function readAndUpdateBadge() {
     }, KEY_URL_BADGE);
 }
 
-function setBadgeText(count) {
+function setBadgeText(text) {
     var bg_color = "#00FF00";
-    var bg_text = count > 0 ? "" + count : "";
+    var bg_text = text != null ? text : "";
     chrome.browserAction.setBadgeBackgroundColor({
         color: bg_color
     });
@@ -107,7 +105,7 @@ function checkUnreadAndUpdateOutLinks(callback) {
         if (result == "true") {
             updateOutLinks(callback);
         } else {
-            setBadgeText(localStorage[KEY_URL_IN_LINKS_SIZE]);
+            setBadgeText(localStorage[KEY_URL_BADGE]);
         }
     }, KEY_URL_HAS_OUT_UNREAD_UPDATE);
 }
@@ -202,7 +200,7 @@ function forceSyncData(data_loaded) {
     fetchData(loadedFunc, KEY_URL_FRIENDS);
     fetchData(loadedFunc, KEY_URL_IN_LINKS);
     fetchData(loadedFunc, KEY_URL_OUT_LINKS);
-    setBadgeText(0);
+    setBadgeText("");
 }
 
 function getLoadedFunc(data_loaded) {
@@ -235,13 +233,15 @@ function loadOutLinks(callback) {
     fetchData(callback, KEY_URL_OUT_LINKS);
 }
 
-function clearInLinks(callback) {
+function clearInLinks() {
+    var callback = function (result) {
+        readAndUpdateBadge();
+    };
     fetchData(callback, KEY_URL_CLEAR_IN_LINKS);
-    localStorage[KEY_URL_IN_LINKS_SIZE] = 0;
-    setBadgeText(0);
 }
 
 function getInLinks() {
+    clearInLinks(callback);
     return localStorage[KEY_URL_IN_LINKS];
 }
 
