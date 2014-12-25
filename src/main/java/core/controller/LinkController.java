@@ -153,7 +153,7 @@ public class LinkController {
 			}
 			user.setInUnreadSynced(false);
 			repository.save(user);
-			System.out.println("Updated undread status for in-links:" +  inLinks);
+			System.out.println("Updated unread status for in-links:" +  inLinks);
 
 			User fromUser = repository.findByEmailId(fromEmailId);
 			String emailId = user.getEmailId();
@@ -166,7 +166,7 @@ public class LinkController {
 				for (OneLink oneLink : outLinks) {
 					oneLink.setUnread(false);
 				}
-				System.out.println("Updated undread status for out-links:" +  outLinks);
+				System.out.println("Updated unread status for out-links:" +  outLinks);
 
 				fromUser.setInUnreadSynced(false);
 				repository.save(fromUser);
