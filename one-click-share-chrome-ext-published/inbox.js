@@ -10,7 +10,6 @@ DIV_IN_LINKS_ID = "inbox-links-div";
 
 function loadInboxUI(loaded) {
     if (loaded) {
-        clearInLinks();
         addLinks(DIV_IN_LINKS_ID, getInLinks(), true);
     }
 }
