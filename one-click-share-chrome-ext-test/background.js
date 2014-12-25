@@ -34,6 +34,7 @@ EXTENSION_NAME = "1-Click Share Link";
 
 
 function startRequest() {
+    setBadgeText(localStorage[KEY_URL_BADGE]);
     updateInBackGround();
     window.setTimeout(startRequest, POLL_INTERVAL);
 }
@@ -104,8 +105,6 @@ function checkUnreadAndUpdateOutLinks(callback) {
     fetchData(function (result) {
         if (result == "true") {
             updateOutLinks(callback);
-        } else {
-            setBadgeText(localStorage[KEY_URL_BADGE]);
         }
     }, KEY_URL_HAS_OUT_UNREAD_UPDATE);
 }
@@ -241,7 +240,7 @@ function clearInLinks() {
 }
 
 function getInLinks() {
-    clearInLinks(callback);
+    clearInLinks();
     return localStorage[KEY_URL_IN_LINKS];
 }
 

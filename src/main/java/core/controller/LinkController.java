@@ -219,7 +219,10 @@ public class LinkController {
 			}
 			
 			if (outUnreadCounter > 0) {
-				badge = badge + "-" + outUnreadCounter;
+				if(badge.equals("")) {
+					badge = "0";
+				}
+				badge = badge + "/" + outUnreadCounter;
 			}
 		}
 		return badge;
