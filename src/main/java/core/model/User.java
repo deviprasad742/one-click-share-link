@@ -130,7 +130,6 @@ public class User {
 		}
 	}
 	
-
 	public boolean isInLinksSynced() {
 		return isInLinksSynced;
 	}

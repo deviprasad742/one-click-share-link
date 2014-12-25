@@ -19,8 +19,6 @@ public class OneLink {
 		this.emailId = emailId;
 	}
 
-	
-	
 
 	@Override
 	public String toString() {

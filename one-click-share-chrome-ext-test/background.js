@@ -22,6 +22,7 @@ KEY_URL_CLEAR_IN_LINKS = "clear-in-links";
 
 KEY_URL_HAS_IN_UNREAD_UPDATE = "has-in-unread-update";
 KEY_URL_HAS_OUT_UNREAD_UPDATE = "has-out-unread-update";
+KEY_URL_HAS_UPDATES = "has-updates";
 URL_MARK_READ = "mark-read";
 
 
@@ -42,26 +43,30 @@ EXTENSION_NAME = "1-Click Share Link";
 
 function updateInBackGround() {
     if (hasCredentials()) {
-        checkAndUpdateInLinks();
-        checkUnreadAndUpdateOutLinks();
+        fetchData(function (result) {
+            if (result == "true") {
+                checkAndUpdateInLinks();
+                checkUnreadAndUpdateOutLinks();
+            }
+        }, KEY_URL_HAS_UPDATES);
     } else {
         setBadgeText(0);
     }
 }
 
-function checkAndUpdateInLinks() {
+function checkAndUpdateInLinks(callback) {
     fetchData(function (result) {
         if (result == "true") {
-            updateInLinks(true);
+            updateInLinks(callback, true);
         } else {
-            checkUnreadAndUpdateInLinks();
+            checkUnreadAndUpdateInLinks(callback);
         }
     }, KEY_URL_HAS_IN_LINKS);
 }
 
-function updateInLinks(notify) {
+function updateInLinks(callback, notify) {
     console.log("Updating in links information");
-    fetchData(null, KEY_URL_IN_LINKS);
+    fetchData(callback, KEY_URL_IN_LINKS);
     fetchData(function (result) {
         setBadgeText(result);
         if (notify) {
@@ -70,27 +75,27 @@ function updateInLinks(notify) {
     }, KEY_URL_IN_LINKS_SIZE);
 }
 
-function checkUnreadAndUpdateInLinks() {
+function checkUnreadAndUpdateInLinks(callback) {
     fetchData(function (result) {
         if (result == "true") {
-            updateInLinks(false);
+            updateInLinks(callback, false);
         }
     }, KEY_URL_HAS_IN_UNREAD_UPDATE);
 }
 
-function checkUnreadAndUpdateOutLinks() {
+function checkUnreadAndUpdateOutLinks(callback) {
     fetchData(function (result) {
         if (result == "true") {
-            updateOutLinks();
+            updateOutLinks(callback);
         } else {
             setBadgeText(localStorage[KEY_URL_IN_LINKS_SIZE]);
         }
     }, KEY_URL_HAS_OUT_UNREAD_UPDATE);
 }
 
-function updateOutLinks() {
+function updateOutLinks(callback) {
     console.log("Updating out links information");
-    fetchData(null, KEY_URL_OUT_LINKS);
+    fetchData(callback, KEY_URL_OUT_LINKS);
 }
 
 var notification;
@@ -156,7 +161,7 @@ function checkAndsyncData(callback) {
                 if (result == "true") {
                     forceSyncData(callback)
                 } else {
-                    callback(true);
+                    checkAndUpdateNotifications(callback);
                 }
 
             }, KEY_URL_HAS_IN_LINKS);
@@ -166,23 +171,30 @@ function checkAndsyncData(callback) {
     }
 }
 
+function checkAndUpdateNotifications(data_loaded) {
+    var loadedFunc = getLoadedFunc(data_loaded);
+    checkUnreadAndUpdateInLinks(loadedFunc);
+    checkUnreadAndUpdateOutLinks(loadedFunc);
+}
+
 function isDataUnSynced() {
     return isBlank(localStorage[KEY_URL_IN_LINKS]);
 }
 
 function forceSyncData(data_loaded) {
-    var loadedFunc = function (result) {
-        data_loaded(true);
-    };
-
+    var loadedFunc = getLoadedFunc(data_loaded);
     fetchData(loadedFunc, KEY_URL_RECENT);
     fetchData(loadedFunc, KEY_URL_IN_LINKS);
     fetchData(loadedFunc, KEY_URL_OUT_LINKS);
     fetchData(loadedFunc, KEY_URL_FRIENDS);
-    updateInBackGround();
+    setBadgeText(0);
 }
 
-
+function getLoadedFunc(data_loaded) {
+    return function (result) {
+        data_loaded(true);
+    };
+}
 
 function fetchData(callback, key_url) {
     var xmlhttp = new XMLHttpRequest();
@@ -254,6 +266,10 @@ function markLinkRead(link) {
     var fromEmail = link[JSON_KEY_EMAIL_ID];
     var title = link[JSON_KEY_TITLE];
     var url = link[JSON_KEY_URL];
+
+    title = encodeURIComponent(title);
+    url = encodeURIComponent(url);
+
     var xmlhttp = new XMLHttpRequest();
     var url = DOMAIN_URL + URL_MARK_READ + "?from=" + fromEmail + "&title=" + title + "&url=" + url;
     xmlhttp.open("POST", url, true);

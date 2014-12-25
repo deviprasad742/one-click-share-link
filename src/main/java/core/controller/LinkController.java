@@ -183,6 +183,15 @@ public class LinkController {
 		return false;
 	}
 	
+	@RequestMapping("/has-updates")
+	public boolean hasUpdates() {
+		User user = getValidatedUser();
+		if (user != null) {
+			return !(user.isInLinksSynced() && user.isInUnreadSynced() && user.isOutUnreadSynced());
+		}
+		return false;
+	}
+	
 	@RequestMapping("/has-in-unread-update")
 	public boolean hasInUnreadUpdates() {
 		User user = getValidatedUser();

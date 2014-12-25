@@ -13,7 +13,7 @@ function trimTitle(string) {
 
 }
 
-function addLinks(divId, linksJson, isInlink) {
+function addLinks(divId, linksJson, isInlink, newTab) {
     if (isBlank(linksJson)) {
         return;
     }
@@ -55,10 +55,12 @@ function addLinks(divId, linksJson, isInlink) {
             return function () {
                 var inCurLink = linksArr[loopIndex];
                 var urlStr = inCurLink[JSON_KEY_URL];
-                chrome.tabs.create({
-                    active: true,
-                    url: urlStr
-                });
+                if (newTab) {
+                    chrome.tabs.create({
+                        active: true,
+                        url: urlStr
+                    });
+                }
 
                 if (isInlink) {
                     var unread = inCurLink[JSON_LINK_KEY_UNREAD];
