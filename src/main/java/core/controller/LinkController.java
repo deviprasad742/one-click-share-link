@@ -155,8 +155,13 @@ public class LinkController {
 			}
 
 			User fromUser = repository.findByEmailId(fromEmailId);
+			String emailId = user.getEmailId();
+			if (emailId.equals(fromEmailId)) {
+				fromUser = user;
+			}
+			
 			if (fromUser != null) {
-				OneLink outLink = findLink(user.getOutLinks(), title, url, user.getEmailId());
+				OneLink outLink = findLink(fromUser.getOutLinks(), title, url, emailId);
 				if (outLink != null) {
 					outLink.setUnread(false);
 					fromUser.setOutUnreadSynced(false);
