@@ -19,6 +19,7 @@ KEY_URL_IN_LINKS_SIZE = "in-links-size";
 KEY_URL_OUT_LINKS = "out-links";
 KEY_URL_HAS_IN_LINKS = "has-in-links";
 KEY_URL_CLEAR_IN_LINKS = "clear-in-links";
+KEY_URL_BADGE = "badge";
 
 KEY_URL_HAS_IN_UNREAD_UPDATE = "has-in-unread-update";
 KEY_URL_HAS_OUT_UNREAD_UPDATE = "has-out-unread-update";
@@ -68,13 +69,31 @@ function checkAndUpdateInLinks(callback) {
 function updateInLinks(callback, notify) {
     console.log("Updating in links information");
     fetchData(callback, KEY_URL_IN_LINKS);
+    readAndUpdateBadge();
     fetchData(function (result) {
-        setBadgeText(result);
         if (notify) {
             notifyIncomingLinks(result);
         }
     }, KEY_URL_IN_LINKS_SIZE);
 }
+
+function readAndUpdateBadge() {
+    fetchData(function (result) {
+        setBadgeText(result);
+    }, KEY_URL_BADGE);
+}
+
+function setBadgeText(count) {
+    var bg_color = "#00FF00";
+    var bg_text = count > 0 ? "" + count : "";
+    chrome.browserAction.setBadgeBackgroundColor({
+        color: bg_color
+    });
+    chrome.browserAction.setBadgeText({
+        text: bg_text
+    });
+}
+
 
 function checkUnreadAndUpdateInLinks(callback) {
     fetchData(function (result) {
@@ -96,6 +115,7 @@ function checkUnreadAndUpdateOutLinks(callback) {
 
 function updateOutLinks(callback) {
     console.log("Updating out links information");
+    readAndUpdateBadge();
     fetchData(callback, KEY_URL_OUT_LINKS);
 }
 
@@ -123,18 +143,6 @@ function notifyIncomingLinks(size) {
         notification.close();
     }, 10000);
 }
-
-function setBadgeText(count) {
-    var bg_color = "#00FF00";
-    var bg_text = count > 0 ? "" + count : "";
-    chrome.browserAction.setBadgeBackgroundColor({
-        color: bg_color
-    });
-    chrome.browserAction.setBadgeText({
-        text: bg_text
-    });
-}
-
 
 document.addEventListener('DOMContentLoaded', function () {
     startRequest();

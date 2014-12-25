@@ -24,23 +24,31 @@ function addLinks(divId, linksJson, isInlink, newTab) {
 
         var itemIndex = parseInt(i) + 1;
         var curLink = linksArr[i];
-        var title = itemIndex + ". " + curLink[JSON_KEY_TITLE];
+
+        var title = curLink[JSON_KEY_TITLE];
         var senderName = curLink[JSON_KEY_NAME];
+        var unread = curLink[JSON_LINK_KEY_UNREAD];
+        var urlStr = curLink[JSON_KEY_URL];
+
+        var specChar = " ";
+        if (!isInlink && !unread) {
+            specChar = "\u2714";
+        }
+        title = itemIndex + "." + specChar + title;
 
         var linkDivElem = document.createElement('div');
         linkDivElem.setAttribute('class', 'in-links-div');
         var linkElem = document.createElement('a');
 
-        var unread = curLink[JSON_LINK_KEY_UNREAD];
-        if (unread) {
+        if (isInlink && unread) {
             linkElem.setAttribute('class', CSS_LINKS_UNREAD_CLASS);
         } else {
             linkElem.setAttribute('class', CSS_LINKS_READ_CLASS);
         }
         //commenting the below line allows customization of style for links
-        linkElem.href = curLink[JSON_KEY_URL];
+        //        linkElem.href = urlStr;
         linkElem.innerHTML = trimTitle(title);
-        linkElem.title = curLink[JSON_KEY_URL];
+        linkElem.title = urlStr;
 
         var senderDivElem = document.createElement('div');
         senderDivElem.setAttribute('class', 'in-sender-div');
@@ -55,6 +63,7 @@ function addLinks(divId, linksJson, isInlink, newTab) {
             return function () {
                 var inCurLink = linksArr[loopIndex];
                 var urlStr = inCurLink[JSON_KEY_URL];
+                newTab = true;
                 if (newTab) {
                     chrome.tabs.create({
                         active: true,

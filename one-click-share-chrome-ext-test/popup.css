@@ -41,6 +41,7 @@ label.aligned {
     text-decoration: none;
 }
 .links-class:hover {
+    color: blue;
     text-decoration: underline;
     cursor: pointer;
 }
@@ -49,12 +50,8 @@ label.aligned {
     font-weight: bold;
 }
 .links-unread-class:hover {
+    color: blue;
     text-decoration: underline;
     font-weight: bold;
     cursor: pointer;
-}
-a:-webkit-any-link {
-    color: -webkit-link;
-    text-decoration: underline;
-    cursor: auto;
 }

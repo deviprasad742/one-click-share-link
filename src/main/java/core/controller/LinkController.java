@@ -201,6 +201,30 @@ public class LinkController {
 		return false;
 	}
 	
+	@RequestMapping("/badge")
+	public String getBadge() {
+		String badge = "";
+		User user = getValidatedUser();
+		if (user != null) {
+			if (user.getInLinkCounter() > 0) {
+				badge = badge + user.getInLinkCounter();
+			}
+			
+			List<OneLink> topLinks = getTopLinks(user.getOutLinks());
+			int outUnreadCounter = 0;
+			for (OneLink oneLink : topLinks) {
+				if (oneLink.isUnread()) {
+					outUnreadCounter++;
+				}
+			}
+			
+			if (outUnreadCounter > 0) {
+				badge = badge + "[" + outUnreadCounter + "]";
+			}
+		}
+		return "";
+	}
+	
 	
 	@RequestMapping("/has-out-unread-update")
 	public boolean hasOutUnreadUpdates() {
@@ -236,13 +260,7 @@ public class LinkController {
 	}
 
 	private List<OneLink> getTopInfoLinks(List<OneLink> links) {
-		List<OneLink> interestedLinks = new ArrayList<OneLink>();
-		if (links.size() > LINK_LIMIT) {
-			interestedLinks = links.subList(links.size() - LINK_LIMIT, links.size());
-		} else {
-			interestedLinks = links;
-		}
-
+		List<OneLink> interestedLinks = getTopLinks(links);
 		Map<String, String> userNameCache = new HashMap<String, String>();
 
 		List<OneLink> topInfoLinks = new ArrayList<OneLink>();
@@ -265,6 +283,16 @@ public class LinkController {
 			topInfoLinks.add(currentLink);
 		}
 		return topInfoLinks;
+	}
+
+	private List<OneLink> getTopLinks(List<OneLink> links) {
+		List<OneLink> interestedLinks = new ArrayList<OneLink>();
+		if (links.size() > LINK_LIMIT) {
+			interestedLinks = links.subList(links.size() - LINK_LIMIT, links.size());
+		} else {
+			interestedLinks = links;
+		}
+		return interestedLinks;
 	}
 
 	private User getValidatedUser() {

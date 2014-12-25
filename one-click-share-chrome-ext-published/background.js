@@ -50,7 +50,7 @@ function updateInBackGround() {
             }
         }, KEY_URL_HAS_UPDATES);
     } else {
-        setBadgeText(0);
+        setBadgeText("");
     }
 }
 
@@ -124,9 +124,9 @@ function notifyIncomingLinks(size) {
     }, 10000);
 }
 
-function setBadgeText(count) {
+function setBadgeText(text) {
     var bg_color = "#00FF00";
-    var bg_text = count > 0 ? "" + count : "";
+    var bg_text = text;
     chrome.browserAction.setBadgeBackgroundColor({
         color: bg_color
     });
@@ -195,7 +195,7 @@ function forceSyncData(data_loaded) {
     fetchData(loadedFunc, KEY_URL_FRIENDS);
     fetchData(loadedFunc, KEY_URL_IN_LINKS);
     fetchData(loadedFunc, KEY_URL_OUT_LINKS);
-    setBadgeText(0);
+    setBadgeText("");
 }
 
 function getLoadedFunc(data_loaded) {
@@ -231,7 +231,7 @@ function loadOutLinks(callback) {
 function clearInLinks(callback) {
     fetchData(callback, KEY_URL_CLEAR_IN_LINKS);
     localStorage[KEY_URL_IN_LINKS_SIZE] = 0;
-    setBadgeText(0);
+    setBadgeText("");
 }
 
 function getInLinks() {
