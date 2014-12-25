@@ -147,12 +147,13 @@ public class LinkController {
 			@RequestParam(value = "url") String url) {
 		User user = getValidatedUser();
 		if (user != null) {
-			OneLink inLink = findLink(user.getInLinks(), title, url, fromEmailId);
-			if (inLink != null) {
-				inLink.setUnread(false);
-				user.setInUnreadSynced(false);
-				repository.save(user);
+			List<OneLink> inLinks = findLinks(user.getInLinks(), title, url, fromEmailId);
+			for (OneLink oneLink : inLinks) {
+				oneLink.setUnread(false);
 			}
+			user.setInUnreadSynced(false);
+			repository.save(user);
+			System.out.println("Updated undread status for in-links:" +  inLinks);
 
 			User fromUser = repository.findByEmailId(fromEmailId);
 			String emailId = user.getEmailId();
@@ -161,12 +162,14 @@ public class LinkController {
 			}
 			
 			if (fromUser != null) {
-				OneLink outLink = findLink(fromUser.getOutLinks(), title, url, emailId);
-				if (outLink != null) {
-					outLink.setUnread(false);
-					fromUser.setOutUnreadSynced(false);
-					repository.save(fromUser);
+				List<OneLink> outLinks = findLinks(fromUser.getOutLinks(), title, url, emailId);
+				for (OneLink oneLink : outLinks) {
+					oneLink.setUnread(false);
 				}
+				System.out.println("Updated undread status for out-links:" +  outLinks);
+
+				fromUser.setInUnreadSynced(false);
+				repository.save(fromUser);
 			}
 		}
 	}
@@ -262,14 +265,25 @@ public class LinkController {
 		return null;
 	}
 
-	private OneLink findLink(List<OneLink> outLinks, String title, String url, String emailId) {
-		for (OneLink oneLink : outLinks) {
+	private OneLink findLink(List<OneLink> links, String title, String url, String emailId) {
+		for (OneLink oneLink : links) {
 			if (oneLink.getTitle().equals(title) && oneLink.getUrl().equals(url)
 					&& oneLink.getEmailId().equals(emailId)) {
 				return oneLink;
 			}
 		}
 		return null;
+	}
+	
+	private List<OneLink> findLinks(List<OneLink> links, String title, String url, String emailId) {
+		List<OneLink> foundLinks = new ArrayList<OneLink>();
+		for (OneLink oneLink : links) {
+			if (oneLink.getTitle().equals(title) && oneLink.getUrl().equals(url)
+					&& oneLink.getEmailId().equals(emailId)) {
+				foundLinks.add(oneLink);
+			}
+		}
+		return foundLinks;
 	}
 
 	public static boolean isValidEmailAddress(String emailId) {

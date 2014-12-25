@@ -108,7 +108,6 @@ function notifyIncomingLinks(size) {
         chrome.tabs.create({
             url: "inbox.html"
         });
-        popup.cancel();
     };
 }
 
