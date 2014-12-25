@@ -1,4 +1,4 @@
-var pollInterval = 1000 * 20; // 1 minute, in milliseconds
+var pollInterval = 1000 * 5; // 1 minute, in milliseconds
 
 function startRequest() {
     updateInBackGround();
@@ -58,6 +58,7 @@ function checkAndUpdateInLinks(callback) {
     fetchData(function (result) {
         if (result == "true") {
             updateInLinks(callback, true);
+            fetchData(null, KEY_URL_RECENT);
         } else {
             checkUnreadAndUpdateInLinks(callback);
         }
@@ -98,13 +99,16 @@ function updateOutLinks(callback) {
     fetchData(callback, KEY_URL_OUT_LINKS);
 }
 
-var notification;
 
 function notifyIncomingLinks(size) {
+    if (size == 0) {
+        return;
+    }
+
     if (Notification.permission !== "granted")
         Notification.requestPermission();
     var message = "You have " + size + " incoming link(s). Click to view them";
-    notification = new Notification(EXTENSION_NAME, {
+    var notification = new Notification(EXTENSION_NAME, {
         icon: 'icon16.png',
         body: message,
     });
@@ -114,6 +118,10 @@ function notifyIncomingLinks(size) {
             url: "inbox.html"
         });
     };
+
+    setTimeout(function () {
+        notification.close();
+    }, 10000);
 }
 
 function setBadgeText(count) {
@@ -184,9 +192,9 @@ function isDataUnSynced() {
 function forceSyncData(data_loaded) {
     var loadedFunc = getLoadedFunc(data_loaded);
     fetchData(loadedFunc, KEY_URL_RECENT);
+    fetchData(loadedFunc, KEY_URL_FRIENDS);
     fetchData(loadedFunc, KEY_URL_IN_LINKS);
     fetchData(loadedFunc, KEY_URL_OUT_LINKS);
-    fetchData(loadedFunc, KEY_URL_FRIENDS);
     setBadgeText(0);
 }
 
