@@ -53,8 +53,8 @@ label.aligned {
     font-weight: bold;
     cursor: pointer;
 }
-/*a:-webkit-any-link {
+a:-webkit-any-link {
     color: -webkit-link;
     text-decoration: underline;
     cursor: auto;
-}*/
+}

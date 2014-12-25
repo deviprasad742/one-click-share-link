@@ -168,7 +168,7 @@ public class LinkController {
 				}
 				System.out.println("Updated unread status for out-links:" +  outLinks);
 
-				fromUser.setInUnreadSynced(false);
+				fromUser.setOutUnreadSynced(false);
 				repository.save(fromUser);
 			}
 		}

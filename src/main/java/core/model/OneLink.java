@@ -19,10 +19,15 @@ public class OneLink {
 		this.emailId = emailId;
 	}
 
+	
+	
+
 	@Override
 	public String toString() {
-		return "OneLink [title=" + title + ", url=" + url + ", emailId=" + emailId + "]";
+		return "OneLink [title=" + title + ", url=" + url + ", emailId=" + emailId + ", isUnread=" + isUnread
+				+ ", name=" + name + "]";
 	}
+
 
 	public String getTitle() {
 		return title;
