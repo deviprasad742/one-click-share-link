@@ -222,7 +222,7 @@ public class LinkController {
 				badge = badge + "[" + outUnreadCounter + "]";
 			}
 		}
-		return "";
+		return badge;
 	}
 	
 	

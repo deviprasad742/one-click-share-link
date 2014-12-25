@@ -27,7 +27,6 @@ KEY_URL_HAS_UPDATES = "has-updates";
 URL_MARK_READ = "mark-read";
 
 
-
 JSON_KEY_NAME = "name";
 JSON_KEY_TITLE = "title";
 JSON_KEY_URL = "url";

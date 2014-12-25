@@ -71,6 +71,7 @@ function sendLinkTo(email) {
                 sendButton.style.color = oldStyleColor;
                 updateLinkStatus(result, email, title, url);
                 forceSyncData(loadUI);
+                readAndUpdateBadge();
             });
         }
     }
