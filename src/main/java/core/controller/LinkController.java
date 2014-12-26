@@ -67,7 +67,6 @@ public class LinkController {
 		    toEmailId = toEmailId.trim();
 			User toUser = repository.findByEmailId(toEmailId);
 			OneLink outLink = new OneLink(title, url, toEmailId);
-			outLink.setUnread(true);
 
 			boolean promptMail = false;
 			if (toUser == null || !toUser.isRegistered()) {
@@ -79,6 +78,8 @@ public class LinkController {
 				} else {
 					return INVALID_LINK;
 				}
+			} else {
+				outLink.setUnread(true);
 			}
 
 			// update sent user info
@@ -210,7 +211,7 @@ public class LinkController {
 				badge = badge + user.getInLinkCounter();
 			}
 			
-			List<OneLink> topLinks = getTopLinks(user.getOutLinks());
+			List<OneLink> topLinks = getTopLinks(user.getOutLinks(), 10);
 			int outUnreadCounter = 0;
 			for (OneLink oneLink : topLinks) {
 				if (oneLink.isUnread()) {
@@ -290,9 +291,13 @@ public class LinkController {
 	}
 
 	private List<OneLink> getTopLinks(List<OneLink> links) {
+		return getTopLinks(links, LINK_LIMIT);
+	}
+
+	private List<OneLink> getTopLinks(List<OneLink> links, int linkLimit) {
 		List<OneLink> interestedLinks = new ArrayList<OneLink>();
-		if (links.size() > LINK_LIMIT) {
-			interestedLinks = links.subList(links.size() - LINK_LIMIT, links.size());
+		if (links.size() > linkLimit) {
+			interestedLinks = links.subList(links.size() - linkLimit, links.size());
 		} else {
 			interestedLinks = links;
 		}
