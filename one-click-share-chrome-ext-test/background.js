@@ -81,14 +81,27 @@ function readAndUpdateBadge() {
     }, KEY_URL_BADGE);
 }
 
-function setBadgeText(text) {
-    var bg_color = "#00FF00";
-    var bg_text = text != null ? text : "";
+function setBadgeText(textVal) {
+    if (textVal == null) {
+        textVal = "";
+    }
+
+    var textColor = "#000000";
+    if (textVal.indexOf("/") != -1) {
+        if (textVal.charAt(0) == "0") {
+            textColor = "#0000FF"
+        } else {
+            textColor = "#00B000"
+        }
+    } else {
+        textColor = "#FF0000"
+    }
+
     chrome.browserAction.setBadgeBackgroundColor({
-        color: bg_color
+        color: textColor
     });
     chrome.browserAction.setBadgeText({
-        text: bg_text
+        text: textVal
     });
 }
 
