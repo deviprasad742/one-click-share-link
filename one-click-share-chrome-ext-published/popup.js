@@ -94,10 +94,15 @@ function updateLinkStatus(result, email, title, url) {
 }
 
 
+NEW_LINE_DOUBLE = "\n\n";
+
 function promptMail(email, title, url) {
-    body = url;
+    title = "Shared a link '" + title + "'";
+    body = url + NEW_LINE_DOUBLE + "This link is shared using the '" + EXTENSION_NAME + "' chrome extension. " + EXTENSION_URL;
+    body = encodeURIComponent(body);
     var composeUrl = "https://mail.google.com/mail/?view=cm&fs=1&to="
-    composeUrl = composeUrl + email + "&su=" + title + "&body=" + body;
+    var params = email + "&su=" + title + "&body=" + body;
+    composeUrl = composeUrl + params;
     window.open(composeUrl);
 }
 

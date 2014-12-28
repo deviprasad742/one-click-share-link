@@ -89,6 +89,7 @@ function setBadgeText(textVal) {
     var textColor = "#000000";
     if (textVal.indexOf("/") != -1) {
         if (textVal.charAt(0) == "0") {
+            textVal = textVal.substring(2);
             textColor = "#0000FF"
         } else {
             textColor = "#00B000"
