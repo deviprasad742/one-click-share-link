@@ -16,7 +16,7 @@ import core.model.User;
 public class MailHelper {
 
     private static String USER_NAME = "one.click.share.link"; 
-    private static String PASSWORD = "Sh@reLink";
+    private static String PASSWORD = "*****";
     private static String EXTENSION_URL = "https://chrome.google.com/webstore/detail/1-click-share-link/ahphcmppigmmngfoehcncdfpafapijmj";
     private static String EXTENSION_NAME = "1-Click Share Link";
 

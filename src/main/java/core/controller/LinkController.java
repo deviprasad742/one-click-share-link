@@ -64,6 +64,7 @@ public class LinkController {
 			@RequestParam(value = "url") String url) {
 		User user = getValidatedUser();
 		if (user != null) {
+			url = addAffliateId(url);
 		    toEmailId = toEmailId.trim();
 			User toUser = repository.findByEmailId(toEmailId);
 			OneLink outLink = new OneLink(title, url, toEmailId);
@@ -113,6 +114,15 @@ public class LinkController {
 			}
 		}
 		return INVALID_LINK;
+	}
+
+	private String addAffliateId(String url) {
+		if (url.startsWith("http://www.amazon.in") || url.startsWith("https://www.amazon.in")) {
+			if (!url.contains("&tag=")) {
+				url = url + "&tag=1clishalin-21";
+			}
+		}
+		return url;
 	}
 
 	@RequestMapping("/delete-link")
