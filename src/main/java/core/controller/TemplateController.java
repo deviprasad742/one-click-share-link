@@ -11,14 +11,19 @@ public class TemplateController {
         return "login";
     }
     
-/*    @RequestMapping("/")
+    @RequestMapping("/")
     public String serverOAuthLogin() {
-        return "server-login";
-    }*/
+        return "main";
+    }
     
-    @RequestMapping("/" + AffiliateManager.AMAZON_INDIA)
-    public String amazonAffliateLink() {
-        return AffiliateManager.AMAZON_INDIA;
+    @RequestMapping("/" + AffiliateTypeConstants.AMAZON_IN_URL_MAPPING)
+    public String amazonAffiliateLink() {
+        return AffiliateTypeConstants.AMAZON_IN_URL_MAPPING;
+    }
+    
+    @RequestMapping("/" + AffiliateTypeConstants.FLIPKART_URL_MAPPING)
+    public String flipkartAffiliateLink() {
+        return AffiliateTypeConstants.FLIPKART_URL_MAPPING;
     }
     
 
