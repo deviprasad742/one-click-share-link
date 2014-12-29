@@ -11,8 +11,8 @@ import core.model.UserInfo;
 @RestController
 public class AffiliateManager {
 	public static final String AMAZON_INDIA = "amazon-india";
-//	private static final String BASE_URL = "https://one-click-share-link.herokuapp.com/";
-	private static final String BASE_URL = "https://one-click-share-link-dev.herokuapp.com/";
+	private static final String BASE_URL = "https://one-click-share-link.herokuapp.com/";
+//	private static final String BASE_URL = "https://one-click-share-link-dev.herokuapp.com/";
 
 	@Autowired
 	private UserRepository repository;
