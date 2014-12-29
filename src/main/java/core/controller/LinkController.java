@@ -33,6 +33,8 @@ public class LinkController {
 	private UserController controller;
 	@Autowired
 	private HttpServletRequest context;
+	@Autowired
+	private AffiliateManager affiliateManager;
 
 	@RequestMapping("/in-links")
 	public List<OneLink> inLinks() {
@@ -64,24 +66,45 @@ public class LinkController {
 			@RequestParam(value = "url") String url) {
 		User user = getValidatedUser();
 		if (user != null) {
-			url = addAffliateId(url);
-		    toEmailId = toEmailId.trim();
+			toEmailId = toEmailId.trim();
+
+			boolean isAffiliateToUser = affiliateManager.isAffiliateUser(toEmailId);
+			if (isAffiliateToUser) {
+				//if the user sends wrong url ignore it
+				url = affiliateManager.getAffiliateUrl(url);
+				if (url == null) {
+					return INVALID_LINK;
+				}
+			} else {
+				if (affiliateManager.isAffiliateSupportedUrl(url)) {
+					url = affiliateManager.addAndGetRedirectUrl(title, url, user.getEmailId());
+				}
+			}
+			
+			
 			User toUser = repository.findByEmailId(toEmailId);
 			OneLink outLink = new OneLink(title, url, toEmailId);
 
 			boolean promptMail = false;
-			if (toUser == null || !toUser.isRegistered()) {
-				if (isValidEmailAddress(toEmailId)) {
-					if (toUser == null) {
-						toUser = new User(new UserInfo(toEmailId, toEmailId, ""));
-					}
-					promptMail =  true;
-				} else {
-					return INVALID_LINK;
+			if (isAffiliateToUser) {
+				if (toUser == null) {
+					 toUser = affiliateManager.createAffiliatedUser(toEmailId);
 				}
 			} else {
-				outLink.setUnread(true);
+				if (toUser == null || !toUser.isRegistered()) {
+					if (isValidEmailAddress(toEmailId)) {
+						if (toUser == null) {
+							toUser = new User(new UserInfo(toEmailId, toEmailId, ""));
+						}
+						promptMail =  true;
+					} else {
+						return INVALID_LINK;
+					}
+				} else {
+					outLink.setUnread(true);
+				}
 			}
+
 
 			// update sent user info
 			user.addOutLink(outLink);
@@ -95,15 +118,8 @@ public class LinkController {
 			}
 
 			// update received user info
-			if (controller.canSaveUser(toUser)) {
-				OneLink inLink = new OneLink(title, url, fromEmailId);
-				inLink.setUnread(true);
-				toUser.addInLink(inLink);
-				toUser.incrementInLinkCounter();
-				toUser.setInLinksSynced(false);
-				toUser.addToLastContacted(fromEmailId);	
-				repository.save(toUser);
-				System.out.println("Incoming links updated for user: " + toUser.getEmailId());
+			if (isAffiliateToUser || controller.canSaveUser(toUser)) {
+				addAndSaveLink(title, url, toUser, fromEmailId);
 			}
 			System.out.println("Link Added -->" + outLink);
 			
@@ -116,15 +132,17 @@ public class LinkController {
 		return INVALID_LINK;
 	}
 
-	private String addAffliateId(String url) {
-		if (url.startsWith("http://www.amazon.in") || url.startsWith("https://www.amazon.in")) {
-			if (!url.contains("&tag=")) {
-				url = url + "&tag=1clishalin-21";
-			}
-		}
-		return url;
+	private void addAndSaveLink(String title, String url, User toUser, String fromEmailId) {
+		OneLink inLink = new OneLink(title, url, fromEmailId);
+		inLink.setUnread(true);
+		toUser.addInLink(inLink);
+		toUser.incrementInLinkCounter();
+		toUser.setInLinksSynced(false);
+		toUser.addToLastContacted(fromEmailId);	
+		repository.save(toUser);
+		System.out.println("Incoming links updated for user: " + toUser.getEmailId());
 	}
-
+	
 	@RequestMapping("/delete-link")
 	public void deleteLink(@RequestParam(value = "to") String toEmailId, @RequestParam(value = "title") String title,
 			@RequestParam(value = "url") String url) {

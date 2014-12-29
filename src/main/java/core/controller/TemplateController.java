@@ -11,9 +11,15 @@ public class TemplateController {
         return "login";
     }
     
-    @RequestMapping("/")
+/*    @RequestMapping("/")
     public String serverOAuthLogin() {
         return "server-login";
+    }*/
+    
+    @RequestMapping("/" + AffiliateManager.AMAZON_INDIA)
+    public String amazonAffliateLink() {
+        return AffiliateManager.AMAZON_INDIA;
     }
+    
 
 }
