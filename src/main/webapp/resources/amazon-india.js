@@ -23,15 +23,19 @@ function initUI() {
 }
 
 function appendMainLink() {
-    var linkElem = document.createElement('a');
     var link = get("link");
     var title = get("title");
     if (link == null) {
         link = encodeURI("https://www.amazon.in?");
         title = "Visit Amazon";
     }
-    linkElem.href = link + TAG;
+
+    var linkElem = document.createElement('a');
+    link = getTagAppendedLink(link);
+    linkElem.href = link;
     linkElem.innerHTML = title;
+    linkElem.title = link;
+
     document.getElementById(DIV_MAIN_LINK).appendChild(linkElem);
 }
 
@@ -45,8 +49,10 @@ function addLinks(divId, key_url) {
             var link = curLink[JSON_KEY_URL];
 
             var linkElem = document.createElement('a');
-            linkElem.href = link + TAG;
+            link = getTagAppendedLink(link);
+            linkElem.href = link;
             linkElem.innerHTML = title;
+            linkElem.title = link;
 
             var linkDivElem = document.createElement('div');
             linkDivElem.setAttribute('class', 'links-div');
@@ -57,7 +63,12 @@ function addLinks(divId, key_url) {
     fetchData(addLinks, key_url);
 }
 
-
+function getTagAppendedLink(link) {
+    if (link != null && link.indexOf(TAG) != -1) {
+        return link;
+    }
+    return link + TAG;
+}
 
 
 function get(name) {
