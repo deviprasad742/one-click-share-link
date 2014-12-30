@@ -144,11 +144,12 @@ public class LinkController {
 	}
 	
 	@RequestMapping("/delete-link")
-	public void deleteLink(@RequestParam(value = "to") String toEmailId, @RequestParam(value = "title") String title,
+	public OneLink deleteLink(@RequestParam(value = "to") String toEmailId, @RequestParam(value = "title") String title,
 			@RequestParam(value = "url") String url) {
+		OneLink outLink = null;
 		User user = getValidatedUser();
 		if (user != null) {
-			OneLink outLink = findLinkToDelete(user.getOutLinks(), title, url, toEmailId);
+			outLink = findLinkToDelete(user.getOutLinks(), title, url, toEmailId);
 			if (outLink != null) {
 				user.getOutLinks().remove(outLink);
 				//use unread flag to force re-sync on client
@@ -184,10 +185,12 @@ public class LinkController {
 				repository.save(toUser);
 			}
 		}
+		
+		return outLink != null ? outLink : INVALID_LINK;
 	}
 	
 	@RequestMapping("/delete-in-link")
-	public void deleteInLink(@RequestParam(value = "from") String fromEmailId, @RequestParam(value = "title") String title,
+	public OneLink deleteInLink(@RequestParam(value = "from") String fromEmailId, @RequestParam(value = "title") String title,
 			@RequestParam(value = "url") String url) {
 		User user = getValidatedUser();
 		if (user != null) {
@@ -196,8 +199,10 @@ public class LinkController {
 				user.getInLinks().remove(inLink);
 				user.setInLinksSynced(false);
 				repository.save(user);
+				return inLink;
 			}
 		}
+		return INVALID_LINK;
 	}
 	
 	
