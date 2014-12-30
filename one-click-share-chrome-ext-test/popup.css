@@ -55,3 +55,11 @@ label.aligned {
     font-weight: bold;
     cursor: pointer;
 }
+.del-button-class{
+    float:right;
+    width: 18px;
+    height: 20px;
+    padding:0px;
+    align-content: center;
+    align-items: center;
+}

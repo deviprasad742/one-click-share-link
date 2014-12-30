@@ -56,8 +56,13 @@ function addLinks(divId, linksJson, isInlink, newTab) {
         senderDivElem.title = curLink[JSON_KEY_EMAIL_ID];
 
         linkDivElem.appendChild(linkElem);
+        
+        var delButtonElem =  document.createElement('button');
+        delButtonElem.setAttribute('class','del-button-class');
+        delButtonElem.innerHTML='x';
+        
+        linkDivElem.appendChild(delButtonElem);
         linkDivElem.appendChild(senderDivElem);
-
 
         linkElem.onclick = function (loopIndex) {
             return function () {
@@ -80,6 +85,30 @@ function addLinks(divId, linksJson, isInlink, newTab) {
                 }
             }
         }(i);
+
+        delButtonElem.onclick = function (v_button,v_curLink,v_isInlink) {
+            return function () {
+                v_email = v_curLink[JSON_KEY_EMAIL_ID]
+                v_title = v_curLink[JSON_KEY_TITLE];
+                v_url = v_curLink[JSON_KEY_URL];
+
+                var oldStyleBg = v_button.style.background;
+                var oldStyleColor = v_button.style.color;
+
+                v_button.style.background = "crimson";
+                v_button.style.color = "white";
+                var fn = deleteLink;
+                if (v_isInlink){
+                    fn=deleteInLink;
+                }
+                fn(v_email, v_title, v_url, function (result) {
+                    v_button.style.background = oldStyleBg;
+                    v_button.style.color = oldStyleColor;
+                    forceSyncData(loadUI);
+                });
+                
+            }
+        }(delButtonElem,curLink,isInlink);
 
         document.getElementById(divId).appendChild(linkDivElem);
         //document.getElementById(divId).appendChild(senderDivElem);
