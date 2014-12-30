@@ -3,6 +3,8 @@ PARAM_EMAIL_ID = "email-id";
 KEY_NAME = "name";
 KEY_IMAGE = "image";
 URL_SEND = "send";
+URL_DELETE_LINK = "delete-link";
+URL_DELETE_IN_LINK = "delete-in-link";
 
 KEY_URL_RECENT = "last-contact";
 KEY_URL_FRIENDS = "friends";
@@ -289,6 +291,47 @@ function sendLink(toEmail, title, url, callback) {
         }
     };
 }
+
+function deleteLink(toEmail, title, url, callback) {
+    var xmlhttp = new XMLHttpRequest();
+    title = encodeURIComponent(title);
+    url = encodeURIComponent(url);
+    var url = DOMAIN_URL + URL_DELETE_LINK + "?to=" + toEmail + "&title=" + title + "&url=" + url;
+    xmlhttp.open("POST", url, true);
+    addCredentials(xmlhttp);
+    xmlhttp.send();
+
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4) {
+            var result = xmlhttp.responseText;
+            console.log(URL_DELETE_LINK + ": " + result);
+            if (callback != null) {
+                callback(result);
+            }
+        }
+    };
+}
+
+function deleteInLink(fromEmail, title, url, callback) {
+    var xmlhttp = new XMLHttpRequest();
+    title = encodeURIComponent(title);
+    url = encodeURIComponent(url);
+    var url = DOMAIN_URL + URL_DELETE_IN_LINK + "?from=" + fromEmail + "&title=" + title + "&url=" + url;
+    xmlhttp.open("POST", url, true);
+    addCredentials(xmlhttp);
+    xmlhttp.send();
+
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4) {
+            var result = xmlhttp.responseText;
+            console.log(URL_DELETE_IN_LINK + ": " + result);
+            if (callback != null) {
+                callback(result);
+            }
+        }
+    };
+}
+
 
 function markLinkRead(link) {
     var fromEmail = link[JSON_KEY_EMAIL_ID];
