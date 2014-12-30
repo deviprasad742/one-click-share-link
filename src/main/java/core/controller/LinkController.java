@@ -148,17 +148,32 @@ public class LinkController {
 			@RequestParam(value = "url") String url) {
 		User user = getValidatedUser();
 		if (user != null) {
-			OneLink outLink = findLink(user.getOutLinks(), title, url, toEmailId);
+			OneLink outLink = findLinkToDelete(user.getOutLinks(), title, url, toEmailId);
 			if (outLink != null) {
 				user.getOutLinks().remove(outLink);
+				//use unread flag to force re-sync on client
+				user.setOutUnreadSynced(false);
 				repository.save(user);
 			}
 
 			User toUser = repository.findByEmailId(toEmailId);
+			String fromEmailId = user.getEmailId();
+			if (toEmailId.equals(fromEmailId)) {
+				toUser = user;
+			}
+
 			if (toUser != null) {
-				OneLink inLink = findLink(toUser.getInLinks(), title, url, user.getEmailId());
+				OneLink inLink = findLinkToDelete(toUser.getInLinks(), title, url, fromEmailId);
 				if (inLink != null) {
 					toUser.getInLinks().remove(inLink);
+				
+					if (inLink.isUnread()) {
+						// update the link counter status
+						toUser.checkDecrementInLinkCounter();
+					}
+					
+					// use in links flag to force re-sync
+					toUser.setInLinksSynced(false);
 
 					// remove user if there are no incoming links and is not
 					// registered
@@ -170,6 +185,21 @@ public class LinkController {
 			}
 		}
 	}
+	
+	@RequestMapping("/delete-in-link")
+	public void deleteInLink(@RequestParam(value = "from") String fromEmailId, @RequestParam(value = "title") String title,
+			@RequestParam(value = "url") String url) {
+		User user = getValidatedUser();
+		if (user != null) {
+			OneLink inLink = findLinkToDelete(user.getInLinks(), title, url, fromEmailId);
+			if (inLink != null) {
+				user.getInLinks().remove(inLink);
+				user.setInLinksSynced(false);
+				repository.save(user);
+			}
+		}
+	}
+	
 	
 	@RequestMapping("/mark-read")
 	public void markRead(@RequestParam(value = "from") String fromEmailId, @RequestParam(value = "title") String title,
@@ -339,10 +369,20 @@ public class LinkController {
 		return null;
 	}
 
-	private OneLink findLink(List<OneLink> links, String title, String url, String emailId) {
+	/**
+	 * 
+	 * @param links
+	 * @param title
+	 * @param url
+	 * @param emailId
+	 * @return link with all the matching attributes
+	 */
+	
+	private OneLink findLinkToDelete(List<OneLink> links, String title, String url, String emailId) {
 		for (OneLink oneLink : links) {
-			if (oneLink.getUrl().equals(url)
+			if (oneLink.getUrl().equals(url) && oneLink.getTitle().equals(title)
 					&& oneLink.getEmailId().equals(emailId)) {
+				System.out.println("-----------------Link to be deleted:" + oneLink);
 				return oneLink;
 			}
 		}

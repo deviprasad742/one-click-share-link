@@ -77,6 +77,15 @@ public class User {
 	public void incrementInLinkCounter() {
 		inLinkCounter++;
 	}
+	
+	/**
+	 * Check and decrement in link counter
+	 */
+	public void checkDecrementInLinkCounter() {
+		if (inLinkCounter != 0) {
+			inLinkCounter--;
+		}
+	}
 
 	public void clearInLinkCounter() {
 		inLinkCounter = 0;
