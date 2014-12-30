@@ -2,7 +2,7 @@ CSS_LINKS_UNREAD_CLASS = 'links-unread-class';
 CSS_LINKS_READ_CLASS = 'links-class';
 
 
-var MAX_CHAR_LENGTH = 45;
+var MAX_CHAR_LENGTH = 40;
 
 function trimTitle(string) {
 
@@ -56,11 +56,11 @@ function addLinks(divId, linksJson, isInlink, newTab) {
         senderDivElem.title = curLink[JSON_KEY_EMAIL_ID];
 
         linkDivElem.appendChild(linkElem);
-        
-        var delButtonElem =  document.createElement('button');
-        delButtonElem.setAttribute('class','del-button-class');
-        delButtonElem.innerHTML='x';
-        
+
+        var delButtonElem = document.createElement('button');
+        delButtonElem.setAttribute('class', 'del-button-class');
+        delButtonElem.innerHTML = 'x';
+
         linkDivElem.appendChild(delButtonElem);
         linkDivElem.appendChild(senderDivElem);
 
@@ -86,7 +86,7 @@ function addLinks(divId, linksJson, isInlink, newTab) {
             }
         }(i);
 
-        delButtonElem.onclick = function (v_button,v_curLink,v_isInlink) {
+        delButtonElem.onclick = function (v_button, v_curLink, v_isInlink) {
             return function () {
                 v_email = v_curLink[JSON_KEY_EMAIL_ID]
                 v_title = v_curLink[JSON_KEY_TITLE];
@@ -98,17 +98,17 @@ function addLinks(divId, linksJson, isInlink, newTab) {
                 v_button.style.background = "crimson";
                 v_button.style.color = "white";
                 var fn = deleteLink;
-                if (v_isInlink){
-                    fn=deleteInLink;
+                if (v_isInlink) {
+                    fn = deleteInLink;
                 }
                 fn(v_email, v_title, v_url, function (result) {
                     v_button.style.background = oldStyleBg;
                     v_button.style.color = oldStyleColor;
                     forceSyncData(loadUI);
                 });
-                
+
             }
-        }(delButtonElem,curLink,isInlink);
+        }(delButtonElem, curLink, isInlink);
 
         document.getElementById(divId).appendChild(linkDivElem);
         //document.getElementById(divId).appendChild(senderDivElem);
