@@ -165,13 +165,12 @@ public class LinkController {
 
 			if (toUser != null) {
 				OneLink inLink = findLinkToDelete(toUser.getInLinks(), title, url, fromEmailId);
-				if (inLink != null) {
+				// allow delete of only unread links
+				if (inLink != null && inLink.isUnread()) {
 					toUser.getInLinks().remove(inLink);
 				
-					if (inLink.isUnread()) {
-						// update the link counter status
-						toUser.checkDecrementInLinkCounter();
-					}
+					// update the link counter status
+					toUser.checkDecrementInLinkCounter();
 					
 					// use in links flag to force re-sync
 					toUser.setInLinksSynced(false);
@@ -181,8 +180,8 @@ public class LinkController {
 					if (toUser.getInLinks().isEmpty() && !toUser.isRegistered()) {
 						repository.delete(toUser);
 					}
+					repository.save(toUser);
 				}
-				repository.save(toUser);
 			}
 		}
 		
