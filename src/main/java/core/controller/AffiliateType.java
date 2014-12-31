@@ -4,7 +4,7 @@ public enum AffiliateType {
 	
 	
 AMAZON_IN("amazon-india", "Amazon", AffiliateTypeConstants.AMAZON_IN_IMAGE, AffiliateTypeConstants.AMAZON_IN_URL_MAPPING, "amazon", "in", "&tag=1clishalin-21"),
-FLIPKART("flipkart", "Flipkart", AffiliateTypeConstants.FLIPKART_IMAGE, AffiliateTypeConstants.FLIPKART_URL_MAPPING, "flipkart", "com", "&affid=deviprasa3")
+FLIPKART("flipkart", "Flipkart", AffiliateTypeConstants.FLIPKART_IMAGE, AffiliateTypeConstants.FLIPKART_URL_MAPPING, "flipkart", "com", "&affid=oneclicks")
 	;
 	
 	private final String emailId;
