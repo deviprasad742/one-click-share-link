@@ -42,7 +42,7 @@ function addLinks(divId, key_url) {
         for (i in linksArr) {
             var itemIndex = parseInt(i) + 1;
             var curLink = linksArr[i];
-            var title = curLink[JSON_KEY_TITLE];
+            var title = itemIndex + ". " + curLink[JSON_KEY_TITLE];
             var link = curLink[JSON_KEY_URL];
 
             var linkElem = document.createElement('a');

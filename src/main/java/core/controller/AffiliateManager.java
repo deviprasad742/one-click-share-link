@@ -1,5 +1,7 @@
 package core.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -104,12 +106,27 @@ public class AffiliateManager {
 	}
 	
 	private String getAffiliateUrl(String url, AffiliateType affiliateType) {
+		url = clearAffiliates(url);
 		String affliateTag = affiliateType.getAffliateTag();
 		if (!url.contains(affliateTag)) {
 			if (!url.contains("?")) {
 				affliateTag = "?" + affliateTag;
 			}
 			url = url + affliateTag;
+		}
+		return url;
+	}
+
+	/**
+	 * 
+	 * @param url
+	 * @return clear the affiliates added by third party
+	 */
+	private String clearAffiliates(String url) {
+		List<String> blackList = AffiliateTypeConstants.getBlackList();
+		for (String tag : blackList) {
+			url = url.replace(AffiliateTypeConstants.PREFIX_PARAM_AND + tag, "");
+			url = url.replace(tag, "");
 		}
 		return url;
 	}
